@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'APIProject.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "RusLanApp_db", 
-        'USER': "postgres", 
-        'PASSWORD': "119C1332", 
-        'HOST': "127.0.0.1", 
+        'NAME': "dfq7q8rg6mcjjd", 
+        'USER': "beuynvyhabuvjy", 
+        'PASSWORD': "aa9edf6f3a5f1b531725ca1b7060b81d1ef3fae5705e7e0af44db5ca0980e418", 
+        'HOST': "ec2-44-198-236-169.compute-1.amazonaws.com", 
         'PORT': "5432"
     }
 }
