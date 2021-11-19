@@ -132,6 +132,7 @@ class Migration(migrations.Migration):
                 ('surname', models.CharField(max_length=40)),
                 ('name', models.CharField(max_length=40)),
                 ('email', models.EmailField(max_length=40, unique=True)),
+                ('password_admin', models.CharField(max_length=20))
             ],
             options={
                 'db_table': 'people',

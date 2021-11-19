@@ -22,8 +22,8 @@ class PeopleGroupsModel(admin.ModelAdmin):
     
 @admin.register(People)
 class PeopleModel(admin.ModelAdmin):
-    list_filter = ('login','surname', 'name', 'group_user', 'email', 'id_country')
-    list_display = ('login','surname', 'name', 'group_user', 'email', 'id_country')
+    list_filter = ('login','surname', 'name', 'group_user', 'email', 'id_country', 'password_admin')
+    list_display = ('login','surname', 'name', 'group_user', 'email', 'id_country', 'password_admin')
 
 @admin.register(TypesLex)
 class TypesLexModel(admin.ModelAdmin):
