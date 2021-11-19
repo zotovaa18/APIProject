@@ -82,27 +82,27 @@ WSGI_APPLICATION = 'APIProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#      'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': "dfq7q8rg6mcjjd", 
-#         'USER': "beuynvyhabuvjy", 
-#         'PASSWORD': "aa9edf6f3a5f1b531725ca1b7060b81d1ef3fae5705e7e0af44db5ca0980e418", 
-#         'HOST': "ec2-44-198-236-169.compute-1.amazonaws.com", 
-#         'PORT': "5432"
-#     }
-# }
-
 DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "RusLanApp_db", 
-        'USER': "postgres", 
-        'PASSWORD': "119C1332", 
-        'HOST': "127.0.0.1", 
+        'NAME': "dfq7q8rg6mcjjd", 
+        'USER': "beuynvyhabuvjy", 
+        'PASSWORD': "aa9edf6f3a5f1b531725ca1b7060b81d1ef3fae5705e7e0af44db5ca0980e418", 
+        'HOST': "ec2-44-198-236-169.compute-1.amazonaws.com", 
         'PORT': "5432"
     }
 }
+
+# DATABASES = {
+#       'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': "RusLanApp_db", 
+#         'USER': "postgres", 
+#         'PASSWORD': "119C1332", 
+#         'HOST': "127.0.0.1", 
+#         'PORT': "5432"
+#     }
+# }
 
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
