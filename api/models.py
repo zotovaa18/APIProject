@@ -91,7 +91,7 @@ class Lexemes(models.Model):
 class Media(models.Model):
     id_med = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
     link_med = models.TextField()
-    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
+    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', null=True)
     med_type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='med_type')
 
     class Meta:
