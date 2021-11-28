@@ -1,5 +1,4 @@
 from django.db import models
-from dbview.models import DbView
 
 
 # Create your models here.

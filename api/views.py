@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+#from django.shortcuts import render, HttpResponse
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Reduction, ReductionLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites
@@ -9,12 +9,12 @@ from .serializers import LessonsSerializer, MediaSerializer, IkSerializer, Repli
 from .serializers import ExercisesSerializer, ProgressSerializer, TasksSerializer, VariantsSerializer, FavoritesSerializer
 from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer, WritewordsSerializer
-from django.http import JsonResponse
+'''from django.http import JsonResponse
 from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view'''
 from rest_framework.response import Response
-from rest_framework import status
+#from rest_framework import status
 from rest_framework.decorators import APIView
 from rest_framework import generics
 from rest_framework import mixins
