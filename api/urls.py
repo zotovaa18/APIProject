@@ -8,13 +8,13 @@ Created on Fri Nov  5 01:53:05 2021
 
 from django.urls import path
 from .views import CountryList, CountryDetails, PeopleGroupsList, PeopleGroupsDetails, ExercisesList, ExercisesDetails, ProgressDetails
-from .views import FavoritesList, IkList, IkDetails, LecFillingList, LessonBlocksList, LessonBlocksDetails, LecFillingDetails,  ReductionLexemesDetails
-from .views import LessonsList, LessonsDetails, LexemesList, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList
-from .views import ProgressList, ReductionList, ReductionDetails, ReductionLexemesList, ReplicasList, ReplicasDetails, TasksList, TasksDetails
+from .views import FavoritesList, IkList, IkDetails, LecFillingList, LessonBlocksList, LessonBlocksDetails, LecFillingDetails,  RulesLexemesDetails
+from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList
+from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, ReplicasList, ReplicasDetails, TasksList, TasksDetails
 from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
 from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
 from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList
-#country_list, country_details 
+#country_list, country_details LexemesList
 
 
 urlpatterns = [
@@ -35,7 +35,7 @@ urlpatterns = [
     path('lessonblocks/<int:pk>/', LessonBlocksDetails.as_view()),
     path('lessons/', LessonsList.as_view()),
     path('lessons/<int:pk>/', LessonsDetails.as_view()),
-    path('lexemes/', LexemesList.as_view()),
+    path('lexemes/', LexemesViewsets.as_view()),
     path('lexemes/<int:pk>/', LexemesDetails.as_view()),
     path('media/', MediaList.as_view()),
     path('media/<int:pk>/', MediaDetails.as_view()),
@@ -43,12 +43,12 @@ urlpatterns = [
     path('people/<str:pk>/', PeopleDetails.as_view()),
     path('progress/', ProgressList.as_view()),
     path('progress/<int:pk>/', ProgressDetails.as_view()),
-    path('reduction/', ReductionList.as_view()),
-    path('reduction/<int:pk>/', ReductionDetails.as_view()),
-    path('reductionlexemes/', ReductionLexemesList.as_view()),
-    path('reductionlexemes/<int:pk>/', ReductionLexemesDetails.as_view()),
-    path('Replicas/', ReplicasList.as_view()),
-    path('Replicas/<int:pk>/', ReplicasDetails.as_view()),
+    path('rules/', RulesList.as_view({'get': 'list'})),
+    path('rules/<int:pk>/', RulesDetails.as_view()),
+    path('ruleslexemes/', RulesLexemesList.as_view()),
+    path('ruleslexemes/<int:pk>/', RulesLexemesDetails.as_view()),
+    path('replicas/', ReplicasList.as_view()),
+    path('replicas/<int:pk>/', ReplicasDetails.as_view()),
     path('tasks/', TasksList.as_view()),
     path('tasks/<int:pk>/', TasksDetails.as_view()),
     path('typesEx/', TypesExList.as_view()),

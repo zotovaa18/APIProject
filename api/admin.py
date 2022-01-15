@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Media, Ik, Replicas, LecFilling, Reduction, ReductionLexemes, TypesEx
+from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
@@ -22,8 +22,8 @@ class PeopleGroupsModel(admin.ModelAdmin):
     
 @admin.register(People)
 class PeopleModel(admin.ModelAdmin):
-    list_filter = ('login','surname', 'name', 'group_user', 'email', 'id_country', 'password_admin')
-    list_display = ('login','surname', 'name', 'group_user', 'email', 'id_country', 'password_admin')
+    list_filter = ('login','surname', 'name', 'group_user', 'email', 'id_country','password', 'password_admin')
+    list_display = ('login','surname', 'name', 'group_user', 'email', 'id_country', 'password', 'password_admin')
 
 @admin.register(TypesLex)
 class TypesLexModel(admin.ModelAdmin):
@@ -55,30 +55,37 @@ class MediaModel(admin.ModelAdmin):
     list_filter = ('id_med','link_med','id_lex','med_type')
     list_display = ('id_med','link_med','id_lex','med_type')
 
+
 @admin.register(Ik)
 class IkModel(admin.ModelAdmin):
     list_filter = ('id_ik',)
     list_display = ('id_ik',)
-    
+
+
 @admin.register(Replicas)
 class ReplicasModel(admin.ModelAdmin):
     list_filter = ('id_rep','time_start','time_finish','id_lex','id_med','id_ik','med_ik')
     list_display = ('id_rep','time_start','time_finish','id_lex','id_med','id_ik','med_ik')
-    
+
+
 @admin.register(LecFilling)
 class LecFillingModel(admin.ModelAdmin):
     list_filter = ('id_lex','id_lex_cons')
     list_display = ('id_lex','id_lex_cons')
-    
-@admin.register(Reduction)
-class ReductionModel(admin.ModelAdmin):
-    list_filter = ('id_red','mean_red')
-    list_display = ('id_red','mean_red')
 
-@admin.register(ReductionLexemes)
-class ReductionLexemesModel(admin.ModelAdmin):
-    list_filter = ('id_red','id_lex')
-    list_display = ('id_red','id_lex')
+
+admin.site.register(Rules)
+
+
+class RulesModel(admin.ModelAdmin):
+    list_filter = ('id_r', 'picture', 'id_les', 'id_lex')
+    list_display = ('id_r', 'picture', 'id_les', 'id_lex')
+
+
+admin.site.register(RulesLexemes)
+# class RulesLexemesModel(admin.ModelAdmin):
+#     list_filter = ('id_r','id_lex')
+#     list_display = ('id_r','id_lex')
 
 @admin.register(TypesEx)
 class TypesExModel(admin.ModelAdmin):
