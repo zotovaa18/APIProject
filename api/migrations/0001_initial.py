@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Exercises',
             fields=[
-                ('id_ex', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
+                ('id_ex', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('num_ex', models.DecimalField(decimal_places=0, max_digits=2)),
             ],
             options={
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LecFilling',
             fields=[
-                ('id', models.DecimalField(decimal_places=0, max_digits=5, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
             ],
             options={
                 'db_table': 'lec_filling',

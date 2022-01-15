@@ -43,7 +43,7 @@ urlpatterns = [
     path('people/<str:pk>/', PeopleDetails.as_view()),
     path('progress/', ProgressList.as_view()),
     path('progress/<int:pk>/', ProgressDetails.as_view()),
-    path('rules/', RulesList.as_view({'get': 'list'})),
+    path('rules/', RulesList.as_view()),
     path('rules/<int:pk>/', RulesDetails.as_view()),
     path('ruleslexemes/', RulesLexemesList.as_view()),
     path('ruleslexemes/<int:pk>/', RulesLexemesDetails.as_view()),

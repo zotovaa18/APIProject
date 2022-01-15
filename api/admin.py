@@ -70,8 +70,8 @@ class ReplicasModel(admin.ModelAdmin):
 
 @admin.register(LecFilling)
 class LecFillingModel(admin.ModelAdmin):
-    list_filter = ('id_lex','id_lex_cons')
-    list_display = ('id_lex','id_lex_cons')
+    list_filter = ('id', 'id_lex', 'id_lex_cons')
+    list_display = ('id', 'id_lex', 'id_lex_cons')
 
 
 admin.site.register(Rules)

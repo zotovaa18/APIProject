@@ -37,8 +37,8 @@ class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
         return self.create(request)
 
 
-class CountryDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class CountryDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin):
     queryset = Countries.objects.all()
     serializer_class = CountriesSerializer
     
@@ -52,8 +52,7 @@ class CountryDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class PeopleGroupsList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class PeopleGroupsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = PeopleGroups.objects.all()
     serializer_class = PeopleGroupsSerializer
 
@@ -64,8 +63,8 @@ class PeopleGroupsList(generics.GenericAPIView, mixins.ListModelMixin,
         return self.create(request)
 
 
-class PeopleGroupsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class PeopleGroupsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin):
     queryset = PeopleGroups.objects.all()
     serializer_class = PeopleGroupsSerializer
     
@@ -79,8 +78,7 @@ class PeopleGroupsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class PeopleList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class PeopleList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
 
@@ -91,8 +89,8 @@ class PeopleList(generics.GenericAPIView, mixins.ListModelMixin,
         return self.create(request)
 
 
-class PeopleDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class PeopleDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
     
@@ -106,8 +104,7 @@ class PeopleDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class TypesLexList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class TypesLexList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TypesLex.objects.all()
     serializer_class = TypesLexSerializer
 
@@ -118,8 +115,8 @@ class TypesLexList(generics.GenericAPIView, mixins.ListModelMixin,
         return self.create(request)
 
 
-class TypesLexDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class TypesLexDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                      mixins.DestroyModelMixin):
     queryset = TypesLex.objects.all()
     serializer_class = TypesLexSerializer
     
@@ -133,8 +130,7 @@ class TypesLexDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class TypesMedList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class TypesMedList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TypesMed.objects.all()
     serializer_class = TypesMedSerializer
 
@@ -145,8 +141,8 @@ class TypesMedList(generics.GenericAPIView, mixins.ListModelMixin,
         return self.create(request)
 
 
-class TypesMedDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class TypesMedDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                      mixins.DestroyModelMixin):
     queryset = TypesMed.objects.all()
     serializer_class = TypesMedSerializer
     
@@ -177,10 +173,10 @@ class LessonBlocksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Cr
         return self.create(request, *args, **kwargs)
 
 
-class LessonBlocksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class LessonBlocksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin):
     queryset = LessonBlocks.objects.all()
-    serializer_class = LessonBlocksReadSerializer
+    serializer_class = LessonBlocksWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -212,7 +208,7 @@ class LessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateM
 class LessonsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                      mixins.DestroyModelMixin):
     queryset = Lessons.objects.all()
-    serializer_class = LessonsReadSerializer
+    serializer_class = LessonsWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -225,26 +221,26 @@ class LessonsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.
 
 
 class LexemesViewsets(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-     queryset = Lexemes.objects.all()
+    queryset = Lexemes.objects.all()
 
-     def get_serializer_class(self):
-         method = self.request.method
-         if method == 'PUT' or method == 'POST':
-             return LexemesWriteSerializer
-         else:
-             return LexemesReadSerializer
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return LexemesWriteSerializer
+        else:
+            return LexemesReadSerializer
 
-     def get(self, request, *args, **kwargs):
-         return self.list(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-     def post(self, request, *args, **kwargs):
-         return self.create(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class LexemesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Lexemes.objects.all()
-    serializer_class = LexemesReadSerializer
+    serializer_class = LexemesWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -277,7 +273,7 @@ class MediaList(generics.GenericAPIView, mixins.ListModelMixin,
 class MediaDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Media.objects.all()
-    serializer_class = MediaReadSerializer
+    serializer_class = MediaWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -289,8 +285,7 @@ class MediaDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class IkList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class IkList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Ik.objects.all()
     serializer_class = IkSerializer
 
@@ -302,7 +297,7 @@ class IkList(generics.GenericAPIView, mixins.ListModelMixin,
 
 
 class IkDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+                mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Ik.objects.all()
     serializer_class = IkSerializer
     
@@ -316,8 +311,7 @@ class IkDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class ReplicasList(generics.GenericAPIView, mixins.ListModelMixin,
-                   mixins.CreateModelMixin):
+class ReplicasList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Replicas.objects.all()
 
     def get_serializer_class(self):
@@ -337,7 +331,7 @@ class ReplicasList(generics.GenericAPIView, mixins.ListModelMixin,
 class ReplicasDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Replicas.objects.all()
-    serializer_class = ReplicasReadSerializer
+    serializer_class = ReplicasWriteSerializer
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -369,7 +363,7 @@ class LecFillingList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
 class LecFillingDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                         mixins.DestroyModelMixin):
     queryset = LecFilling.objects.all()
-    serializer_class = LecFillingReadSerializer
+    serializer_class = LecFillingWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -416,7 +410,7 @@ class RulesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
 class RulesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Rules.objects.all()
-    serializer_class = RulesReadSerializer
+    serializer_class = RulesSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -546,7 +540,8 @@ class TasksList(generics.GenericAPIView, mixins.ListModelMixin,
     
     def post(self, request):
         return self.create(request)
-    
+
+
 class TasksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Tasks.objects.all()
@@ -554,53 +549,52 @@ class TasksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
-    
-    
+
     def put(self, request, pk):
         return self.update(request, pk=pk)
     
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
-    
-class VariantsList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+
+
+class VariantsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Variants.objects.all()
     serializer_class = VariantsSerializer
-    
-    
+
     def get(self, request):
         return self.list(request)
     
     def post(self, request):
         return self.create(request)
-    
+
+
 class VariantsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+                      mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Variants.objects.all()
     serializer_class = VariantsSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
-    
-    
+
     def put(self, request, pk):
         return self.update(request, pk=pk)
     
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
-    
+
+
 class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
     queryset = Favorites.objects.all()
     serializer_class = FavoritesSerializer
-    
-    
+
     def get(self, request):
         return self.list(request)
     
     def post(self, request):
         return self.create(request)
-    
+
+
 class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Favorites.objects.all()
@@ -608,14 +602,12 @@ class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
-    
-    
+
     def put(self, request, pk):
         return self.update(request, pk=pk)
     
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
-
 
 
 # class NewlettersList(generics.GenericAPIView, mixins.ListModelMixin,
@@ -641,12 +633,14 @@ class NewwordsList(APIView):
         serializer = NewwordsSerializer(newword, many=True)
         return Response(serializer.data)
 
+
 class NewphrasesList(APIView):
     def get(self, request):
         newword = Newphrases.objects.all()
         serializer = NewphrasesSerializer(newword, many=True)
         return Response(serializer.data)
-    
+
+
 class MatchsyllablessoundList(APIView):
     def get(self, request):
         matchsyllablesound = Matchsyllablessound.objects.all()
@@ -661,31 +655,34 @@ class CollectwordslettersList(APIView):
         return Response(serializer.data)   
     
 
-   
 class MissingletterList(APIView):
     def get(self, request):
         missletter = Missingletter.objects.all()
         serializer = MissingletterSerializer(missletter, many=True)
         return Response(serializer.data)   
-    
+
+
 class PronunciationwordsList(APIView):
     def get(self, request):
         pronunciationword = Pronunciationwords.objects.all()
         serializer = PronunciationwordsSerializer(pronunciationword, many=True)
         return Response(serializer.data)       
-    
+
+
 class RecoverphrasesList(APIView):
     def get(self, request):
         recoverphrase = Recoverphrases.objects.all()
         serializer = RecoverphrasesSerializer(recoverphrase, many=True)
         return Response(serializer.data) 
-    
+
+
 class SelectwordsList(APIView):
     def get(self, request):
         selectword = Selectwords.objects.all()
         serializer = SelectwordsSerializer(selectword, many=True)
         return Response(serializer.data) 
-    
+
+
 class WordpicturematchList(APIView):
     def get(self, request):
         wordpicturem = Wordpicturematch.objects.all()
@@ -693,7 +690,6 @@ class WordpicturematchList(APIView):
         return Response(serializer.data) 
 
 
-    
 class WordpictureselectList(APIView):
     def get(self, request):
         wordpictures = Wordpictureselect.objects.all()
@@ -706,6 +702,8 @@ class WritewordsList(APIView):
         writeword = Writewords.objects.all()
         serializer = WritewordsSerializer(writeword, many=True)
         return Response(serializer.data)     
+
+
 '''
 class CountryList(APIView):
     def get(self, request):
@@ -794,5 +792,3 @@ def country_details(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 '''
-
-

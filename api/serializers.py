@@ -67,14 +67,60 @@ class LessonsReadSerializer(serializers.ModelSerializer):
 
 
 class LexemesWriteSerializer(serializers.ModelSerializer):
+    id_lex_cons = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+
     class Meta:
         model = Lexemes
-        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type_lex', 'id_les')
+        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type_lex', 'id_les', 'id_lex_cons')
 
 
 class LexemesReadSerializer(serializers.ModelSerializer):
    class Meta(LexemesWriteSerializer.Meta):
        depth = 1
+
+
+class LecFillingWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = LecFilling
+       fields = ('id', 'id_lex', 'id_lex_cons')
+
+
+class LecFillingReadSerializer(serializers.ModelSerializer):
+    class Meta(LecFillingWriteSerializer.Meta):
+        depth = 1
+
+
+class RulesLexemesSerializer(serializers.HyperlinkedModelSerializer):
+    id_lex = serializers.ReadOnlyField(source='lexemes.id_lex')
+
+    class Meta:
+        model = RulesLexemes
+        fields = ('id_lex',)
+
+
+class RulesSerializer(serializers.ModelSerializer):
+    id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    id_les = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
+
+    class Meta:
+        model = Rules
+        fields = '__all__'
+
+    # def create(self, validated_data):
+    #     lexemes = Lexemes.objects.get(pk=validated_data.pop("id_lex"))
+    #     instance = Rules.objects.create(**validated_data)
+    #     RulesLexemes.objects.create(Lexemes=lexemes, Rules=instance)
+    #     return instance
+    #
+    # def to_representation(self, instance):
+    #     representation = super(RulesSerializer, self).to_representation(instance)
+    #     representation["ruleslexemes"] = RulesLexemesSerializer(instance.ruleslexemes_set.all(), many=True).data
+    #     return representation
+
+
+class RulesReadSerializer(serializers.ModelSerializer):
+    class Meta(RulesSerializer.Meta):
+        depth = 1
 
 
 class MediaWriteSerializer(serializers.ModelSerializer):
@@ -103,55 +149,6 @@ class ReplicasWriteSerializer(serializers.ModelSerializer):
 class ReplicasReadSerializer(serializers.ModelSerializer):
    class Meta(ReplicasWriteSerializer.Meta):
        depth = 2
-
-
-class LecFillingWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = LecFilling
-       fields = ('id_lex', 'id_lex_cons')
-
-
-class LecFillingReadSerializer(serializers.ModelSerializer):
-   class Meta(LecFillingWriteSerializer.Meta):
-       depth = 1
-
-
-class RulesLexemesSerializer(serializers.HyperlinkedModelSerializer):
-    id_lex = serializers.ReadOnlyField(source='lexemes.id_lex')
-
-    class Meta:
-        model = RulesLexemes
-        fields = ('id_lex',)
-
-
-class RulesSerializer(serializers.ModelSerializer):
-
-    #id_lex = RulesLexemesSerializer(source='ruleslexemes_set', many=True)
-    #id_lex = LexemesWriteSerializer(read_only=True, many=True)
-    #source_products = serializers.PrimaryKeyRelatedField(many=True, queryset=RulesLexemes.objects.all())
-    id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-    id_les = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
-
-    class Meta:
-        model = Rules
-        fields = '__all__'
-        depth = 1
-
-    # def create(self, validated_data):
-    #     lexemes = Lexemes.objects.get(pk=validated_data.pop("id_lex"))
-    #     instance = Rules.objects.create(**validated_data)
-    #     RulesLexemes.objects.create(Lexemes=lexemes, Rules=instance)
-    #     return instance
-    #
-    # def to_representation(self, instance):
-    #     representation = super(RulesSerializer, self).to_representation(instance)
-    #     representation["ruleslexemes"] = RulesLexemesSerializer(instance.ruleslexemes_set.all(), many=True).data
-    #     return representation
-
-
-class RulesReadSerializer(serializers.ModelSerializer):
-   class Meta(RulesSerializer.Meta):
-       depth = 1
 
 
 class TypesExSerializer(serializers.ModelSerializer):

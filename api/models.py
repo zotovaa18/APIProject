@@ -58,20 +58,6 @@ class Ik(models.Model):
         return self.id_ik
 
 
-class LecFilling(models.Model):
-    id = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='Lexemes_id_lex')
-    id_lex_cons = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex_cons',
-                                    related_name='Lexemes_id_lex_cons')
-
-    class Meta:
-        managed = False
-        db_table = 'lec_filling'
-
-    def __str__(self):
-        return '%s %s' % (self.id_lex, self.id_lex_cons)
-
-
 class LessonBlocks(models.Model):
     id_lb = models.AutoField(auto_created=True, primary_key=True, serialize=False)
 
@@ -111,6 +97,7 @@ class Lexemes(models.Model):
     stress = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True)
     type_lex = models.ForeignKey(TypesLex, models.DO_NOTHING, db_column='type_lex')
     id_les = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
+    id_lex_cons = models.ManyToManyField('Lexemes', through='LecFilling', related_name='Lex_cons')
 
     class Meta:
         managed = False
@@ -118,6 +105,20 @@ class Lexemes(models.Model):
 
     def __str__(self):
         return '%s %s %s' % (self.id_lex, self.mean_lex, self.type_lex)
+
+
+class LecFilling(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='Lexemes_id_lex')
+    id_lex_cons = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex_cons',
+                                    related_name='Lexemes_id_lex_cons')
+
+    class Meta:
+        managed = False
+        db_table = 'lec_filling'
+
+    def __str__(self):
+        return '%s %s' % (self.id_lex, self.id_lex_cons)
 
 
 class Media(models.Model):
