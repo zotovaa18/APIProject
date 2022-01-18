@@ -142,7 +142,7 @@ class People(models.Model):
     name = models.CharField(max_length=40)
     group_user = models.ForeignKey('PeopleGroups', models.DO_NOTHING, db_column='group_user', blank=True, null=True)
     email = models.EmailField(max_length=40, unique=True)
-    id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
+    #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
     password_admin = models.CharField(max_length=20, blank=True, null=True)
 
