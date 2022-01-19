@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Video(models.Model):
-    id_ex = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    id_v = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_video = models.CharField(max_length=100)
 
     class Meta:
