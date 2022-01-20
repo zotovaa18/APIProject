@@ -62,7 +62,7 @@ class LexemesModel(admin.ModelAdmin):
 @admin.register(Media)
 class MediaModel(admin.ModelAdmin):
     list_filter = ('id_med', 'link_med', 'id_lex', 'med_type', 'id_les')
-    list_display = ('id_med', 'link_med', 'id_lex', 'med_type', 'id_les')
+    list_display = ('id_med', 'link_med', 'id_lex', 'med_type')
 
 
 @admin.register(Ik)
