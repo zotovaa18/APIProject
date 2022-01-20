@@ -76,7 +76,7 @@ class Lessons(models.Model):
         db_table = 'lessons'
 
     def __str__(self):
-        return self.name_les
+        return '%s %s' % (self.name_les, self.id_lb)
 
 
 class TypesLex(models.Model):
