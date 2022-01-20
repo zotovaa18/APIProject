@@ -44,17 +44,6 @@ class TypesMedSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class LessonBlocksWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = LessonBlocks
-       fields = ('id_lb',)
-
-
-class LessonBlocksReadSerializer(serializers.ModelSerializer):
-   class Meta(LessonBlocksWriteSerializer.Meta):
-       depth = 1
-
-
 class LessonsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Lessons
@@ -64,6 +53,18 @@ class LessonsWriteSerializer(serializers.ModelSerializer):
 class LessonsReadSerializer(serializers.ModelSerializer):
     class Meta(LessonsWriteSerializer.Meta):
         depth = 1
+
+
+class LessonBlocksWriteSerializer(serializers.ModelSerializer):
+    lesson = LessonsWriteSerializer(many=True, read_only=True)
+    class Meta:
+        model = LessonBlocks
+        fields = ('id_lb', 'lesson')
+
+
+class LessonBlocksReadSerializer(serializers.ModelSerializer):
+   class Meta(LessonBlocksWriteSerializer.Meta):
+       depth = 1
 
 
 class LexemesWriteSerializer(serializers.ModelSerializer):

@@ -26,4 +26,4 @@ class VideoCommands(models.Model):
         db_table = 'video_commands'
 
     def __str__(self):
-        return self.id
+        return '%s %s' % (self.id_v, self.command)

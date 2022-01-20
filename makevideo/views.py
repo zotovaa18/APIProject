@@ -48,7 +48,13 @@ class VideoCommandsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
             return VideoCommandsReadSerializer
 
     def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+        id_v = request.GET.get("id_v")
+        if id_v is not None:
+            cer_video = VideoCommands.objects.filter(id_v=id_v)
+            serializer = VideoCommandsWriteSerializer(cer_video, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -67,3 +73,4 @@ class VideoCommandsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, m
 
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
+

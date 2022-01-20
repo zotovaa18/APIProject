@@ -69,7 +69,7 @@ class LessonBlocks(models.Model):
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(unique=True, max_length=100)
-    id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb')
+    id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
 
     class Meta:
         managed = False
