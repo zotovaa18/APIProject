@@ -127,6 +127,7 @@ class Media(models.Model):
     link_med = models.TextField()
     id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', null=True)
     med_type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='med_type')
+    id_les = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', null=True)
 
     class Meta:
         managed = False

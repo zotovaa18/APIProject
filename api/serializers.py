@@ -127,7 +127,7 @@ class RulesReadSerializer(serializers.ModelSerializer):
 class MediaWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Media
-       fields = ('id_med', 'link_med', 'id_lex', 'med_type')
+       fields = ('id_med', 'link_med', 'id_lex', 'med_type', 'id_les')
 
 
 class MediaReadSerializer(serializers.ModelSerializer):
