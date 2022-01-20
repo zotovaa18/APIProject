@@ -68,12 +68,13 @@ class LessonBlocks(models.Model):
 
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    name_les = models.CharField(unique=True, max_length=100)
+    name_les = models.CharField(max_length=100)
     id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
 
     class Meta:
         managed = False
         db_table = 'lessons'
+        unique_together = (('name_les', 'id_lb'),)
 
     def __str__(self):
         return '%s %s' % (self.name_les, self.id_lb)
