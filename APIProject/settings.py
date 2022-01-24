@@ -83,27 +83,27 @@ WSGI_APPLICATION = 'APIProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "dfq7q8rg6mcjjd",
-        'USER': "beuynvyhabuvjy",
-        'PASSWORD': "aa9edf6f3a5f1b531725ca1b7060b81d1ef3fae5705e7e0af44db5ca0980e418",
-        'HOST': "ec2-44-198-236-169.compute-1.amazonaws.com",
-        'PORT': "5432"
-    }
-}
-
 # DATABASES = {
 #       'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': "postgres",
-#         'USER': "postgres",
-#         'PASSWORD': "postgres",
-#         'HOST': "192.168.122.150",
+#         'NAME': "dfq7q8rg6mcjjd",
+#         'USER': "beuynvyhabuvjy",
+#         'PASSWORD': "aa9edf6f3a5f1b531725ca1b7060b81d1ef3fae5705e7e0af44db5ca0980e418",
+#         'HOST': "ec2-44-198-236-169.compute-1.amazonaws.com",
 #         'PORT': "5432"
 #     }
 # }
+
+DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "postgres",
+        'USER': "postgres",
+        'PASSWORD': "postgres",
+        'HOST': "192.168.122.150",
+        'PORT': "5432"
+     }
+ }
 
 # DATABASES = {
 #       'default': {
