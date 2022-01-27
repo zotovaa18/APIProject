@@ -145,8 +145,8 @@ class Migration(migrations.Migration):
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
                 ('word', models.CharField(max_length=100)),
                 ('num_lex', models.DecimalField(decimal_places=0, max_digits=1)),
-                ('count_miss', models.DecimalField(decimal_places=0, max_digits=50)),
-                ('num_miss', models.DecimalField(decimal_places=0, max_digits=101)),
+                ('count_miss', models.DecimalField(decimal_places=0, max_digits=3)),
+                ('num_miss', models.DecimalField(decimal_places=0, max_digits=3)),
                 ('letter', models.CharField(max_length=100)),
             ],
             options={
@@ -229,6 +229,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.DecimalField(decimal_places=0, max_digits=5, primary_key=True, serialize=False)),
                 ('mean_pr', models.BooleanField()),
+                ('count_attempt', models.DecimalField(max_digits=3, decimal_places=0))
             ],
             options={
                 'db_table': 'progress',
@@ -305,8 +306,8 @@ class Migration(migrations.Migration):
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
                 ('phrase', models.CharField(max_length=100)),
                 ('num_lex', models.DecimalField(decimal_places=0, max_digits=1)),
-                ('count_miss', models.DecimalField(decimal_places=0, max_digits=50)),
-                ('num_miss', models.DecimalField(decimal_places=0, max_digits=101)),
+                ('count_miss', models.DecimalField(decimal_places=0, max_digits=3)),
+                ('num_miss', models.DecimalField(decimal_places=0, max_digits=3)),
                 ('word', models.CharField(max_length=100)),
             ],
             options={
@@ -319,8 +320,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_task', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
-                ('num_lex', models.DecimalField(blank=True, decimal_places=0, max_digits=1, null=True)),
-                ('count_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=50, null=True)),
+                ('num_lex', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
+                ('count_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
             ],
             options={
                 'db_table': 'tasks',
@@ -408,8 +409,8 @@ class Migration(migrations.Migration):
                 ('id_ex', models.DecimalField(decimal_places=0, max_digits=5)),
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
                 ('phrase', models.CharField(max_length=100)),
-                ('num_lex', models.DecimalField(decimal_places=0, max_digits=1)),
-                ('count_miss', models.DecimalField(decimal_places=0, max_digits=50)),
+                ('num_lex', models.DecimalField(decimal_places=0, max_digits=3)),
+                ('count_miss', models.DecimalField(decimal_places=0, max_digits=3)),
                 ('word', models.CharField(max_length=100)),
             ],
             options={

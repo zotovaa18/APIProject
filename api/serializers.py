@@ -9,7 +9,7 @@ from rest_framework import serializers
 
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 
@@ -17,6 +17,12 @@ from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicture
 class PeopleGroupsSerializer(serializers.ModelSerializer):
    class Meta:
        model = PeopleGroups
+       fields = '__all__'
+
+
+class StatusSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = Status
        fields = '__all__'
 
 
@@ -47,7 +53,7 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class LessonsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Lessons
-       fields = ['id_les', 'name_les', 'id_lb']
+       fields = ['id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
 
 
 class LessonsReadSerializer(serializers.ModelSerializer):

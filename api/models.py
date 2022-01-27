@@ -65,11 +65,31 @@ class LessonBlocks(models.Model):
         managed = False
         db_table = 'lesson_blocks'
 
+    def __str__(self):
+        return str(self.id_lb)
+
+
+class Status(models.Model):
+    id_status = models.CharField(primary_key=True, max_length=10)
+
+    class Meta:
+        managed = False
+        db_table = 'status'
+
+    def __str__(self):
+        return self.id_status
+
 
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
     id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
+    video = models.TextField(null=True)
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st', default='Пусто', editable=False)
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st', default='Пусто', editable=False)
 
     class Meta:
         managed = False
@@ -77,7 +97,7 @@ class Lessons(models.Model):
         unique_together = (('name_les', 'id_lb'),)
 
     def __str__(self):
-        return '%s %s' % (self.name_les, self.id_lb)
+        return '%s %s' % (self.name_les, str(self.id_lb))
 
 
 class TypesLex(models.Model):
@@ -171,6 +191,7 @@ class Progress(models.Model):
     id_ex = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
     login = models.ForeignKey(People, models.DO_NOTHING, db_column='login')
     mean_pr = models.BooleanField()
+    count_attempt = models.DecimalField(max_digits=3, decimal_places=0)
 
     class Meta:
         managed = False
@@ -230,8 +251,8 @@ class Tasks(models.Model):
     num_task = models.DecimalField(max_digits=2, decimal_places=0)
     id_lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right')
     type_med = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
-    num_lex = models.DecimalField(max_digits=1, decimal_places=0, blank=True, null=True)
-    count_miss = models.DecimalField(max_digits=50, decimal_places=0, blank=True, null=True)
+    num_lex = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
+    count_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 
     class Meta:
         managed = False

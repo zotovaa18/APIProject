@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 
@@ -47,10 +47,16 @@ class LessonBlocksModel(admin.ModelAdmin):
     list_display = ('id_lb',)
 
 
+@admin.register(Status)
+class LessonBlocksModel(admin.ModelAdmin):
+    list_filter = ('id_status',)
+    list_display = ('id_status',)
+
+
 @admin.register(Lessons)
 class LessonsModel(admin.ModelAdmin):
-    list_filter = ('id_les', 'name_les', 'id_lb')
-    list_display = ('id_les', 'name_les', 'id_lb')
+    list_filter = ('id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
+    list_display = ('id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
 
 
 @admin.register(Lexemes)
@@ -112,8 +118,8 @@ class ExercisesModel(admin.ModelAdmin):
 
 @admin.register(Progress)
 class ProgressModel(admin.ModelAdmin):
-    list_filter = ('id_ex', 'login', 'mean_pr')
-    list_display = ('id_ex', 'login', 'mean_pr')
+    list_filter = ('id_ex', 'login', 'mean_pr', 'count_attempt')
+    list_display = ('id_ex', 'login', 'mean_pr', 'count_attempt')
 
 
 @admin.register(Tasks)

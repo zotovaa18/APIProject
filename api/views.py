@@ -1,7 +1,7 @@
 #from django.shortcuts import render, HttpResponse
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
@@ -9,7 +9,7 @@ from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer
 from .serializers import ExercisesSerializer, ProgressSerializer, TasksSerializer, VariantsSerializer, FavoritesSerializer, RulesLexemesSerializer, TypesExSerializer
 from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer
-from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer
+from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
 from .serializers import LecFillingReadSerializer, LecFillingWriteSerializer, RulesSerializer, WritewordsSerializer, RulesReadSerializer
 '''from django.http import JsonResponse
 from django.http import HttpResponse
@@ -74,6 +74,31 @@ class PeopleGroupsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mi
     def put(self, request, pk):
         return self.update(request, pk=pk)
     
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
+
+class StatusList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class StatusDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
