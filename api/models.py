@@ -2,6 +2,8 @@ from django.db import models
 
 
 # Create your models here.
+from makevideo.models import Video
+
 
 class Countries(models.Model):
     id_country = models.CharField(primary_key=True, max_length=3)
@@ -84,7 +86,7 @@ class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
     id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
-    video = models.TextField(null=True)
+    id_v = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video')
     video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
     lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
     phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)

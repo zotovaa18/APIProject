@@ -53,7 +53,7 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class LessonsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Lessons
-       fields = ['id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
+       fields = ['id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
 
 
 class LessonsReadSerializer(serializers.ModelSerializer):
@@ -83,7 +83,7 @@ class LexemesWriteSerializer(serializers.ModelSerializer):
 
 class LexemesReadSerializer(serializers.ModelSerializer):
    class Meta(LexemesWriteSerializer.Meta):
-       depth = 1
+        depth = 0
 
 
 class LecFillingWriteSerializer(serializers.ModelSerializer):

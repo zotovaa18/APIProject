@@ -55,8 +55,8 @@ class LessonBlocksModel(admin.ModelAdmin):
 
 @admin.register(Lessons)
 class LessonsModel(admin.ModelAdmin):
-    list_filter = ('id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
-    list_display = ('id_les', 'name_les', 'id_lb', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
+    list_filter = ('id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
+    list_display = ('id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
 
 
 @admin.register(Lexemes)
