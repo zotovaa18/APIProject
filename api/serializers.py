@@ -8,7 +8,7 @@ Created on Fri Nov  5 22:20:50 2021
 from rest_framework import serializers
 
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
@@ -53,7 +53,7 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class LessonsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Lessons
-       fields = ['id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
+       fields = ['id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
 
 
 class LessonsReadSerializer(serializers.ModelSerializer):
@@ -74,11 +74,11 @@ class LessonBlocksReadSerializer(serializers.ModelSerializer):
 
 
 class LexemesWriteSerializer(serializers.ModelSerializer):
-    id_lex_cons = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    cons = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
 
     class Meta:
         model = Lexemes
-        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type_lex', 'id_les', 'id_lex_cons')
+        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type', 'lesson', 'cons')
 
 
 class LexemesReadSerializer(serializers.ModelSerializer):
@@ -89,7 +89,7 @@ class LexemesReadSerializer(serializers.ModelSerializer):
 class LecFillingWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = LecFilling
-       fields = ('id', 'id_lex', 'id_lex_cons')
+       fields = ('id', 'lexeme', 'cons')
 
 
 class LecFillingReadSerializer(serializers.ModelSerializer):
@@ -97,17 +97,17 @@ class LecFillingReadSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class RulesLexemesSerializer(serializers.HyperlinkedModelSerializer):
-    id_lex = serializers.ReadOnlyField(source='lexemes.id_lex')
+class RulesLexemesSerializer(serializers.ModelSerializer):
+    #lexeme = serializers.ReadOnlyField(source='lexemes.id_lex')
 
     class Meta:
         model = RulesLexemes
-        fields = ('id_lex',)
+        fields = ('id', 'rule', 'lexeme')
 
 
 class RulesSerializer(serializers.ModelSerializer):
-    id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-    id_les = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
+    lexeme = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    lesson = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
 
     class Meta:
         model = Rules
@@ -132,8 +132,8 @@ class RulesReadSerializer(serializers.ModelSerializer):
 
 class MediaWriteSerializer(serializers.ModelSerializer):
    class Meta:
-       model = Media
-       fields = ('id_med', 'link_med', 'id_lex', 'med_type')
+       model = Medias
+       fields = ('id_med', 'link_med', 'lexeme', 'type')
 
 
 class MediaReadSerializer(serializers.ModelSerializer):
@@ -150,7 +150,7 @@ class IkSerializer(serializers.ModelSerializer):
 class ReplicasWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Replicas
-       fields = ('id_rep', 'time_start', 'time_finish', 'id_lex', 'id_med', 'id_ik', 'med_ik')
+       fields = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'link_ik')
 
 
 class ReplicasReadSerializer(serializers.ModelSerializer):
@@ -164,10 +164,14 @@ class TypesExSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class ExercisesSerializer(serializers.ModelSerializer):
+class ExercisesWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Exercises
        fields = '__all__'
+
+
+class ExercisesReadSerializer(serializers.ModelSerializer):
+   class Meta(ExercisesWriteSerializer.Meta):
        depth = 2
 
 
@@ -178,17 +182,26 @@ class ProgressSerializer(serializers.ModelSerializer):
        depth = 2
 
 
-class TasksSerializer(serializers.ModelSerializer):
+
+class TasksWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Tasks
-       fields = '__all__'
+       fields = ('id_task', 'exercise', 'num_task', 'id_lex_right', 'type', 'num_lex', 'count_miss')
+
+
+class TasksReadSerializer(serializers.ModelSerializer):
+   class Meta(TasksWriteSerializer.Meta):
        depth = 2
 
 
-class VariantsSerializer(serializers.ModelSerializer):
+class VariantsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Variants
-       fields = '__all__'
+       fields = ('id', 'task', 'lexeme', 'num_miss')
+
+
+class VariantsReadSerializer(serializers.ModelSerializer):
+   class Meta(VariantsWriteSerializer.Meta):
        depth = 2
 
 

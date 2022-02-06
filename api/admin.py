@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
@@ -55,20 +55,20 @@ class LessonBlocksModel(admin.ModelAdmin):
 
 @admin.register(Lessons)
 class LessonsModel(admin.ModelAdmin):
-    list_filter = ('id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
-    list_display = ('id_les', 'name_les', 'id_lb', 'id_v', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
+    list_filter = ('id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
+    list_display = ('id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st')
 
 
 @admin.register(Lexemes)
 class LexemesModel(admin.ModelAdmin):
-    list_filter = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type_lex', 'id_les')
-    list_display = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type_lex', 'id_les')
+    list_filter = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type', 'lesson')
+    list_display = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type', 'lesson')
 
 
-@admin.register(Media)
+@admin.register(Medias)
 class MediaModel(admin.ModelAdmin):
-    list_filter = ('id_med', 'link_med', 'id_lex', 'med_type')
-    list_display = ('id_med', 'link_med', 'id_lex', 'med_type')
+    list_filter = ('id_med', 'link_med', 'lexeme', 'type')
+    list_display = ('id_med', 'link_med', 'lexeme', 'type')
 
 
 @admin.register(Ik)
@@ -79,30 +79,29 @@ class IkModel(admin.ModelAdmin):
 
 @admin.register(Replicas)
 class ReplicasModel(admin.ModelAdmin):
-    list_filter = ('id_rep', 'time_start', 'time_finish', 'id_lex', 'id_med', 'id_ik', 'med_ik')
-    list_display = ('id_rep', 'time_start', 'time_finish', 'id_lex', 'id_med', 'id_ik', 'med_ik')
+    list_filter = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'link_ik')
+    list_display = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'link_ik')
 
 
 @admin.register(LecFilling)
 class LecFillingModel(admin.ModelAdmin):
-    list_filter = ('id', 'id_lex', 'id_lex_cons')
-    list_display = ('id', 'id_lex', 'id_lex_cons')
+    list_filter = ('id', 'lexeme', 'cons')
+    list_display = ('id', 'lexeme', 'cons')
 
 
 admin.site.register(Rules)
 
 
 class RulesModel(admin.ModelAdmin):
-    list_filter = ('id_r', 'picture', 'id_les', 'id_lex')
-    list_display = ('id_r', 'picture', 'id_les', 'id_lex')
+    list_filter = ('id_r', 'picture', 'lesson', 'lexeme')
+    list_display = ('id_r', 'picture', 'lesson', 'lexeme')
 
 
 admin.site.register(RulesLexemes)
+class RulesLexemesModel(admin.ModelAdmin):
+    list_filter = ('id', 'rule', 'lexeme')
+    list_display = ('id', 'rule', 'lexeme')
 
-
-# class RulesLexemesModel(admin.ModelAdmin):
-#     list_filter = ('id_r','id_lex')
-#     list_display = ('id_r','id_lex')
 
 @admin.register(TypesEx)
 class TypesExModel(admin.ModelAdmin):
@@ -112,32 +111,32 @@ class TypesExModel(admin.ModelAdmin):
 
 @admin.register(Exercises)
 class ExercisesModel(admin.ModelAdmin):
-    list_filter = ('id_ex', 'type_ex', 'id_les', 'num_ex')
-    list_display = ('id_ex', 'type_ex', 'id_les', 'num_ex')
+    list_filter = ('id_ex', 'type', 'lesson', 'num_ex')
+    list_display = ('id_ex', 'type', 'lesson', 'num_ex')
 
 
 @admin.register(Progress)
 class ProgressModel(admin.ModelAdmin):
-    list_filter = ('id_ex', 'login', 'mean_pr', 'count_attempt')
-    list_display = ('id_ex', 'login', 'mean_pr', 'count_attempt')
+    list_filter = ('id', 'exercise', 'person', 'mean_pr', 'count_attempt')
+    list_display = ('id', 'exercise', 'person', 'mean_pr', 'count_attempt')
 
 
 @admin.register(Tasks)
 class TasksModel(admin.ModelAdmin):
-    list_filter = ('id_task', 'id_ex', 'num_task', 'id_lex_right', 'type_med', 'num_lex', 'count_miss')
-    list_display = ('id_task', 'id_ex', 'num_task', 'id_lex_right', 'type_med', 'num_lex', 'count_miss')
+    list_filter = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss')
+    list_display = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss')
 
 
 @admin.register(Variants)
 class VariantsModel(admin.ModelAdmin):
-    list_filter = ('id_task', 'id_lex', 'num_miss')
-    list_display = ('id_task', 'id_lex', 'num_miss')
+    list_filter = ('id', 'task', 'lexeme', 'num_miss')
+    list_display = ('id', 'task', 'lexeme', 'num_miss')
 
 
 @admin.register(Favorites)
 class FavoritesModel(admin.ModelAdmin):
-    list_filter = ('id_ex', 'id_lex', 'id_med', 'login')
-    list_display = ('id_ex', 'id_lex', 'id_med', 'login')
+    list_filter = ('id', 'exercise', 'lexeme', 'media', 'person')
+    list_display = ('id', 'exercise', 'lexeme', 'media', 'person')
 
 
 @admin.register(Newletters)

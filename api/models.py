@@ -20,30 +20,30 @@ class Countries(models.Model):
 
 class Exercises(models.Model):
     id_ex = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    lesson = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
 
     class Meta:
         managed = False
         db_table = 'exercises'
-        unique_together = (('id_les', 'num_ex'),)
+        unique_together = (('lesson', 'num_ex'),)
 
     def __str__(self):
-        return self.id_ex
+        return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type_ex)
 
 
 class Favorites(models.Model):
     id = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.ForeignKey('Exercises', models.DO_NOTHING, db_column='id_ex', blank=True, null=True)
-    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
-    id_med = models.ForeignKey('Media', models.DO_NOTHING, db_column='id_med', blank=True, null=True)
-    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+    exercise = models.ForeignKey('Exercises', models.DO_NOTHING, db_column='id_ex', blank=True, null=True)
+    lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
+    media = models.ForeignKey('Medias', models.DO_NOTHING, db_column='id_med', blank=True, null=True)
+    person = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
 
     class Meta:
         managed = False
         db_table = 'favorites'
-        unique_together = (('login', 'id_ex'), ('login', 'id_lex'), ('login', 'id_med'),)
+        unique_together = (('person', 'exercise'), ('person', 'lexeme'), ('person', 'media'),)
 
     def __str__(self):
         return self.id
@@ -85,8 +85,8 @@ class Status(models.Model):
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
-    id_lb = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
-    id_v = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video')
+    lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
+    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video')
     video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
     lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
     phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)
@@ -96,10 +96,10 @@ class Lessons(models.Model):
     class Meta:
         managed = False
         db_table = 'lessons'
-        unique_together = (('name_les', 'id_lb'),)
+        unique_together = (('name_les', 'lessonblock'),)
 
     def __str__(self):
-        return '%s %s' % (self.name_les, str(self.id_lb))
+        return '%s %s' % (self.name_les, str(self.lessonblock))
 
 
 class TypesLex(models.Model):
@@ -118,45 +118,44 @@ class Lexemes(models.Model):
     mean_lex = models.CharField(max_length=100)
     transcr = models.CharField(max_length=100, blank=True, null=True, default=True)
     stress = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True)
-    type_lex = models.ForeignKey(TypesLex, models.DO_NOTHING, db_column='type_lex')
-    id_les = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
-    id_lex_cons = models.ManyToManyField('Lexemes', through='LecFilling', related_name='Lex_cons')
+    type = models.ForeignKey(TypesLex, models.DO_NOTHING, db_column='type_lex')
+    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
+    cons = models.ManyToManyField('Lexemes', through='LecFilling', related_name='Lex_cons')
 
     class Meta:
         managed = False
         db_table = 'lexemes'
 
     def __str__(self):
-        return '%s %s %s' % (self.id_lex, self.mean_lex, self.type_lex)
+        return '%s %s %s' % (self.id_lex, self.mean_lex, self.type)
 
 
 class LecFilling(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='Lexemes_id_lex')
-    id_lex_cons = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex_cons',
-                                    related_name='Lexemes_id_lex_cons')
+    lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='Lexemes_lex')
+    cons = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex_cons', related_name='Lexemes_cons')
 
     class Meta:
         managed = False
         db_table = 'lec_filling'
 
     def __str__(self):
-        return '%s %s' % (self.id_lex, self.id_lex_cons)
+        return '%s %s' % (self.lexeme, self.cons)
 
 
-class Media(models.Model):
+class Medias(models.Model):
     id_med = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     link_med = models.TextField()
-    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', null=True)
-    med_type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='med_type')
+    lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', null=True)
+    type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='med_type')
 
     class Meta:
         managed = False
         db_table = 'media'
-        unique_together = (('id_lex', 'med_type'),)
+        unique_together = (('lexeme', 'type'),)
 
     def __str__(self):
-        return '%s %s' % (self.id_lex, self.med_type)
+        return '%s %s' % (self.id_lex, self.type)
 
 
 class People(models.Model):
@@ -190,8 +189,8 @@ class PeopleGroups(models.Model):
 
 class Progress(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    id_ex = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
-    login = models.ForeignKey(People, models.DO_NOTHING, db_column='login')
+    exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
+    person = models.ForeignKey(People, models.DO_NOTHING, db_column='login')
     mean_pr = models.BooleanField()
     count_attempt = models.DecimalField(max_digits=3, decimal_places=0)
 
@@ -206,21 +205,21 @@ class Progress(models.Model):
 class Rules(models.Model):
     id_r = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     picture = models.TextField()
-    id_les = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
-    id_lex = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
+    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
+    lexeme = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
 
     class Meta:
         managed = False
         db_table = 'rules'
 
     def __str__(self):
-        return self.id_r
+        return str(self.id_r)
 
 
 class RulesLexemes(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    id_r = models.ForeignKey(Rules, models.DO_NOTHING, db_column='id_r')
-    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
+    rule = models.ForeignKey(Rules, models.DO_NOTHING, db_column='id_r')
+    lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
 
     class Meta:
         managed = False
@@ -234,10 +233,10 @@ class Replicas(models.Model):
     id_rep = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     time_start = models.TimeField()
     time_finish = models.TimeField()
-    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
-    id_med = models.ForeignKey(Media, models.DO_NOTHING, db_column='id_med')
-    id_ik = models.ForeignKey(Ik, models.DO_NOTHING, db_column='id_ik')
-    med_ik = models.TextField()
+    lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
+    media = models.ForeignKey(Medias, models.DO_NOTHING, db_column='id_med')
+    ik = models.ForeignKey(Ik, models.DO_NOTHING, db_column='id_ik')
+    link_ik = models.TextField()
 
     class Meta:
         managed = False
@@ -249,10 +248,10 @@ class Replicas(models.Model):
 
 class Tasks(models.Model):
     id_task = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    id_ex = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
+    exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
     num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    id_lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right')
-    type_med = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
+    lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right')
+    type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
     num_lex = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     count_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 
@@ -260,7 +259,7 @@ class Tasks(models.Model):
         managed = False
         db_table = 'tasks'
 
-    def __str__(self):
+    def __int__(self):
         return self.id_task
 
 
@@ -288,15 +287,15 @@ class TypesMed(models.Model):
 
 
 class Variants(models.Model):
-    id = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_task = models.ForeignKey(Tasks, models.DO_NOTHING, db_column='id_task')
-    id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
-    num_miss = models.DecimalField(max_digits=101, decimal_places=0, blank=True, null=True)
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    task = models.ForeignKey(Tasks, models.DO_NOTHING, db_column='id_task')
+    lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
+    num_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'variants'
-        unique_together = (('num_miss', 'id_task'),)
+        unique_together = (('num_miss', 'task'),)
 
     def __str__(self):
         return self.id

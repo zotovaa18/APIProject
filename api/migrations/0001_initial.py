@@ -127,7 +127,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Media',
+            name='Medias',
             fields=[
                 ('id_med', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
                 ('link_med', models.TextField()),
@@ -362,8 +362,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Variants',
             fields=[
-                ('id', models.DecimalField(decimal_places=0, max_digits=5, primary_key=True, serialize=False)),
-                ('num_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=101, null=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('num_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
             ],
             options={
                 'db_table': 'variants',

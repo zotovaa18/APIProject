@@ -1,12 +1,12 @@
 #from django.shortcuts import render, HttpResponse
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
 from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer, ReplicasReadSerializer, ReplicasWriteSerializer
-from .serializers import ExercisesSerializer, ProgressSerializer, TasksSerializer, VariantsSerializer, FavoritesSerializer, RulesLexemesSerializer, TypesExSerializer
+from .serializers import ExercisesWriteSerializer, ExercisesReadSerializer, ProgressSerializer, TasksReadSerializer, TasksWriteSerializer, VariantsWriteSerializer, VariantsReadSerializer, FavoritesSerializer, RulesLexemesSerializer, TypesExSerializer
 from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer
 from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
@@ -279,7 +279,7 @@ class LexemesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
 
 class MediaList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
-    queryset = Media.objects.all()
+    queryset = Medias.objects.all()
 
     def get_serializer_class(self):
         method = self.request.method
@@ -297,7 +297,7 @@ class MediaList(generics.GenericAPIView, mixins.ListModelMixin,
 
 class MediaDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin, mixins.DestroyModelMixin):
-    queryset = Media.objects.all()
+    queryset = Medias.objects.all()
     serializer_class = MediaWriteSerializer
     
     def get(self, request, pk):
@@ -447,8 +447,7 @@ class RulesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class RulesLexemesList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class RulesLexemesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = RulesLexemes.objects.all()
     serializer_class = RulesLexemesSerializer
 
@@ -504,7 +503,13 @@ class TypesExDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
 class ExercisesList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
     queryset = Exercises.objects.all()
-    serializer_class = ExercisesSerializer
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return ExercisesWriteSerializer
+        else:
+            return ExercisesReadSerializer
 
     def get(self, request):
         return self.list(request)
@@ -516,8 +521,9 @@ class ExercisesList(generics.GenericAPIView, mixins.ListModelMixin,
 class ExercisesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Exercises.objects.all()
-    serializer_class = ExercisesSerializer
-    
+
+    serializer_class = ExercisesWriteSerializer
+
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
 
@@ -558,7 +564,13 @@ class ProgressDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
 class TasksList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
     queryset = Tasks.objects.all()
-    serializer_class = TasksSerializer
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return TasksWriteSerializer
+        else:
+            return TasksReadSerializer
 
     def get(self, request):
         return self.list(request)
@@ -570,7 +582,7 @@ class TasksList(generics.GenericAPIView, mixins.ListModelMixin,
 class TasksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Tasks.objects.all()
-    serializer_class = TasksSerializer
+    serializer_class = TasksWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -584,7 +596,13 @@ class TasksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
 
 class VariantsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Variants.objects.all()
-    serializer_class = VariantsSerializer
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return VariantsWriteSerializer
+        else:
+            return VariantsReadSerializer
 
     def get(self, request):
         return self.list(request)
@@ -596,7 +614,7 @@ class VariantsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
 class VariantsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Variants.objects.all()
-    serializer_class = VariantsSerializer
+    serializer_class = VariantsWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
