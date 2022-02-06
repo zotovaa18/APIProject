@@ -30,7 +30,7 @@ class Exercises(models.Model):
         unique_together = (('id_les', 'num_ex'),)
 
     def __str__(self):
-        return self.id_ex
+        return '%s %s %s' % (str(self.id_les), str(self.num_ex), self.type_ex)
 
 
 class Favorites(models.Model):
@@ -260,7 +260,7 @@ class Tasks(models.Model):
         managed = False
         db_table = 'tasks'
 
-    def __str__(self):
+    def __int__(self):
         return self.id_task
 
 
@@ -288,10 +288,10 @@ class TypesMed(models.Model):
 
 
 class Variants(models.Model):
-    id = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     id_task = models.ForeignKey(Tasks, models.DO_NOTHING, db_column='id_task')
     id_lex = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
-    num_miss = models.DecimalField(max_digits=101, decimal_places=0, blank=True, null=True)
+    num_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 
     class Meta:
         managed = False

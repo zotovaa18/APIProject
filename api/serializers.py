@@ -164,10 +164,14 @@ class TypesExSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class ExercisesSerializer(serializers.ModelSerializer):
+class ExercisesWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Exercises
        fields = '__all__'
+
+
+class ExercisesReadSerializer(serializers.ModelSerializer):
+   class Meta(ExercisesWriteSerializer.Meta):
        depth = 2
 
 
@@ -178,17 +182,26 @@ class ProgressSerializer(serializers.ModelSerializer):
        depth = 2
 
 
-class TasksSerializer(serializers.ModelSerializer):
+
+class TasksWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Tasks
-       fields = '__all__'
+       fields = ('id_task', 'id_ex', 'num_task', 'id_lex_right', 'type_med', 'num_lex', 'count_miss')
+
+
+class TasksReadSerializer(serializers.ModelSerializer):
+   class Meta(TasksWriteSerializer.Meta):
        depth = 2
 
 
-class VariantsSerializer(serializers.ModelSerializer):
+class VariantsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Variants
-       fields = '__all__'
+       fields = ('id', 'id_task', 'id_lex', 'num_miss')
+
+
+class VariantsReadSerializer(serializers.ModelSerializer):
+   class Meta(VariantsWriteSerializer.Meta):
        depth = 2
 
 
