@@ -150,7 +150,7 @@ class IkSerializer(serializers.ModelSerializer):
 class ReplicasWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Replicas
-       fields = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'link_ik')
+       fields = ('id_rep', 'time_start', 'time_finish', 'id_lex', 'id_med', 'id_ik', 'med_ik')
 
 
 class ReplicasReadSerializer(serializers.ModelSerializer):
@@ -186,7 +186,7 @@ class ProgressSerializer(serializers.ModelSerializer):
 class TasksWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Tasks
-       fields = ('id_task', 'exercise', 'num_task', 'id_lex_right', 'type', 'num_lex', 'count_miss')
+       fields = ('id_task', 'id_ex', 'num_task', 'id_lex_right', 'type_med', 'num_lex', 'count_miss')
 
 
 class TasksReadSerializer(serializers.ModelSerializer):
@@ -197,7 +197,7 @@ class TasksReadSerializer(serializers.ModelSerializer):
 class VariantsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Variants
-       fields = ('id', 'task', 'lexeme', 'num_miss')
+       fields = ('id', 'id_task', 'id_lex', 'num_miss')
 
 
 class VariantsReadSerializer(serializers.ModelSerializer):

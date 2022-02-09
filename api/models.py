@@ -30,7 +30,7 @@ class Exercises(models.Model):
         unique_together = (('lesson', 'num_ex'),)
 
     def __str__(self):
-        return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type)
+        return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type_ex)
 
 
 class Favorites(models.Model):
@@ -87,16 +87,11 @@ class Lessons(models.Model):
     name_les = models.CharField(max_length=100)
     lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video')
-    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st',
-                                 default='Пусто', editable=False)
-    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st',
-                               default='Пусто', editable=False)
-    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st',
-                               default='Пусто', editable=False)
-    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st',
-                                  default='Пусто', editable=False)
-    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st',
-                                 default='Пусто', editable=False)
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st', default='Пусто', editable=False)
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st', default='Пусто', editable=False)
 
     class Meta:
         managed = False
@@ -160,7 +155,7 @@ class Medias(models.Model):
         unique_together = (('lexeme', 'type'),)
 
     def __str__(self):
-        return '%s %s' % (self.lexeme, self.type)
+        return '%s %s' % (self.id_lex, self.type)
 
 
 class People(models.Model):
@@ -169,7 +164,7 @@ class People(models.Model):
     name = models.CharField(max_length=40)
     group_user = models.ForeignKey('PeopleGroups', models.DO_NOTHING, db_column='group_user', blank=True, null=True)
     email = models.EmailField(max_length=40, unique=True)
-# id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
+    #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
     password_admin = models.CharField(max_length=20, blank=True, null=True)
 

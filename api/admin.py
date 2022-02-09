@@ -129,8 +129,8 @@ class TasksModel(admin.ModelAdmin):
 
 @admin.register(Variants)
 class VariantsModel(admin.ModelAdmin):
-    list_filter = ('id', 'task', 'lexeme', 'num_miss')
-    list_display = ('id', 'task', 'lexeme', 'num_miss')
+    list_filter = ('id', 'id_task', 'lexeme', 'num_miss')
+    list_display = ('id', 'id_task', 'lexeme', 'num_miss')
 
 
 @admin.register(Favorites)
