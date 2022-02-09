@@ -30,7 +30,7 @@ class Exercises(models.Model):
         unique_together = (('lesson', 'num_ex'),)
 
     def __str__(self):
-        return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type_ex)
+        return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type)
 
 
 class Favorites(models.Model):
@@ -155,7 +155,7 @@ class Medias(models.Model):
         unique_together = (('lexeme', 'type'),)
 
     def __str__(self):
-        return '%s %s' % (self.id_lex, self.type)
+        return '%s %s' % (self.lexeme, self.type)
 
 
 class People(models.Model):

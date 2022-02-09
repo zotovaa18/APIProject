@@ -6,7 +6,7 @@ from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Colle
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
 from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer, ReplicasReadSerializer, ReplicasWriteSerializer
-from .serializers import ExercisesWriteSerializer, ExercisesReadSerializer, ProgressSerializer, TasksReadSerializer, TasksWriteSerializer, VariantsWriteSerializer, VariantsReadSerializer, FavoritesSerializer, RulesLexemesSerializer, TypesExSerializer
+from .serializers import ExercisesWriteSerializer, ExercisesReadSerializer, ProgressSerializer, TasksReadSerializer, TasksWriteSerializer, VariantsWriteSerializer, VariantsReadSerializer, FavoritesReadSerializer, FavoritesWriteSerializer, RulesLexemesSerializer, TypesExSerializer
 from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer
 from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
@@ -626,10 +626,15 @@ class VariantsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Favorites.objects.all()
-    serializer_class = FavoritesSerializer
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return FavoritesWriteSerializer
+        else:
+            return FavoritesReadSerializer
 
     def get(self, request):
         return self.list(request)
@@ -641,7 +646,7 @@ class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin,
 class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Favorites.objects.all()
-    serializer_class = FavoritesSerializer
+    serializer_class = FavoritesWriteSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)

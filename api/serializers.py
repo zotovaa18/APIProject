@@ -205,10 +205,14 @@ class VariantsReadSerializer(serializers.ModelSerializer):
        depth = 2
 
 
-class FavoritesSerializer(serializers.ModelSerializer):
+class FavoritesWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Favorites
-       fields = '__all__'
+       fields = ('id', 'exercise', 'lexeme', 'media', 'person')
+
+
+class FavoritesReadSerializer(serializers.ModelSerializer):
+   class Meta(VariantsWriteSerializer.Meta):
        depth = 2
 
 
