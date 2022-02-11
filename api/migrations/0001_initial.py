@@ -322,6 +322,8 @@ class Migration(migrations.Migration):
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
                 ('num_lex', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
                 ('count_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
+                ('picture', models.TextField(blank=True, null=True)),
+                ('sound', models.TextField(blank=True, null=True))
             ],
             options={
                 'db_table': 'tasks',

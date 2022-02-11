@@ -1,7 +1,7 @@
 #from django.shortcuts import render, HttpResponse
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
@@ -11,6 +11,7 @@ from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer
 from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
 from .serializers import LecFillingReadSerializer, LecFillingWriteSerializer, RulesSerializer, WritewordsSerializer, RulesReadSerializer
+from .serializers import VowelSoundReadSerializer, VowelSoundWriteSerializer, ShowInfoAboutRulesSerializer, ShowInfoAboutWordsLettersSerializer
 '''from django.http import JsonResponse
 from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
@@ -277,8 +278,39 @@ class LexemesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
         return self.destroy(request, pk=pk)
 
 
-class MediaList(generics.GenericAPIView, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class VowelSoundList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = VowelSound.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return VowelSoundWriteSerializer
+        else:
+            return VowelSoundReadSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class VowelSoundDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin):
+    queryset = VowelSound.objects.all()
+    serializer_class = VowelSoundWriteSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
+
+class MediaList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Medias.objects.all()
 
     def get_serializer_class(self):
@@ -411,7 +443,13 @@ class RulesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
             return RulesReadSerializer
 
     def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+        id_v = request.GET.get("id_v")
+        if id_v is not None:
+            cer_video = RulesLexemes.objects.filter(id_v=id_v)
+            serializer = RulesLexemesSerializer(cer_video, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -667,6 +705,47 @@ class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
 #     def get(self, request):
 #         return self.list(request)
 
+
+class ShowInfoAboutRulesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = ShowInfoAboutRules.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return ShowInfoAboutRulesSerializer
+
+    def get(self, request, *args, **kwargs):
+        id_ex = request.GET.get("id_ex")
+        id_r = request.GET.get("id_r")
+        if id_ex is not None:
+            show_info = ShowInfoAboutRules.objects.filter(id_ex=id_ex)
+            serializer = ShowInfoAboutRulesSerializer(show_info, many=True)
+            return Response(serializer.data)
+        elif id_r is not None:
+            show_info = ShowInfoAboutRules.objects.filter(id_r=id_r)
+            serializer = ShowInfoAboutRulesSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+
+# писать /api/showinfoaboutrules/?id_ex=0
+
+
+class ShowInfoAboutWordsLettersList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = ShowInfoAboutWordsLetters.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return ShowInfoAboutWordsLettersSerializer
+
+    def get(self, request, *args, **kwargs):
+        id_ex = request.GET.get("id_ex")
+        if id_ex is not None:
+            show_info = ShowInfoAboutWordsLetters.objects.filter(id_ex=id_ex)
+            serializer = ShowInfoAboutWordsLettersSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+# Писать /api/showinfoaboutwordsletters/?id_ex=1
 
 class NewlettersList(APIView):
     def get(self, request):

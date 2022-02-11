@@ -8,11 +8,11 @@ Created on Fri Nov  5 22:20:50 2021
 from rest_framework import serializers
 
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
-
+from .models import ShowInfoAboutWordsLetters
 
 class PeopleGroupsSerializer(serializers.ModelSerializer):
    class Meta:
@@ -186,7 +186,7 @@ class ProgressSerializer(serializers.ModelSerializer):
 class TasksWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Tasks
-       fields = ('id_task', 'id_ex', 'num_task', 'id_lex_right', 'type_med', 'num_lex', 'count_miss')
+       fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound')
 
 
 class TasksReadSerializer(serializers.ModelSerializer):
@@ -197,12 +197,23 @@ class TasksReadSerializer(serializers.ModelSerializer):
 class VariantsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Variants
-       fields = ('id', 'id_task', 'id_lex', 'num_miss')
+       fields = ('id', 'task', 'lexeme', 'num_miss')
 
 
 class VariantsReadSerializer(serializers.ModelSerializer):
    class Meta(VariantsWriteSerializer.Meta):
        depth = 2
+
+
+class VowelSoundWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = VowelSound
+       fields = ('id', 'lexeme', 'transcr1', 'transcr2', 'sound1', 'sound2')
+
+
+class VowelSoundReadSerializer(serializers.ModelSerializer):
+   class Meta(VowelSoundWriteSerializer.Meta):
+       depth = 1
 
 
 class FavoritesWriteSerializer(serializers.ModelSerializer):
@@ -214,6 +225,20 @@ class FavoritesWriteSerializer(serializers.ModelSerializer):
 class FavoritesReadSerializer(serializers.ModelSerializer):
    class Meta(VariantsWriteSerializer.Meta):
        depth = 2
+
+
+class ShowInfoAboutRulesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShowInfoAboutRules
+        fields = ('name_les', 'id_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
+                   'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
+
+
+class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShowInfoAboutWordsLetters
+        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
+                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
 
 
 class NewlettersSerializer(serializers.ModelSerializer):

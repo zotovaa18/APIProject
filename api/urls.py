@@ -14,6 +14,7 @@ from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, Repl
 from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
 from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
 from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList, StatusList, StatusDetails
+from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList
 #country_list, country_details LexemesList
 
 
@@ -51,16 +52,21 @@ urlpatterns = [
     path('api/replicas/<int:pk>/', ReplicasDetails.as_view()),
     path('api/tasks/', TasksList.as_view()),
     path('api/tasks/<int:pk>/', TasksDetails.as_view()),
-    path('api/typesEx/', TypesExList.as_view()),
-    path('api/typesEx/<int:pk>/', TypesExDetails.as_view()),
-    path('api/typesLex/', TypesLexList.as_view()),
-    path('api/typesLex/<int:pk>/', TypesLexDetails.as_view()),
-    path('api/typesMed/', TypesMedList.as_view()),
-    path('api/typesMed/<int:pk>/', TypesMedDetails.as_view()),
+    path('api/typesex/', TypesExList.as_view()),
+    path('api/typesex/<int:pk>/', TypesExDetails.as_view()),
+    path('api/typeslex/', TypesLexList.as_view()),
+    path('api/typeslex/<int:pk>/', TypesLexDetails.as_view()),
+    path('api/typesmed/', TypesMedList.as_view()),
+    path('api/typesmed/<int:pk>/', TypesMedDetails.as_view()),
     path('api/status/', StatusList.as_view()),
     path('api/status/<str:pk>/', StatusDetails.as_view()),
     path('api/variants/', VariantsList.as_view()),
     path('api/variants/<int:pk>/', VariantsDetails.as_view()),
+    path('api/vowelsound/', VowelSoundList.as_view()),
+    path('api/vowelsound/<int:pk>/', VowelSoundDetails.as_view()),
+    path('api/showinfoaboutrules/', ShowInfoAboutRulesList.as_view()),
+    path('api/showinfoaboutwordsletters/', ShowInfoAboutWordsLettersList.as_view()),
+
     path('api/newletters/', NewlettersList.as_view()),
     path('api/newwords/', NewwordsList.as_view()),
     path('api/newphrases/', NewphrasesList.as_view()),

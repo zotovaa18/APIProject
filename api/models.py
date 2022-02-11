@@ -86,7 +86,7 @@ class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
     lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
-    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video')
+    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video', blank=True, null=True)
     video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
     lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
     phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)
@@ -205,6 +205,8 @@ class Progress(models.Model):
 class Rules(models.Model):
     id_r = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     picture = models.TextField()
+    side = models.CharField(max_length=5)
+    sound_rule = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
     lexeme = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
 
@@ -254,6 +256,8 @@ class Tasks(models.Model):
     type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
     num_lex = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     count_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
+    picture = models.TextField(blank=True, null=True)
+    sound = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -299,6 +303,61 @@ class Variants(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class VowelSound(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    lexeme = models.OneToOneField(Lexemes, models.DO_NOTHING, db_column='id_lex')
+    transcr1 = models.CharField(max_length=2)
+    transcr2 = models.CharField(max_length=2)
+    sound1 = models.TextField()
+    sound2 = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'vowel_sound'
+
+
+class ShowInfoAboutRules(models.Model):
+    name_les = models.CharField(max_length=100)
+    id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    id_r = models.DecimalField(max_digits=5, decimal_places=0)
+    id_task = models.TextField()
+    picture = models.TextField()
+    sound_rule = models.TextField()
+    side = models.CharField(max_length=5)
+    mean_lex = models.TextField()
+    var_lex = models.TextField()
+    var_transcr = models.TextField()
+    var_sound = models.TextField()
+    var_pic = models.TextField()
+    mean_type_ex = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'show_info_about_rules'
+
+
+class ShowInfoAboutWordsLetters(models.Model):
+    name_les = models.CharField(max_length=100)
+    id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    id_task = models.TextField()
+    num_task = models.TextField()
+    mean_lex1 = models.TextField()
+    sound1 = models.TextField()
+    mean_lex2 = models.TextField()
+    sound2 = models.TextField()
+    transcr1 = models.TextField()
+    transcr2 = models.TextField()
+    stress = models.DecimalField(max_digits=2, decimal_places=0)
+    pic = models.TextField()
+    mean_type_ex = models.TextField()
+    var = models.TextField()
+    miss = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'show_info_about_words_letters'
 
 
 class Newletters(models.Model):

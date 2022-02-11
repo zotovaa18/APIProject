@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
-from .models import Exercises, Progress, Tasks, Variants, Favorites, Status
+from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
+from .models import Exercises, Progress, Tasks, Variants, Favorites, Status,  VowelSound, ShowInfoAboutRules
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 
@@ -93,8 +93,8 @@ admin.site.register(Rules)
 
 
 class RulesModel(admin.ModelAdmin):
-    list_filter = ('id_r', 'picture', 'lesson', 'lexeme')
-    list_display = ('id_r', 'picture', 'lesson', 'lexeme')
+    list_filter = ('id_r', 'picture', 'side', 'lesson', 'lexeme')
+    list_display = ('id_r', 'picture', 'side', 'lesson', 'lexeme')
 
 
 admin.site.register(RulesLexemes)
@@ -123,8 +123,8 @@ class ProgressModel(admin.ModelAdmin):
 
 @admin.register(Tasks)
 class TasksModel(admin.ModelAdmin):
-    list_filter = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss')
-    list_display = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss')
+    list_filter = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound')
+    list_display = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound')
 
 
 @admin.register(Variants)
@@ -137,6 +137,28 @@ class VariantsModel(admin.ModelAdmin):
 class FavoritesModel(admin.ModelAdmin):
     list_filter = ('id', 'exercise', 'lexeme', 'media', 'person')
     list_display = ('id', 'exercise', 'lexeme', 'media', 'person')
+
+
+@admin.register(VowelSound)
+class  VowelSoundModel(admin.ModelAdmin):
+    list_filter = ('id', 'lexeme', 'transcr1', 'transcr2', 'sound1', 'sound2')
+    list_display = ('id', 'lexeme', 'transcr1', 'transcr2', 'sound1', 'sound2')
+
+
+@admin.register(ShowInfoAboutRules)
+class  ShowInfoAboutRulesModel(admin.ModelAdmin):
+    list_filter = ('name_les', 'id_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
+                   'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
+    list_display = ('name_les', 'id_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
+                   'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
+
+
+@admin.register(ShowInfoAboutWordsLetters)
+class  ShowInfoAboutWordsLettersModel(admin.ModelAdmin):
+    list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
+                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+    list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
+                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
 
 
 @admin.register(Newletters)
