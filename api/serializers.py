@@ -12,7 +12,7 @@ from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexem
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
-from .models import ShowInfoAboutWordsLetters
+from .models import ShowInfoAboutWordsLetters, ShowInfoAboutPhrase
 
 class PeopleGroupsSerializer(serializers.ModelSerializer):
    class Meta:
@@ -150,7 +150,7 @@ class IkSerializer(serializers.ModelSerializer):
 class ReplicasWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Replicas
-       fields = ('id_rep', 'time_start', 'time_finish', 'id_lex', 'id_med', 'id_ik', 'med_ik')
+       fields = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'med_ik', 'symbol')
 
 
 class ReplicasReadSerializer(serializers.ModelSerializer):
@@ -186,7 +186,8 @@ class ProgressSerializer(serializers.ModelSerializer):
 class TasksWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Tasks
-       fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound')
+       fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound',
+                 'replic','pronunciation')
 
 
 class TasksReadSerializer(serializers.ModelSerializer):
@@ -202,7 +203,7 @@ class VariantsWriteSerializer(serializers.ModelSerializer):
 
 class VariantsReadSerializer(serializers.ModelSerializer):
    class Meta(VariantsWriteSerializer.Meta):
-       depth = 2
+       depth = 3
 
 
 class VowelSoundWriteSerializer(serializers.ModelSerializer):
@@ -227,6 +228,7 @@ class FavoritesReadSerializer(serializers.ModelSerializer):
        depth = 2
 
 
+
 class ShowInfoAboutRulesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutRules
@@ -239,6 +241,13 @@ class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
         model = ShowInfoAboutWordsLetters
         fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
                    'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+
+
+class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShowInfoAboutPhrase
+        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'var', 'miss',
+                  'mean_type_ex')
 
 
 class NewlettersSerializer(serializers.ModelSerializer):

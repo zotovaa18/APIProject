@@ -14,7 +14,7 @@ from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, Repl
 from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
 from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
 from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList, StatusList, StatusDetails
-from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList
+from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList, ShowInfoAboutPhraseList
 #country_list, country_details LexemesList
 
 
@@ -66,6 +66,7 @@ urlpatterns = [
     path('api/vowelsound/<int:pk>/', VowelSoundDetails.as_view()),
     path('api/showinfoaboutrules/', ShowInfoAboutRulesList.as_view()),
     path('api/showinfoaboutwordsletters/', ShowInfoAboutWordsLettersList.as_view()),
+    path('api/showinfoaboutphrase/', ShowInfoAboutPhraseList.as_view()),
 
     path('api/newletters/', NewlettersList.as_view()),
     path('api/newwords/', NewwordsList.as_view()),

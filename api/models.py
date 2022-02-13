@@ -155,7 +155,7 @@ class Medias(models.Model):
         unique_together = (('lexeme', 'type'),)
 
     def __str__(self):
-        return '%s %s' % (self.lexeme, self.type)
+        return '%s %s %s' % (str(self.id_med), self.lexeme, self.type)
 
 
 class People(models.Model):
@@ -238,26 +238,28 @@ class Replicas(models.Model):
     lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
     media = models.ForeignKey(Medias, models.DO_NOTHING, db_column='id_med')
     ik = models.ForeignKey(Ik, models.DO_NOTHING, db_column='id_ik')
-    link_ik = models.TextField()
-
+    med_ik = models.TextField()
+    symbol = models.CharField(max_length=1)
     class Meta:
         managed = False
         db_table = 'replicas'
 
     def __str__(self):
-        return self.id_rep
+        return '%s %s %s' % (str(self.id_rep), self.lexeme, self.symbol)
 
 
 class Tasks(models.Model):
     id_task = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
     num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right')
+    lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right', blank=True, null=True)
     type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
     num_lex = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     count_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     picture = models.TextField(blank=True, null=True)
     sound = models.TextField(blank=True, null=True)
+    replic = models.ForeignKey('Replicas', models.DO_NOTHING, db_column='id_rep',  blank=True, null=True)
+    pronunciation = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -358,6 +360,24 @@ class ShowInfoAboutWordsLetters(models.Model):
     class Meta:
         managed = False
         db_table = 'show_info_about_words_letters'
+
+
+class ShowInfoAboutPhrase(models.Model):
+    name_les = models.CharField(max_length=100)
+    id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    id_task = models.TextField()
+    num_task = models.TextField()
+    replica = models.TextField()
+    ik = models.TextField()
+    pic_video = models.TextField(db_column='pic/video')
+    sound2 = models.TextField()
+    var = models.TextField()
+    miss = models.TextField()
+    mean_type_ex = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'show_info_about_phrase'
 
 
 class Newletters(models.Model):

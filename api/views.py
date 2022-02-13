@@ -1,5 +1,5 @@
 #from django.shortcuts import render, HttpResponse
-from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
+from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons, ShowInfoAboutPhrase
 from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
@@ -12,6 +12,7 @@ from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer,
 from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
 from .serializers import LecFillingReadSerializer, LecFillingWriteSerializer, RulesSerializer, WritewordsSerializer, RulesReadSerializer
 from .serializers import VowelSoundReadSerializer, VowelSoundWriteSerializer, ShowInfoAboutRulesSerializer, ShowInfoAboutWordsLettersSerializer
+from .serializers import ShowInfoAboutPhraseSerializer
 '''from django.http import JsonResponse
 from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
@@ -652,7 +653,7 @@ class VariantsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
 class VariantsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Variants.objects.all()
-    serializer_class = VariantsWriteSerializer
+    serializer_class = VariantsReadSerializer
     
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -746,6 +747,25 @@ class ShowInfoAboutWordsLettersList(generics.GenericAPIView, mixins.ListModelMix
         else:
             return self.list(request, *args, **kwargs)
 # Писать /api/showinfoaboutwordsletters/?id_ex=1
+
+
+class ShowInfoAboutPhraseList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = ShowInfoAboutPhrase.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return ShowInfoAboutPhraseSerializer
+
+    def get(self, request, *args, **kwargs):
+        id_ex = request.GET.get("id_ex")
+        if id_ex is not None:
+            show_info = ShowInfoAboutPhrase.objects.filter(id_ex=id_ex)
+            serializer = ShowInfoAboutPhraseSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+# Писать /api/showinfoaboutphrase/?id_ex=1
+
 
 class NewlettersList(APIView):
     def get(self, request):
