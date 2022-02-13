@@ -157,10 +157,10 @@ class  ShowInfoAboutRulesModel(admin.ModelAdmin):
 
 @admin.register(ShowInfoAboutWordsLetters)
 class  ShowInfoAboutWordsLettersModel(admin.ModelAdmin):
-    list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
-                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
-    list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
-                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+    list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+    list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
 
 @admin.register(ShowInfoAboutPhrase)
 class  ShowInfoAboutPhraseModel(admin.ModelAdmin):

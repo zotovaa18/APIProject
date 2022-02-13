@@ -239,8 +239,8 @@ class ShowInfoAboutRulesSerializer(serializers.ModelSerializer):
 class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutWordsLetters
-        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'sound2', 'transcr1',
-                   'transcr2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
 
 
 class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
