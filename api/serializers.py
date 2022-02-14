@@ -240,13 +240,13 @@ class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutWordsLetters
         fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
-                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'variant', 'miss')
 
 
 class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutPhrase
-        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'var', 'miss',
+        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
                   'mean_type_ex')
 
 

@@ -158,15 +158,15 @@ class  ShowInfoAboutRulesModel(admin.ModelAdmin):
 @admin.register(ShowInfoAboutWordsLetters)
 class  ShowInfoAboutWordsLettersModel(admin.ModelAdmin):
     list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
-                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'variant', 'miss')
     list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
-                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'var', 'miss')
+                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'variant', 'miss')
 
 @admin.register(ShowInfoAboutPhrase)
 class  ShowInfoAboutPhraseModel(admin.ModelAdmin):
-    list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'var', 'miss',
+    list_filter = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
                    'mean_type_ex')
-    list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'var', 'miss',
+    list_display = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
                    'mean_type_ex')
 
 

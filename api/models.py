@@ -354,7 +354,7 @@ class ShowInfoAboutWordsLetters(models.Model):
     stress = models.DecimalField(max_digits=2, decimal_places=0)
     pic = models.TextField()
     mean_type_ex = models.TextField()
-    var = models.TextField()
+    variant = models.TextField()
     miss = models.TextField()
 
     class Meta:
@@ -371,7 +371,7 @@ class ShowInfoAboutPhrase(models.Model):
     ik = models.TextField()
     pic_video = models.TextField(db_column='pic/video')
     sound2 = models.TextField()
-    var = models.TextField()
+    variant = models.TextField()
     miss = models.TextField()
     mean_type_ex = models.TextField()
 

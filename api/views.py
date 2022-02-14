@@ -22,10 +22,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework import generics
 from rest_framework import mixins
+import coreapi
+from rest_framework.schemas import AutoSchema
 from rest_framework import viewsets
 
 # Create your views here.
-
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
