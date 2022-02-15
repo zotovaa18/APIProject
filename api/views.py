@@ -28,8 +28,20 @@ from rest_framework import viewsets
 
 # Create your views here.
 
+
+from rest_framework import viewsets
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from django.utils.decorators import method_decorator
+
+# @method_decorator(name='list', decorator=swagger_auto_schema(
+#     operation_description="description from swagger_auto_schema via method_decorator"
+# ))
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
+    """retrieve:
+        """
     queryset = Countries.objects.all()
     serializer_class = CountriesSerializer
 
