@@ -9,11 +9,11 @@ Created on Fri Nov  5 01:53:05 2021
 from django.urls import path
 from .views import CountryList, CountryDetails, PeopleGroupsList, PeopleGroupsDetails, ExercisesList, ExercisesDetails, ProgressDetails
 from .views import FavoritesList, IkList, IkDetails, LecFillingList, LessonBlocksList, LessonBlocksDetails, LecFillingDetails,  RulesLexemesDetails
-from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList
+from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList, StatusList, StatusDetails
 from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, ReplicasList, ReplicasDetails, TasksList, TasksDetails
 from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
-from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
-from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList, StatusList, StatusDetails
+#from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
+#from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList
 from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList, ShowInfoAboutPhraseList
 #country_list, country_details LexemesList
 
@@ -55,9 +55,9 @@ urlpatterns = [
     path('api/typesex/', TypesExList.as_view()),
     path('api/typesex/<int:pk>/', TypesExDetails.as_view()),
     path('api/typeslex/', TypesLexList.as_view()),
-    path('api/typeslex/<int:pk>/', TypesLexDetails.as_view()),
+    path('api/typeslex/<str:pk>/', TypesLexDetails.as_view()),
     path('api/typesmed/', TypesMedList.as_view()),
-    path('api/typesmed/<int:pk>/', TypesMedDetails.as_view()),
+    path('api/typesmed/<str:pk>/', TypesMedDetails.as_view()),
     path('api/status/', StatusList.as_view()),
     path('api/status/<str:pk>/', StatusDetails.as_view()),
     path('api/variants/', VariantsList.as_view()),
@@ -68,16 +68,16 @@ urlpatterns = [
     path('api/showinfoaboutwordsletters/', ShowInfoAboutWordsLettersList.as_view()),
     path('api/showinfoaboutphrase/', ShowInfoAboutPhraseList.as_view()),
 
-    path('api/newletters/', NewlettersList.as_view()),
-    path('api/newwords/', NewwordsList.as_view()),
-    path('api/newphrases/', NewphrasesList.as_view()),
-    path('api/matchsyllablessound/', MatchsyllablessoundList.as_view()),
-    path('api/collectwordsletters/', CollectwordslettersList.as_view()),
-    path('api/missingletter/', MissingletterList.as_view()),
-    path('api/pronunciationwords/', PronunciationwordsList.as_view()),
-    path('api/recoverphrases/', RecoverphrasesList.as_view()),
-    path('api/selectwords/', SelectwordsList.as_view()),
-    path('api/wordpicturematch/', WordpicturematchList.as_view()),
-    path('api/wordpictureselect/', WordpictureselectList.as_view()),
-    path('api/writewords/', WritewordsList.as_view()),
+    # path('api/newletters/', NewlettersList.as_view()),
+    # path('api/newwords/', NewwordsList.as_view()),
+    # path('api/newphrases/', NewphrasesList.as_view()),
+    # path('api/matchsyllablessound/', MatchsyllablessoundList.as_view()),
+    # path('api/collectwordsletters/', CollectwordslettersList.as_view()),
+    # path('api/missingletter/', MissingletterList.as_view()),
+    # path('api/pronunciationwords/', PronunciationwordsList.as_view()),
+    # path('api/recoverphrases/', RecoverphrasesList.as_view()),
+    # path('api/selectwords/', SelectwordsList.as_view()),
+    # path('api/wordpicturematch/', WordpicturematchList.as_view()),
+    # path('api/wordpictureselect/', WordpictureselectList.as_view()),
+    # path('api/writewords/', WritewordsList.as_view()),
 ]

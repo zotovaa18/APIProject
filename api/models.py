@@ -103,7 +103,7 @@ class Lessons(models.Model):
 
 
 class TypesLex(models.Model):
-    type_lex = models.CharField(primary_key=True, max_length=5)
+    type_lex = models.CharField(primary_key=True, max_length=6)
 
     class Meta:
         managed = False
@@ -380,160 +380,160 @@ class ShowInfoAboutPhrase(models.Model):
         db_table = 'show_info_about_phrase'
 
 
-class Newletters(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    mean_lex = models.CharField(max_length=100)
-    med_type = models.CharField(max_length=11)
-    link_med = models.TextField()
-    
-    class Meta:
-        managed = False
-        db_table = 'new_letters'
-
-
-class Newwords(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    mean_lex = models.CharField(max_length=100)
-    med_type = models.CharField(max_length=11)
-    link_med = models.TextField()
-    
-    class Meta:
-        managed = False
-        db_table = 'new_words'    
-
-
-class Newphrases(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    mean_lex = models.CharField(max_length=100)
-    med_type = models.CharField(max_length=11)
-    link_med = models.TextField()
-    
-    class Meta:
-        managed = False
-        db_table = 'new_phrases'  
-
-
-class Matchsyllablessound(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    mean_lex = models.CharField(max_length=100)
-    right_sound = models.TextField()
-    wrong_sound = models.TextField()
-    
-    class Meta:
-        managed = False
-        db_table = 'match_syllables_sound'  
-
-
-class Collectwordsletters(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    word = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'collect_words_letters'          
-        
-
-class Missingletter(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    word = models.CharField(max_length=100)
-    num_lex = models.DecimalField(max_digits=1, decimal_places=0)
-    count_miss = models.DecimalField(max_digits=50, decimal_places=0)
-    num_miss = models.DecimalField(max_digits=101, decimal_places=0)
-    letter = models.CharField(max_length=100)
-    
-    class Meta:
-        managed = False
-        db_table = 'missing_letter'  
-
-
-class Pronunciationwords(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    mean_lex = models.CharField(max_length=100)
-    right_sound = models.TextField()
-    wrong_sound = models.TextField()
-    
-    class Meta:
-        managed = False
-        db_table = 'pronunciation_words'          
-
-
-class Recoverphrases(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    word = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'recover_phrases'  
-
-
-class Selectwords(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    phrase = models.CharField(max_length=100)
-    num_lex = models.DecimalField(max_digits=1, decimal_places=0)
-    count_miss = models.DecimalField(max_digits=50, decimal_places=0)
-    num_miss = models.DecimalField(max_digits=101, decimal_places=0)
-    word = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'select_words'  
-
-
-class Wordpicturematch(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    var1_lex = models.CharField(max_length=100)
-    var1_pic = models.TextField()
-    var_lex = models.CharField(max_length=100)
-    var_pic = models.TextField()    
-    
-    class Meta:
-        managed = False
-        db_table = 'word_picture_match'          
-
-
-class Wordpictureselect(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    right_lex = models.CharField(max_length=100)
-    right_pic = models.TextField()
-    wrong_lex = models.CharField(max_length=100)
-    wrong_pic = models.TextField()    
-    
-    class Meta:
-        managed = False
-        db_table = 'word_picture_select'          
-
-
-class Writewords(models.Model):
-    id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
-    id_ex = models.DecimalField(max_digits=5, decimal_places=0)
-    num_task = models.DecimalField(max_digits=2, decimal_places=0)
-    phrase = models.CharField(max_length=100)
-    num_lex = models.DecimalField(max_digits=1, decimal_places=0)
-    count_miss = models.DecimalField(max_digits=50, decimal_places=0)
-    word = models.CharField(max_length=100)   
-    
-    class Meta:
-        managed = False
-        db_table = 'write_words'
+# class Newletters(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     mean_lex = models.CharField(max_length=100)
+#     med_type = models.CharField(max_length=11)
+#     link_med = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'new_letters'
+#
+#
+# class Newwords(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     mean_lex = models.CharField(max_length=100)
+#     med_type = models.CharField(max_length=11)
+#     link_med = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'new_words'
+#
+#
+# class Newphrases(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     mean_lex = models.CharField(max_length=100)
+#     med_type = models.CharField(max_length=11)
+#     link_med = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'new_phrases'
+#
+#
+# class Matchsyllablessound(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     mean_lex = models.CharField(max_length=100)
+#     right_sound = models.TextField()
+#     wrong_sound = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'match_syllables_sound'
+#
+#
+# class Collectwordsletters(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     word = models.CharField(max_length=100)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'collect_words_letters'
+#
+#
+# class Missingletter(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     word = models.CharField(max_length=100)
+#     num_lex = models.DecimalField(max_digits=1, decimal_places=0)
+#     count_miss = models.DecimalField(max_digits=50, decimal_places=0)
+#     num_miss = models.DecimalField(max_digits=101, decimal_places=0)
+#     letter = models.CharField(max_length=100)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'missing_letter'
+#
+#
+# class Pronunciationwords(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     mean_lex = models.CharField(max_length=100)
+#     right_sound = models.TextField()
+#     wrong_sound = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'pronunciation_words'
+#
+#
+# class Recoverphrases(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     word = models.CharField(max_length=100)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'recover_phrases'
+#
+#
+# class Selectwords(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     phrase = models.CharField(max_length=100)
+#     num_lex = models.DecimalField(max_digits=1, decimal_places=0)
+#     count_miss = models.DecimalField(max_digits=50, decimal_places=0)
+#     num_miss = models.DecimalField(max_digits=101, decimal_places=0)
+#     word = models.CharField(max_length=100)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'select_words'
+#
+#
+# class Wordpicturematch(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     var1_lex = models.CharField(max_length=100)
+#     var1_pic = models.TextField()
+#     var_lex = models.CharField(max_length=100)
+#     var_pic = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'word_picture_match'
+#
+#
+# class Wordpictureselect(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     right_lex = models.CharField(max_length=100)
+#     right_pic = models.TextField()
+#     wrong_lex = models.CharField(max_length=100)
+#     wrong_pic = models.TextField()
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'word_picture_select'
+#
+#
+# class Writewords(models.Model):
+#     id_task = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+#     id_ex = models.DecimalField(max_digits=5, decimal_places=0)
+#     num_task = models.DecimalField(max_digits=2, decimal_places=0)
+#     phrase = models.CharField(max_length=100)
+#     num_lex = models.DecimalField(max_digits=1, decimal_places=0)
+#     count_miss = models.DecimalField(max_digits=50, decimal_places=0)
+#     word = models.CharField(max_length=100)
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'write_words'

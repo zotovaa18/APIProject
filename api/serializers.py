@@ -10,8 +10,8 @@ from rest_framework import serializers
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
-from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
-from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
+#from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
+#from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .models import ShowInfoAboutWordsLetters, ShowInfoAboutPhrase
 
 class PeopleGroupsSerializer(serializers.ModelSerializer):
@@ -250,73 +250,73 @@ class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
                   'mean_type_ex')
 
 
-class NewlettersSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Newletters 
-       fields = '__all__'
-
-
-class NewwordsSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Newwords 
-       fields = '__all__'       
-
-
-class NewphrasesSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Newphrases 
-       fields = '__all__'
-
-
-class MatchsyllablessoundSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Matchsyllablessound
-       fields = '__all__'        
-
-
-class CollectwordslettersSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Collectwordsletters
-       fields = '__all__'            
-
-
-class MissingletterSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Missingletter
-       fields = '__all__'  
-
-
-class PronunciationwordsSerializer(serializers.ModelSerializer):
-   class Meta:
-        model = Pronunciationwords
-        fields = '__all__'
-
-
-class RecoverphrasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Recoverphrases
-        fields = '__all__'  
-
-
-class SelectwordsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Selectwords
-        fields = '__all__'  
-
-
-class WordpicturematchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wordpicturematch
-        fields = '__all__'              
-
-
-class WordpictureselectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wordpictureselect
-        fields = '__all__'     
-
-
-class WritewordsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Writewords
-        fields = '__all__'
+# class NewlettersSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Newletters
+#        fields = '__all__'
+#
+#
+# class NewwordsSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Newwords
+#        fields = '__all__'
+#
+#
+# class NewphrasesSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Newphrases
+#        fields = '__all__'
+#
+#
+# class MatchsyllablessoundSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Matchsyllablessound
+#        fields = '__all__'
+#
+#
+# class CollectwordslettersSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Collectwordsletters
+#        fields = '__all__'
+#
+#
+# class MissingletterSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Missingletter
+#        fields = '__all__'
+#
+#
+# class PronunciationwordsSerializer(serializers.ModelSerializer):
+#    class Meta:
+#         model = Pronunciationwords
+#         fields = '__all__'
+#
+#
+# class RecoverphrasesSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Recoverphrases
+#         fields = '__all__'
+#
+#
+# class SelectwordsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Selectwords
+#         fields = '__all__'
+#
+#
+# class WordpicturematchSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Wordpicturematch
+#         fields = '__all__'
+#
+#
+# class WordpictureselectSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Wordpictureselect
+#         fields = '__all__'
+#
+#
+# class WritewordsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Writewords
+#         fields = '__all__'

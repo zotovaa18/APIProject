@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons, ShowInfoAboutPhrase
 from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
 from .models import Exercises, Progress, Tasks, Variants, Favorites, Status,  VowelSound, ShowInfoAboutRules
-from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
-from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
+#from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
+#from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 
 
 # Register your models here.
@@ -170,7 +170,7 @@ class  ShowInfoAboutPhraseModel(admin.ModelAdmin):
                    'mean_type_ex')
 
 
-
+'''
 @admin.register(Newletters)
 class NewlettersModel(admin.ModelAdmin):
     list_filter = ('id_task', 'id_ex', 'num_task', 'mean_lex', 'med_type', 'link_med')
@@ -241,3 +241,4 @@ class Pronunciationwords(admin.ModelAdmin):
 class Writewords(admin.ModelAdmin):
     list_filter = ('id_task', 'id_ex', 'num_task', 'phrase', 'num_lex', 'count_miss', 'word')
     list_display = ('id_task', 'id_ex', 'num_task', 'phrase', 'num_lex', 'count_miss', 'word')
+'''

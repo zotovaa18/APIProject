@@ -4,6 +4,7 @@ from rest_framework.decorators import APIView
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import viewsets
+from drf_yasg.utils import swagger_auto_schema
 
 from .models import Video
     #, VideoCommands
@@ -14,27 +15,46 @@ from .serializers import VideoSerializer\
 
 
 class VideoList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+     get:
+       возвращает данные о всех видео и о командах, из которых состоит видео
+     post:
+       добавляет новые данные о видео. Команды запоминаться в массив. Писать '{"бежать", "стоять"}
+    """
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
+    @swagger_auto_schema(operation_summary='получить список данных для видео')
     def get(self, request):
         return self.list(request)
 
+    @swagger_auto_schema(operation_summary='добавить новые данные для видео')
     def post(self, request):
         return self.create(request)
 
 
 class VideoDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin):
+    """
+     get:
+       возвращает данные о конкретном видео с командами
+     put:
+       изменяет данные о конкретном видео с командами. Команды запоминаться в массив. Писать '{"бежать", "стоять"}'
+     delete:
+       удаляет данные о видео и командах
+    """
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
+    @swagger_auto_schema(operation_summary='получить данные о конкретном видео по id')
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
 
+    @swagger_auto_schema(operation_summary='изменить данные о конкретном видео')
     def put(self, request, pk):
         return self.update(request, pk=pk)
 
+    @swagger_auto_schema(operation_summary='удалить данные о конкретном видео')
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
