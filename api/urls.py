@@ -6,7 +6,7 @@ Created on Fri Nov  5 01:53:05 2021
 """
 
 
-from django.urls import path
+from django.urls import path, include
 from .views import CountryList, CountryDetails, PeopleGroupsList, PeopleGroupsDetails, ExercisesList, ExercisesDetails, ProgressDetails
 from .views import FavoritesList, IkList, IkDetails, LecFillingList, LessonBlocksList, LessonBlocksDetails, LecFillingDetails,  RulesLexemesDetails
 from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList, StatusList, StatusDetails
@@ -16,10 +16,17 @@ from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, T
 #from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList
 from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList, ShowInfoAboutPhraseList
 #country_list, country_details LexemesList
+from .views import *
 
+from rest_framework import routers
+
+from api import views
+
+# router = routers.DefaultRouter()
+# router.register(r'lessons', views.LessonsDetails)
 
 urlpatterns = [
-
+    # path('api/', include(router.urls)),
     path('api/countries/', CountryList.as_view()),
     path('api/countries/<str:pk>/', CountryDetails.as_view()),
     path('api/peoplegroups/', PeopleGroupsList.as_view()),

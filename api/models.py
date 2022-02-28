@@ -21,7 +21,7 @@ class Countries(models.Model):
 class Exercises(models.Model):
     id_ex = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-    lesson = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    lesson = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les', related_name='exercises_info')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
 
     class Meta:
@@ -70,6 +70,9 @@ class LessonBlocks(models.Model):
     def __str__(self):
         return str(self.id_lb)
 
+    @property
+    def lesson(self):
+        return self.lesson_set.all()
 
 class Status(models.Model):
     id_status = models.CharField(primary_key=True, max_length=10)
@@ -85,13 +88,13 @@ class Status(models.Model):
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
-    lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson')
+    lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson_info', null=True)
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video', blank=True, null=True)
-    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто', editable=False)
-    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто', editable=False)
-    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто', editable=False)
-    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st', default='Пусто', editable=False)
-    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st', default='Пусто', editable=False)
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто')
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто')
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто')
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st', default='Пусто')
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st', default='Пусто')
 
     class Meta:
         managed = False
@@ -119,7 +122,7 @@ class Lexemes(models.Model):
     transcr = models.CharField(max_length=100, blank=True, null=True, default=True)
     stress = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True)
     type = models.ForeignKey(TypesLex, models.DO_NOTHING, db_column='type_lex')
-    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
+    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', related_name='lexeme')
     cons = models.ManyToManyField('Lexemes', through='LecFilling', related_name='Lex_cons')
 
     class Meta:
@@ -207,7 +210,7 @@ class Rules(models.Model):
     picture = models.TextField()
     side = models.CharField(max_length=5)
     sound_rule = models.TextField(blank=True, null=True)
-    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les')
+    lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', related_name='rule')
     lexeme = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
 
     class Meta:
@@ -250,7 +253,7 @@ class Replicas(models.Model):
 
 class Tasks(models.Model):
     id_task = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
+    exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex', related_name='task')
     num_task = models.DecimalField(max_digits=2, decimal_places=0)
     lex_right = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex_right', blank=True, null=True)
     type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
@@ -294,7 +297,7 @@ class TypesMed(models.Model):
 
 class Variants(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    task = models.ForeignKey(Tasks, models.DO_NOTHING, db_column='id_task')
+    task = models.ForeignKey(Tasks, models.DO_NOTHING, db_column='id_task', related_name='variants')
     lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex', blank=True, null=True)
     num_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
 

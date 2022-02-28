@@ -50,61 +50,6 @@ class TypesMedSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class LessonsWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Lessons
-       fields = ['id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st']
-
-
-class LessonsReadSerializer(serializers.ModelSerializer):
-    class Meta(LessonsWriteSerializer.Meta):
-        depth = 1
-
-
-class LessonBlocksWriteSerializer(serializers.ModelSerializer):
-    lesson = LessonsWriteSerializer(many=True, read_only=True)
-    class Meta:
-        model = LessonBlocks
-        fields = ('id_lb', 'lesson')
-
-
-class LessonBlocksReadSerializer(serializers.ModelSerializer):
-   class Meta(LessonBlocksWriteSerializer.Meta):
-       depth = 1
-
-
-class LexemesWriteSerializer(serializers.ModelSerializer):
-    cons = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-
-    class Meta:
-        model = Lexemes
-        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type', 'lesson', 'cons')
-
-
-class LexemesReadSerializer(serializers.ModelSerializer):
-   class Meta(LexemesWriteSerializer.Meta):
-        depth = 0
-
-
-class LecFillingWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = LecFilling
-       fields = ('id', 'lexeme', 'cons')
-
-
-class LecFillingReadSerializer(serializers.ModelSerializer):
-    class Meta(LecFillingWriteSerializer.Meta):
-        depth = 1
-
-
-class RulesLexemesSerializer(serializers.ModelSerializer):
-    #lexeme = serializers.ReadOnlyField(source='lexemes.id_lex')
-
-    class Meta:
-        model = RulesLexemes
-        fields = ('id', 'rule', 'lexeme')
-
-
 class RulesSerializer(serializers.ModelSerializer):
     lexeme = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
     lesson = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
@@ -128,6 +73,134 @@ class RulesSerializer(serializers.ModelSerializer):
 class RulesReadSerializer(serializers.ModelSerializer):
     class Meta(RulesSerializer.Meta):
         depth = 1
+
+class LexemesWriteSerializer(serializers.ModelSerializer):
+    cons = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+
+    class Meta:
+        model = Lexemes
+        fields = ('id_lex', 'mean_lex', 'transcr', 'stress', 'type', 'lesson', 'cons')
+
+
+class LexemesReadSerializer(serializers.ModelSerializer):
+   class Meta(LexemesWriteSerializer.Meta):
+        depth = 0
+
+class VariantsWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = Variants
+       fields = ('id', 'task', 'lexeme', 'num_miss')
+
+
+class VariantsReadSerializer(serializers.ModelSerializer):
+   class Meta(VariantsWriteSerializer.Meta):
+       depth = 3
+
+class TasksWriteSerializer(serializers.ModelSerializer):
+   variants = VariantsWriteSerializer(many=True)
+   class Meta:
+       model = Tasks
+       fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound',
+                 'replic', 'pronunciation', 'variants')
+       depth = 1
+
+
+class TasksReadSerializer(serializers.ModelSerializer):
+   class Meta(TasksWriteSerializer.Meta):
+       depth = 1
+
+
+class ExercisesWriteSerializer(serializers.ModelSerializer):
+   task = TasksWriteSerializer(many=True)
+   class Meta:
+       model = Exercises
+       fields = ('id_ex', 'type', 'lesson', 'num_ex', 'task')
+       depth = 5
+
+
+class ExercisesReadSerializer(serializers.ModelSerializer):
+   class Meta(ExercisesWriteSerializer.Meta):
+       depth = 5
+
+
+class LessonsWriteSerializer(serializers.ModelSerializer):
+   exercises_info = ExercisesWriteSerializer(many=True)
+   class Meta:
+       model = Lessons
+       fields = ('id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st', 'exercises_info')
+       read_only_fields = ('lessonblock',)
+       depth = 6
+
+       def create(self, validated_data):
+           exercises_info = validated_data.pop('exercises_info')
+           lesson = Lessons.objects.create(**validated_data)
+           for exercise in exercises_info:
+               Exercises.objects.create(**exercise, lesson=lesson)
+           return lesson
+
+
+class LessonsReadSerializer(serializers.ModelSerializer):
+    class Meta(LessonsWriteSerializer.Meta):
+        depth = 6
+
+
+class LessonBlocksWriteSerializer(serializers.ModelSerializer):
+    lesson_info = LessonsWriteSerializer(many=True)
+    class Meta:
+        model = LessonBlocks
+        fields = ["id_lb", "lesson_info"]
+
+    def create(self, validated_data):
+        lesson_info = validated_data.pop('lesson_info')
+        lessonblock = LessonBlocks.objects.create(**validated_data)
+        for lesson in lesson_info:
+            Lessons.objects.create(**lesson, lessonblock=lessonblock)
+        return lessonblock
+
+    # def update(self, instance, validated_data):
+    #     lessons_data = validated_data.pop('lesson')
+    #     less = (instance.lesson).all()
+    #     less = list(less)
+    #     instance.id_lb = validated_data.get('id_lb', instance.id_lb)
+    #     instance.save()
+    #
+    #     for lesson_data in lessons_data:
+    #         lesson = less.pop(0)
+    #         lesson.name_les = lesson_data.get('name_les', lesson.name_les)
+    #         lesson.video = lesson_data.get('video', lesson.video)
+    #         lesson.video_st = lesson_data.get('video_st', lesson.video_st)
+    #         lesson.lex_st = lesson_data.get('lex_st', lesson.lex_st)
+    #         lesson.phr_st = lesson_data.get('phr_st', lesson.phr_st)
+    #         lesson.dialog_st = lesson_data.get('dialog_st', lesson.dialog_st)
+    #         lesson.rules_st = lesson_data.get('rules_st', lesson.rules_st)
+    #
+    #         lesson.save()
+    #     return instance
+
+
+class LessonBlocksReadSerializer(serializers.ModelSerializer):
+   class Meta(LessonBlocksWriteSerializer.Meta):
+       depth = 1
+
+
+
+class LecFillingWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = LecFilling
+       fields = ('id', 'lexeme', 'cons')
+
+
+class LecFillingReadSerializer(serializers.ModelSerializer):
+    class Meta(LecFillingWriteSerializer.Meta):
+        depth = 1
+
+
+class RulesLexemesSerializer(serializers.ModelSerializer):
+    #lexeme = serializers.ReadOnlyField(source='lexemes.id_lex')
+
+    class Meta:
+        model = RulesLexemes
+        fields = ('id', 'rule', 'lexeme')
 
 
 class MediaWriteSerializer(serializers.ModelSerializer):
@@ -164,46 +237,11 @@ class TypesExSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class ExercisesWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Exercises
-       fields = '__all__'
-
-
-class ExercisesReadSerializer(serializers.ModelSerializer):
-   class Meta(ExercisesWriteSerializer.Meta):
-       depth = 2
-
-
 class ProgressSerializer(serializers.ModelSerializer):
    class Meta:
        model = Progress
        fields = '__all__'
        depth = 2
-
-
-
-class TasksWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Tasks
-       fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound',
-                 'replic','pronunciation')
-
-
-class TasksReadSerializer(serializers.ModelSerializer):
-   class Meta(TasksWriteSerializer.Meta):
-       depth = 2
-
-
-class VariantsWriteSerializer(serializers.ModelSerializer):
-   class Meta:
-       model = Variants
-       fields = ('id', 'task', 'lexeme', 'num_miss')
-
-
-class VariantsReadSerializer(serializers.ModelSerializer):
-   class Meta(VariantsWriteSerializer.Meta):
-       depth = 3
 
 
 class VowelSoundWriteSerializer(serializers.ModelSerializer):

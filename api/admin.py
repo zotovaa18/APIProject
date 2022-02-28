@@ -48,7 +48,7 @@ class LessonBlocksModel(admin.ModelAdmin):
 
 
 @admin.register(Status)
-class LessonBlocksModel(admin.ModelAdmin):
+class StatusModel(admin.ModelAdmin):
     list_filter = ('id_status',)
     list_display = ('id_status',)
 

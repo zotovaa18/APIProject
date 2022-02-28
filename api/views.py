@@ -25,6 +25,7 @@ from rest_framework.schemas import AutoSchema
 from rest_framework import viewsets
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import action
 
 # Create your views here.
 
@@ -298,6 +299,11 @@ class TypesMedDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
+class LessonBlocksViewSet(viewsets.ModelViewSet):
+    serializer_class = LessonsWriteSerializer
+    queryset = LessonBlocks.objects.all()
+
+
 
 class LessonBlocksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
@@ -349,6 +355,12 @@ class LessonBlocksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mi
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
+    @action(detail=True, methods=["GET"])
+    def lessons(self, request, pk=None):
+        lessonblock = self.get_object()
+        lessons = Lessons.objects.filter(lessonblock=lessonblock)
+        serializer = LexemesWriteSerializer(lessons, many=True)
+        return Response(serializer.data)
 
 class LessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
@@ -399,6 +411,13 @@ class LessonsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.
     @swagger_auto_schema(operation_summary='удалить данные о конкретном уроке')
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
+
+    # @action(detail=True, methods=["GET"])
+    # def exercises(self, request, pk=None):
+    #     lesson = self.get_object()
+    #     exercises = Exercises.objects.filter(lesson=lesson)
+    #     serializer = LexemesWriteSerializer(exercises, many=True)
+    #     return Response(serializer.data)
 
 
 class LexemesViewsets(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
