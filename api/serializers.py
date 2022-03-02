@@ -124,19 +124,19 @@ class ExercisesReadSerializer(serializers.ModelSerializer):
 
 
 class LessonsWriteSerializer(serializers.ModelSerializer):
-   exercises_info = ExercisesWriteSerializer(many=True)
+   #exercises_info = ExercisesWriteSerializer(many=True)
    class Meta:
        model = Lessons
-       fields = ('id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st', 'exercises_info')
+       fields = ('id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st', )
        read_only_fields = ('lessonblock',)
        depth = 6
 
-       def create(self, validated_data):
-           exercises_info = validated_data.pop('exercises_info')
-           lesson = Lessons.objects.create(**validated_data)
-           for exercise in exercises_info:
-               Exercises.objects.create(**exercise, lesson=lesson)
-           return lesson
+#        def create(self, validated_data):
+#            exercises_info = validated_data.pop('exercises_info')
+#            lesson = Lessons.objects.create(**validated_data)
+#            for exercise in exercises_info:
+#                Exercises.objects.create(**exercise, lesson=lesson)
+#            return lesson
 
 
 class LessonsReadSerializer(serializers.ModelSerializer):
@@ -150,12 +150,12 @@ class LessonBlocksWriteSerializer(serializers.ModelSerializer):
         model = LessonBlocks
         fields = ["id_lb", "lesson_info"]
 
-    def create(self, validated_data):
-        lesson_info = validated_data.pop('lesson_info')
-        lessonblock = LessonBlocks.objects.create(**validated_data)
-        for lesson in lesson_info:
-            Lessons.objects.create(**lesson, lessonblock=lessonblock)
-        return lessonblock
+#     def create(self, validated_data):
+#         lesson_info = validated_data.pop('lesson_info')
+#         lessonblock = LessonBlocks.objects.create(**validated_data)
+#         for lesson in lesson_info:
+#             Lessons.objects.create(**lesson, lessonblock=lessonblock)
+#         return lessonblock
 
     # def update(self, instance, validated_data):
     #     lessons_data = validated_data.pop('lesson')
