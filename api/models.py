@@ -120,14 +120,6 @@ class Exercises(models.Model):
         return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type)
 
 
-class TimeSpent(models.Model):
-    login = models.CharField(primary_key=True, max_length=200)
-    time_spent = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'user_time_spent'
-
 
 class Favorites(models.Model):
     id = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
