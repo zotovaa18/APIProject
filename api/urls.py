@@ -13,7 +13,7 @@ from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails,
 from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, ReplicasList, ReplicasDetails, TasksList, TasksDetails
 from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
 from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
-from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList
+from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList, TimeSpentList
 #country_list, country_details LexemesList
 
 
@@ -71,4 +71,5 @@ urlpatterns = [
     path('api/wordpicturematch/', WordpicturematchList.as_view()),
     path('api/wordpictureselect/', WordpictureselectList.as_view()),
     path('api/writewords/', WritewordsList.as_view()),
+    path('api/time_spent/', TimeSpentList.as_view())
 ]

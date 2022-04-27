@@ -7,7 +7,7 @@ Created on Fri Nov  5 22:20:50 2021
 
 from rest_framework import serializers
 
-from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
+from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons, TimeSpent
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
@@ -262,4 +262,11 @@ class WordpictureselectSerializer(serializers.ModelSerializer):
 class WritewordsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Writewords
+        fields = '__all__'
+
+
+
+class TimeSpentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSpent
         fields = '__all__'

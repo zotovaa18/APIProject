@@ -437,3 +437,12 @@ class Writewords(models.Model):
     class Meta:
         managed = False
         db_table = 'write_words'
+
+
+class TimeSpent(models.Model):
+    login = models.CharField(max_length=200)
+    time_spent = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'user_time_spent'

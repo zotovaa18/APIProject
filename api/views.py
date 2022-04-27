@@ -1,11 +1,11 @@
 #from django.shortcuts import render, HttpResponse
-from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
+from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons, TimeSpent
 from .models import Lexemes, Media, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx
 from .models import Exercises, Progress, Tasks, Variants, Favorites
 from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
 from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
-from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer, ReplicasReadSerializer, ReplicasWriteSerializer
+from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer, ReplicasReadSerializer, ReplicasWriteSerializer, TimeSpentSerializer
 from .serializers import ExercisesSerializer, ProgressSerializer, TasksSerializer, VariantsSerializer, FavoritesSerializer, RulesLexemesSerializer, TypesExSerializer
 from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
 from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer
@@ -701,7 +701,18 @@ class WritewordsList(APIView):
     def get(self, request):
         writeword = Writewords.objects.all()
         serializer = WritewordsSerializer(writeword, many=True)
-        return Response(serializer.data)     
+        return Response(serializer.data)
+
+
+class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = TimeSpent.objects.all()
+    serializer_class = TimeSpentSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
 
 
 '''
