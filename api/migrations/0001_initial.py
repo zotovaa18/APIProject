@@ -202,7 +202,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='People',
             fields=[
-                ('login', models.CharField(max_length=20, primary_key=True, serialize=False)),
+                ('login', models.CharField(max_length=200, primary_key=True, serialize=False)),
                 ('surname', models.CharField(max_length=40)),
                 ('name', models.CharField(max_length=40)),
                 ('email', models.EmailField(max_length=40, unique=True)),
