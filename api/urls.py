@@ -70,6 +70,7 @@ urlpatterns = [
     path('api/lessoninfodto/', LessonInfoList.as_view()),
     path('api/rulesdto/', RulesDTOList.as_view()),
     path('api/time_spent/', TimeSpentList.as_view()),
+    path('api/time_spent/<int:pk>/', TimeSpentDetails.as_view()),
 
     # path('api/newletters/', NewlettersList.as_view()),
     # path('api/newwords/', NewwordsList.as_view()),

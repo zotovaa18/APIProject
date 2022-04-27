@@ -13,8 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TimeSpent',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('login', models.CharField(max_length=200)),
+                ('login', models.CharField(max_length=200, primary_key=True, serialize=False)),
                 ('time_spent', models.IntegerField()),
             ],
             options={
