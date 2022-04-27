@@ -6,7 +6,7 @@ from makevideo.models import Video
 
 
 class TimeSpent(models.Model):
-    login = models.CharField(max_length=200, primary_key=True, serialize=False)
+    login = models.CharField(primary_key=True, max_length=200, serialize=False)
     time_spent = models.IntegerField()
 
     class Meta:
@@ -121,7 +121,7 @@ class Exercises(models.Model):
 
 
 class TimeSpent(models.Model):
-    login = models.CharField(max_length=200)
+    login = models.CharField(primary_key=True, max_length=200)
     time_spent = models.IntegerField()
 
     class Meta:
