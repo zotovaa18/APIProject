@@ -162,7 +162,7 @@ class Medias(models.Model):
 
 
 class People(models.Model):
-    login = models.CharField(primary_key=True, max_length=20)
+    login = models.CharField(primary_key=True, max_length=200)
     surname = models.CharField(max_length=40)
     name = models.CharField(max_length=40)
     group_user = models.ForeignKey('PeopleGroups', models.DO_NOTHING, db_column='group_user', blank=True, null=True)
