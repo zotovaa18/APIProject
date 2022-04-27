@@ -4,7 +4,15 @@ from django.db import models
 # Create your models here.
 from makevideo.models import Video
 
+class TimeSpent(models.Model):
+    login = models.CharField(max_length=200)
+    time_spent = models.IntegerField()
 
+    class Meta:
+        managed = False
+        db_table = 'user_time_spent'
+
+        
 class Countries(models.Model):
     id_country = models.CharField(primary_key=True, max_length=3)
     country_name = models.CharField(unique=True, max_length=40)
