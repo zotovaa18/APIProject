@@ -29,6 +29,16 @@ from rest_framework.decorators import action
 
 # Create your views here.
 
+class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = TimeSpent.objects.all()
+    serializer_class = TimeSpentSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
