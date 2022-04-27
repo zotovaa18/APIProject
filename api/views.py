@@ -58,6 +58,16 @@ class ForLessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
     def post(self, request):
         return self.create(request)
 
+class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = TimeSpent.objects.all()
+    serializer_class = TimeSpentSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
