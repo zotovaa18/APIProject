@@ -1,18 +1,6 @@
 #from django.shortcuts import render, HttpResponse
-from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons, ShowInfoAboutPhrase
-from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
-from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
-#from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
-#from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
-from .serializers import CountriesSerializer, PeopleGroupsSerializer, PeopleSerializer, TypesLexSerializer, TypesMedSerializer, LessonBlocksWriteSerializer, LessonBlocksReadSerializer
-from .serializers import MediaReadSerializer, MediaWriteSerializer, IkSerializer, ReplicasReadSerializer, ReplicasWriteSerializer
-from .serializers import ExercisesWriteSerializer, ExercisesReadSerializer, ProgressSerializer, TasksReadSerializer, TasksWriteSerializer, VariantsWriteSerializer, VariantsReadSerializer, FavoritesReadSerializer, FavoritesWriteSerializer, RulesLexemesSerializer, TypesExSerializer
-#from .serializers import NewlettersSerializer, NewwordsSerializer, NewphrasesSerializer, MatchsyllablessoundSerializer, CollectwordslettersSerializer, MissingletterSerializer
-#from .serializers import PronunciationwordsSerializer, RecoverphrasesSerializer, SelectwordsSerializer, WordpicturematchSerializer, WordpictureselectSerializer, WritewordsSerializer,
-from .serializers import LexemesWriteSerializer, LexemesReadSerializer, LessonsWriteSerializer, LessonsReadSerializer, StatusSerializer
-from .serializers import LecFillingReadSerializer, LecFillingWriteSerializer, RulesSerializer, RulesReadSerializer
-from .serializers import VowelSoundReadSerializer, VowelSoundWriteSerializer, ShowInfoAboutRulesSerializer
-from .serializers import ShowInfoAboutPhraseSerializer, ShowInfoAboutWordsLettersSerializer
+from .models import *
+from .serializers import *
 '''from django.http import JsonResponse
 from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
@@ -27,7 +15,48 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
-# Create your views here.
+
+class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = TimeSpent.objects.all()
+    serializer_class = TimeSpentSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+class RulesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = RulesDTO.objects.all()
+    serializer_class = RulesDTOWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class LessonInfoList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = LessonInfoDTO.objects.all()
+    serializer_class = LessonInfoDTOWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class ForLessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = ForLessonsDTO.objects.all()
+    serializer_class = ForLessonsDTOWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
 
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
@@ -355,12 +384,12 @@ class LessonBlocksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mi
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
-    @action(detail=True, methods=["GET"])
-    def lessons(self, request, pk=None):
-        lessonblock = self.get_object()
-        lessons = Lessons.objects.filter(lessonblock=lessonblock)
-        serializer = LexemesWriteSerializer(lessons, many=True)
-        return Response(serializer.data)
+    # @action(detail=True, methods=["PUT"])
+    # def lessons(self, request, pk=None):
+    #     lessonblock = self.get_object()
+    #     lessons = Lessons.objects.filter(lessonblock=lessonblock)
+    #     serializer = LexemesWriteSerializer(lessons, many=True)
+    #     return Response(serializer.data)
 
 class LessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """

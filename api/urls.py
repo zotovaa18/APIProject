@@ -7,15 +7,7 @@ Created on Fri Nov  5 01:53:05 2021
 
 
 from django.urls import path, include
-from .views import CountryList, CountryDetails, PeopleGroupsList, PeopleGroupsDetails, ExercisesList, ExercisesDetails, ProgressDetails
-from .views import FavoritesList, IkList, IkDetails, LecFillingList, LessonBlocksList, LessonBlocksDetails, LecFillingDetails,  RulesLexemesDetails
-from .views import LessonsList, LessonsDetails, LexemesViewsets, LexemesDetails, MediaDetails, MediaList, PeopleDetails, PeopleList, StatusList, StatusDetails
-from .views import ProgressList, RulesList, RulesDetails, RulesLexemesList, ReplicasList, ReplicasDetails, TasksList, TasksDetails
-from .views import TypesExList, TypesExDetails, TypesLexDetails, TypesLexList, TypesMedDetails, TypesMedList, VariantsList, FavoritesDetails, VariantsDetails
-#from .views import NewlettersList, NewwordsList, NewphrasesList, MatchsyllablessoundList, CollectwordslettersList, MissingletterList, PronunciationwordsList
-#from .views import RecoverphrasesList, SelectwordsList, WordpicturematchList, WordpictureselectList, WritewordsList
-from .views import VowelSoundList, VowelSoundDetails, ShowInfoAboutRulesList, ShowInfoAboutWordsLettersList, ShowInfoAboutPhraseList
-#country_list, country_details LexemesList
+#country_list, country_details LexemesList, ForLessonsList
 from .views import *
 
 from rest_framework import routers
@@ -74,6 +66,10 @@ urlpatterns = [
     path('api/showinfoaboutrules/', ShowInfoAboutRulesList.as_view()),
     path('api/showinfoaboutwordsletters/', ShowInfoAboutWordsLettersList.as_view()),
     path('api/showinfoaboutphrase/', ShowInfoAboutPhraseList.as_view()),
+    path('api/forlessonsdto/',ForLessonsList.as_view()),
+    path('api/lessoninfodto/', LessonInfoList.as_view()),
+    path('api/rulesdto/', RulesDTOList.as_view()),
+    path('api/time_spent/', TimeSpentList.as_view()),
 
     # path('api/newletters/', NewlettersList.as_view()),
     # path('api/newwords/', NewwordsList.as_view()),

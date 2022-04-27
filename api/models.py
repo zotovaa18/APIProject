@@ -28,71 +28,72 @@ class Status(models.Model):
     def __str__(self):
         return self.id_status
 
-#
-# class LessonInfoDTO(models.Model):
-#     video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='ForLessonsDTO_status_video_st',
-#                                  default='Пусто')
-#     lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='ForLessonsDTO_status_lex_st',
-#                                default='Пусто')
-#     phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='ForLessonsDTO_status_phr_st',
-#                                default='Пусто')
-#     dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='ForLessonsDTO_status_dialog_st',
-#                                   default='Пусто')
-#     rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='ForLessonsDTO_status_rules_st',
-#
-#                                 default='Пусто')
-#     forlesson = models.ForeignKey("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
-#
-#
-# class Vl(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     value = models.IntegerField()
-#     label = models.CharField(max_length=100)
-#
-# class RulesDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
-#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-#     id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
-#     id_var = models.ManyToManyField('Lexemes')
-#     vl_var = models.ManyToManyField('Vl', blank=True, null=True)
-#     side = models.CharField(max_length=5)
-#     sound_rule = models.TextField(blank=True, null=True)
-#     picture = models.TextField()
-#     forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules_dto', blank=True, null=True,)
-#
-#
-# class LexDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-#     id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
-#     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_miss')
-#     id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_variant')
-#
-#
-# class DialogDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-#     picture = models.TextField()
-#
-#
-# class PhrasesDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-#     lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
-#     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
-#     id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_variant')
-#
-#
-# class ForLessonsDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     name_les = models.CharField(max_length=100,  null=True)
-#     lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb', related_name='ForLessonsDTO_lesson_info',
-#                                     null=True)
-#     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video', blank=True, null=True)
+
+class LessonInfoDTO(models.Model):
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='ForLessonsDTO_status_video_st',
+                                 default='Пусто')
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='ForLessonsDTO_status_lex_st',
+                               default='Пусто')
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='ForLessonsDTO_status_phr_st',
+                               default='Пусто')
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='ForLessonsDTO_status_dialog_st',
+                                  default='Пусто')
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='ForLessonsDTO_status_rules_st',
+
+                                default='Пусто')
+    forlesson = models.ForeignKey("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
+
+
+class Vl(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+
+
+class RulesDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
+    num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
+    id_var = models.ManyToManyField('Lexemes')
+    vl_var = models.ManyToManyField('Vl', blank=True, null=True)
+    side = models.CharField(max_length=5)
+    sound_rule = models.TextField(blank=True, null=True)
+    picture = models.TextField()
+    forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules_dto', blank=True, null=True,)
+
+
+class LexDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+    id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
+    id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_miss')
+    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_variant')
+
+
+class DialogDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+    picture = models.TextField()
+
+
+class PhrasesDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+    lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
+    id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
+    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_variant')
+
+
+class ForLessonsDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    name_les = models.CharField(max_length=100,  null=True)
+    lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb', related_name='ForLessonsDTO_lesson_info',
+                                    null=True)
+    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video', blank=True, null=True)
 
 
 class Exercises(models.Model):
@@ -108,6 +109,15 @@ class Exercises(models.Model):
 
     def __str__(self):
         return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type)
+
+
+class TimeSpent(models.Model):
+    login = models.CharField(max_length=200)
+    time_spent = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'user_time_spent'
 
 
 class Favorites(models.Model):
@@ -196,8 +206,10 @@ class Lexemes(models.Model):
         managed = False
         db_table = 'lexemes'
 
+    # def __str__(self):
+    #     return '%s %s %s' % (self.id_lex, self.mean_lex, self.type)
     def __str__(self):
-        return '%s %s %s' % (self.id_lex, self.mean_lex, self.type)
+        return '%s' % (self.id_lex)
 
 
 class LecFilling(models.Model):
