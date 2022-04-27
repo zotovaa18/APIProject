@@ -74,6 +74,7 @@ urlpatterns = [
     path('api/showinfoaboutrules/', ShowInfoAboutRulesList.as_view()),
     path('api/showinfoaboutwordsletters/', ShowInfoAboutWordsLettersList.as_view()),
     path('api/showinfoaboutphrase/', ShowInfoAboutPhraseList.as_view()),
+    path('api/time_spent/', TimeSpentList.as_view()),
 
     # path('api/newletters/', NewlettersList.as_view()),
     # path('api/newwords/', NewwordsList.as_view()),
