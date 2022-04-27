@@ -18,10 +18,87 @@ class Countries(models.Model):
         return self.country_name
 
 
+class Status(models.Model):
+    id_status = models.CharField(primary_key=True, max_length=10)
+
+    class Meta:
+        managed = False
+        db_table = 'status'
+
+    def __str__(self):
+        return self.id_status
+
+#
+# class LessonInfoDTO(models.Model):
+#     video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='ForLessonsDTO_status_video_st',
+#                                  default='Пусто')
+#     lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='ForLessonsDTO_status_lex_st',
+#                                default='Пусто')
+#     phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='ForLessonsDTO_status_phr_st',
+#                                default='Пусто')
+#     dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='ForLessonsDTO_status_dialog_st',
+#                                   default='Пусто')
+#     rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='ForLessonsDTO_status_rules_st',
+#
+#                                 default='Пусто')
+#     forlesson = models.ForeignKey("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
+#
+#
+# class Vl(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     value = models.IntegerField()
+#     label = models.CharField(max_length=100)
+#
+# class RulesDTO(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
+#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+#     id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
+#     id_var = models.ManyToManyField('Lexemes')
+#     vl_var = models.ManyToManyField('Vl', blank=True, null=True)
+#     side = models.CharField(max_length=5)
+#     sound_rule = models.TextField(blank=True, null=True)
+#     picture = models.TextField()
+#     forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules_dto', blank=True, null=True,)
+#
+#
+# class LexDTO(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+#     id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
+#     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_miss')
+#     id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_variant')
+#
+#
+# class DialogDTO(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+#     picture = models.TextField()
+#
+#
+# class PhrasesDTO(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+#     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
+#     lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
+#     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
+#     id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_variant')
+#
+#
+# class ForLessonsDTO(models.Model):
+#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+#     name_les = models.CharField(max_length=100,  null=True)
+#     lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb', related_name='ForLessonsDTO_lesson_info',
+#                                     null=True)
+#     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video', blank=True, null=True)
+
+
 class Exercises(models.Model):
     id_ex = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
-    lesson = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les', related_name='exercises_info')
+    lesson = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
 
     class Meta:
@@ -73,16 +150,6 @@ class LessonBlocks(models.Model):
     @property
     def lesson(self):
         return self.lesson_set.all()
-
-class Status(models.Model):
-    id_status = models.CharField(primary_key=True, max_length=10)
-
-    class Meta:
-        managed = False
-        db_table = 'status'
-
-    def __str__(self):
-        return self.id_status
 
 
 class Lessons(models.Model):
@@ -162,10 +229,10 @@ class Medias(models.Model):
 
 
 class People(models.Model):
-    login = models.CharField(primary_key=True, max_length=20)
+    login = models.CharField(primary_key=True, max_length=200)
     surname = models.CharField(max_length=40)
     name = models.CharField(max_length=40)
-    group_user = models.ForeignKey('PeopleGroups', models.DO_NOTHING, db_column='group_user', blank=True, null=True)
+    group_user = models.ForeignKey('PeopleGroups', models.DO_NOTHING, db_column='group_user', default='Пользователь')
     email = models.EmailField(max_length=40, unique=True)
     #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
@@ -280,8 +347,8 @@ class TypesEx(models.Model):
         managed = False
         db_table = 'types_ex'
 
-    def __str__(self):
-        return self.mean_type_ex
+    # def __str__(self):
+    #     return self.mean_type_ex
 
 
 class TypesMed(models.Model):
