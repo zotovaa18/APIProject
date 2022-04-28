@@ -999,8 +999,15 @@ class ProgressList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
      post:
        добавляет прогресс для пользователя
     """
+
     queryset = Progress.objects.all()
-    serializer_class = ProgressSerializer
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'PUT' or method == 'POST':
+            return ProgressWriteSerializer
+        else:
+            return ProgressReadSerializer
 
     @swagger_auto_schema(operation_summary='получить список прогресса')
     def get(self, request):
@@ -1022,7 +1029,7 @@ class ProgressDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins
        удаляет данные о конкретном прогрессе
     """
     queryset = Progress.objects.all()
-    serializer_class = ProgressSerializer
+    serializer_class = ProgressWriteSerializer
 
     @swagger_auto_schema(operation_summary='получить данные о конкретном прогрессе по id')
     def get(self, request, pk):

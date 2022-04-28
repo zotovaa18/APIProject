@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Lexemes',
             fields=[
-                ('id_lex', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
+                ('id_lex', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('mean_lex', models.CharField(max_length=100)),
                 ('transcr', models.CharField(blank=True, max_length=100, null=True, default=True)),
                 ('stress', models.DecimalField(blank=True, decimal_places=0, max_digits=2, null=True)),
@@ -227,7 +227,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Progress',
             fields=[
-                ('id', models.DecimalField(decimal_places=0, max_digits=5, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('mean_pr', models.BooleanField()),
                 ('count_attempt', models.DecimalField(max_digits=3, decimal_places=0))
             ],

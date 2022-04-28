@@ -66,7 +66,7 @@ class RulesDTO(models.Model):
     id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
     id_var = models.ManyToManyField('Lexemes')
     vl_var = models.ManyToManyField('Vl', blank=True, null=True)
-    side = models.CharField(max_length=5)
+    side = models.CharField(max_length=5, blank=True, null=True)
     sound_rule = models.TextField(blank=True, null=True)
     picture = models.TextField()
     forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules_dto', blank=True, null=True,)
@@ -118,7 +118,6 @@ class Exercises(models.Model):
 
     def __str__(self):
         return '%s %s %s' % (str(self.lesson), str(self.num_ex), self.type)
-
 
 
 class Favorites(models.Model):
