@@ -1002,12 +1002,7 @@ class ProgressList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
 
     queryset = Progress.objects.all()
 
-    def get_serializer_class(self):
-        method = self.request.method
-        if method == 'PUT' or method == 'POST':
-            return ProgressWriteSerializer
-        else:
-            return ProgressReadSerializer
+    serializer_class = ProgressWriteSerializer
 
     @swagger_auto_schema(operation_summary='получить список прогресса')
     def get(self, request):

@@ -516,9 +516,6 @@ class ProgressWriteSerializer(serializers.ModelSerializer):
        fields = ('id', 'id_ex', 'login', 'mean_pr', 'count_attempt')
 
 
-class ProgressReadSerializer(serializers.ModelSerializer):
-   class Meta(ProgressWriteSerializer.Meta):
-       depth = 2
 
 
 class VowelSoundWriteSerializer(serializers.ModelSerializer):
