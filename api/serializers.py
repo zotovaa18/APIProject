@@ -513,7 +513,7 @@ class TypesExSerializer(serializers.ModelSerializer):
 class ProgressWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Progress
-       fields = '__all__'
+       fields = ('id', 'id_ex', 'login', 'mean_pr', 'count_attempt')
 
 
 class ProgressReadSerializer(serializers.ModelSerializer):

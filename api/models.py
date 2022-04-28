@@ -271,8 +271,8 @@ class PeopleGroups(models.Model):
 
 class Progress(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    exercise = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
-    person = models.ForeignKey(People, models.DO_NOTHING, db_column='login')
+    id_ex = models.ForeignKey(Exercises, models.DO_NOTHING, db_column='id_ex')
+    login = models.ForeignKey(People, models.DO_NOTHING, db_column='login')
     mean_pr = models.BooleanField()
     count_attempt = models.DecimalField(max_digits=3, decimal_places=0)
 

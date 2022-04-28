@@ -117,8 +117,8 @@ class ExercisesModel(admin.ModelAdmin):
 
 @admin.register(Progress)
 class ProgressModel(admin.ModelAdmin):
-    list_filter = ('id', 'exercise', 'person', 'mean_pr', 'count_attempt')
-    list_display = ('id', 'exercise', 'person', 'mean_pr', 'count_attempt')
+    list_filter = ('id', 'id_ex', 'login', 'mean_pr', 'count_attempt')
+    list_display = ('id', 'id_ex', 'login', 'mean_pr', 'count_attempt')
 
 
 @admin.register(Tasks)
