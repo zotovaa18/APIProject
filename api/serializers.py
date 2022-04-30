@@ -564,22 +564,20 @@ class LessonsReadSerializer(serializers.ModelSerializer):
 
 
 class LessonBlocksWriteSerializer(serializers.ModelSerializer):
-    #lesson_info = LessonsWriteSerializer(many=True,  read_only=True)
+    lesson_info = LessonsWriteSerializer(many=True)
     class Meta:
         model = LessonBlocks
-        fields = ["id_lb"]
+        fields = ["id_lb", 'lesson_info']
 
     # #"lesson_info"
-    # def create(self, validated_data):
-    #     lessons_info = validated_data.pop('lesson_info')
-    #     lessonblock = LessonBlocks.objects.create(**validated_data)
-    #     for lesson in lessons_info:
-    #         ex_info = lesson.pop('exercises_info')
-    #         les = Lessons.objects.create(**lesson, lessonblock=lessonblock)
-    #         for exercise in ex_info:
-    #             Exercises.objects.create(**exercise, lesson=les)
-    #     return lessonblock
-    #
+    def create(self, validated_data):
+        lessons_info = validated_data.pop('lesson_info')
+        lessonblock = LessonBlocks.objects.create(**validated_data)
+        for lesson in lessons_info:
+            les = Lessons.objects.create(**lesson, lessonblock=lessonblock)
+            les.save()
+        return lessonblock
+
     # def update(self, instance, validated_data):
     #     lesson_info = validated_data.pop('lesson_info')
     #     instance.save()
@@ -633,28 +631,26 @@ class LessonBlocksWriteSerializer(serializers.ModelSerializer):
     #         if lesson_data.id_les not in keep_lessons:
     #             lesson_data.delete()
     #     return instance
-# def update(self, instance, validated_data):
-    #     lessons_data = validated_data.get('lesson_info')
-    #     instance.save()
-    #
-    #     for lesson_data in lessons_data:
-    #         les_id = lesson_data.get('id_les', None)
-    #         if les_id:
-    #             print("yes")
-    #             lesson = Lessons.objects.get(id_les=les_id)
-    #             lesson.name_les = lesson_data.get('name_les', lesson.name_les)
-    #             lesson.lessonblock = lesson_data('lessonblock', instance.id_lb)
-    #             lesson.video = lesson_data.get('video', lesson.video)
-    #             lesson.video_st = lesson_data.get('video_st', lesson.video_st)
-    #             lesson.lex_st = lesson_data.get('lex_st', lesson.lex_st)
-    #             lesson.phr_st = lesson_data.get('phr_st', lesson.phr_st)
-    #             lesson.dialog_st = lesson_data.get('dialog_st', lesson.dialog_st)
-    #             lesson.rules_st = lesson_data.get('rules_st', lesson.rules_st)
-    #             lesson.save()
-    #         else:
-    #             print("no")
-    #             Lessons.objects.create(**lesson_data, lessonblock=instance)
-    #     return instance
+    def update(self, instance, validated_data):
+            lessons_data = validated_data.get('lesson_info')
+            instance.save()
+
+            for lesson_data in lessons_data:
+                les_id = lesson_data.get('id_les', None)
+                if les_id:
+                    lesson = Lessons.objects.get(id_les=les_id)
+                    lesson.name_les = lesson_data.get('name_les', lesson.name_les)
+                    lesson.lessonblock = lesson_data('lessonblock', instance.id_lb)
+                    lesson.video = lesson_data.get('video', lesson.video)
+                    lesson.video_st = lesson_data.get('video_st', lesson.video_st)
+                    lesson.lex_st = lesson_data.get('lex_st', lesson.lex_st)
+                    lesson.phr_st = lesson_data.get('phr_st', lesson.phr_st)
+                    lesson.dialog_st = lesson_data.get('dialog_st', lesson.dialog_st)
+                    lesson.rules_st = lesson_data.get('rules_st', lesson.rules_st)
+                    lesson.save()
+                else:
+                    Lessons.objects.create(**lesson_data, lessonblock=instance)
+            return instance
 
 
 class LessonBlocksReadSerializer(serializers.ModelSerializer):
