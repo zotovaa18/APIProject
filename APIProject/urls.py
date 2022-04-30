@@ -30,7 +30,7 @@ schema_view = get_schema_view(
 
    ),
    public=True,
-   url="http://188.120.235.15:8000",
+   url="https://api.unolingua.flareon.ru/",
    generator_class=CustomOpenAPISchemaGenerator,
 )
 
