@@ -1,14 +1,7 @@
 version: "3.8"
-networks:
-  default:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet:  10.10.0.1/16
-
 services:
   db:
+    container_name: unolingua_database
     image: postgres:latest
     restart: always
     volumes:
@@ -20,12 +13,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5888:5432"
   backend:
     command: python manage.py runserver 0.0.0.0:8000
     networks:
       - default
-    container_name: mobile-app-back
+    container_name: unolingua_backend
     build:
       dockerfile: Dockerfile
       context: ./
@@ -33,4 +26,3 @@ services:
       - db
     ports:
       - "8000:8000"
-  

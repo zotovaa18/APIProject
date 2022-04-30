@@ -15,6 +15,47 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
+class DialogDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+
+    queryset = DialogDTO.objects.all()
+
+    serializer_class = DialogDTOWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class VlList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+
+    queryset = Vl.objects.all()
+
+    serializer_class = VlWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class VlDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                mixins.DestroyModelMixin):
+
+    queryset = Vl.objects.all()
+    serializer_class = VlWriteSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
 
 class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TimeSpent.objects.all()
@@ -25,6 +66,7 @@ class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
 
     def post(self, request):
         return self.create(request)
+
 
 class RulesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = RulesDTO.objects.all()

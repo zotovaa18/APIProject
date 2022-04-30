@@ -94,6 +94,7 @@ class LexemesReadSerializer(serializers.ModelSerializer):
    class Meta(LexemesWriteSerializer.Meta):
         depth = 0
 
+
 class VariantsWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Variants
@@ -104,13 +105,13 @@ class VariantsReadSerializer(serializers.ModelSerializer):
    class Meta(VariantsWriteSerializer.Meta):
        depth = 3
 
+
 class TasksWriteSerializer(serializers.ModelSerializer):
    #variants = VariantsWriteSerializer(many=True)
    class Meta:
        model = Tasks
        fields = ('id_task', 'exercise', 'num_task', 'lex_right', 'type', 'num_lex', 'count_miss', 'picture', 'sound',
                  'replic', 'pronunciation', )
-
 
 
 class TasksReadSerializer(serializers.ModelSerializer):
@@ -140,10 +141,57 @@ class LessonInfoDTOWriteSerializer(serializers.ModelSerializer):
        exclude = ('forlesson',)
 
 
-class RulesDTOWriteSerializer(serializers.ModelSerializer):
+class VlWriteSerializer(serializers.ModelSerializer):
    class Meta:
-       model = RulesDTO
-       fields = ["id", "type", "num_ex", "id_lex", "id_var", "vl_var", "side", "sound_rule", "picture"]
+       model = Vl
+       fields = ['id', 'value', 'label', 'id_r']
+
+
+class RulesDTOWriteSerializer(serializers.ModelSerializer):
+    vl_var = VlWriteSerializer(many=True)
+    id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    class Meta:
+        model = RulesDTO
+        fields = '__all__'
+
+    # {
+    #     "type": 23,
+    #     "num_ex": 0,
+    #     "id_lex": null,
+    #     "id_var": [61, 62],
+    #     "vl_var": [{
+    #         "value": 61,
+    #         "label": "к"
+    #     },
+    #         {
+    #             "value": 62,
+    #             "label": "э"
+    #         }],
+    #     "side": "лево",
+    #     "sound_rule": "прол",
+    #     "picture": "лдолд"
+    # }
+
+    def create(self, validated_data):
+        vls_data = validated_data.pop('vl_var')
+        print('near rulesdto')
+        picture = validated_data.get('picture')
+        sound_rule = validated_data.get('sound_rule')
+        side = validated_data.get('side')
+        type = validated_data.get('type')
+        num_ex = validated_data.get('num_ex')
+        id_lex = validated_data.get('id_lex')
+        rulesdto = RulesDTO.objects.create(type_ex=type, num_ex=num_ex, id_lex=id_lex, side=side, sound_rule=sound_rule,
+                                           picture=picture)
+        rulesdto.id_var.set(validated_data.get('id_var'))
+        rulesdto.save()
+        print('near for')
+        #print(vls_data)
+        for vl_data in vls_data:
+            v = Vl.objects.create(id_r=rulesdto, **vl_data)
+            v.save()
+            #rulesdto.vl_var.set(v.id)
+        return rulesdto
 
 
 class LexDTOWriteSerializer(serializers.ModelSerializer):
@@ -156,8 +204,7 @@ class LexDTOWriteSerializer(serializers.ModelSerializer):
 class DialogDTOWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = DialogDTO
-       fields = "__all__"
-       depth = 5
+       fields = ['id', 'type_ex', 'num_ex', 'pic_video', 'forlesson']
 
 
 class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
@@ -168,10 +215,11 @@ class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
 
 
 class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
-    lesson_info = LessonInfoDTOWriteSerializer(many=True)
+    lesson_info = LessonInfoDTOWriteSerializer()
     rules_dto = RulesDTOWriteSerializer(many=True)
+    dialogs = DialogDTOWriteSerializer(many=True)
+
     # lex_dto = LexDTOWriteSerializer(many=True)
-    # dialog_dto = DialogDTOWriteSerializer(many=True)
     # phrase_dto = PhrasesDTOWriteSerializer(many=True)
     # {
     #     "lesson_info": [
@@ -226,39 +274,192 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     #     "lessonblock": 1,
     #     "video": 1
     # }
-
+    # {
+    #     "lesson_info": [
+    #         {
+    #             "video_st": "Пусто     ",
+    #             "lex_st": "Пусто     ",
+    #             "phr_st": "Пусто     ",
+    #             "dialog_st": "Пусто     ",
+    #             "rules_st": "Пусто     "
+    #         }
+    #     ],
+    #     "rules_dto": [
+    #         {
+    #             "type": 23,
+    #             "num_ex": 0,
+    #             "id_lex": null,
+    #             "id_var": [61, 62],
+    #             "vl_var": [{
+    #                 "value": 61,
+    #                 "label": "к"
+    #             },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 }],
+    #             "side": "лево",
+    #             "sound_rule": "прол",
+    #             "picture": "лдолд"
+    #         }
+    #     ],
+    #     "name_les": "Тест 29.04_",
+    #     "lessonblock": 1,
+    #     "video": 1
+    # }
+    #
+    # {
+    #     "name_les": "Тест 29.04_10",
+    #     "lessonblock": 1,
+    #     "video": 1,
+    #     "lesson_info": [
+    #         {
+    #             "video_st": "Пусто     ",
+    #             "lex_st": "Пусто     ",
+    #             "phr_st": "Пусто     ",
+    #             "dialog_st": "Пусто     ",
+    #             "rules_st": "Пусто     "
+    #         }
+    #     ],
+    #     "rules_dto": [
+    #         {
+    #             "type_ex": 23,
+    #             "num_ex": 0,
+    #             "id_lex": null,
+    #             "id_var": [61, 62],
+    #             "vl_var": [{
+    #                 "value": 61,
+    #                 "label": "к"
+    #             },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 }],
+    #             "side": "лево",
+    #             "sound_rule": "прол",
+    #             "picture": "лдолд"
+    #         }
+    #     ],
+    #     "dialog": [
+    #         {
+    #             "type_ex": 21,
+    #             "num_ex": 0,
+    #             "pic_video": "asdfghjkl"
+    #         }],
+    #     "description": "fghjkl"
+    # }
+    # {
+    #     "name_les": "Тест 29.04_17",
+    #     "lessonblock": 1,
+    #     "video": null,
+    #     "lesson_info": {
+    #         "video_st": "Пусто     ",
+    #         "lex_st": "В процессе",
+    #         "phr_st": "В процессе",
+    #         "dialog_st": "В процессе",
+    #         "rules_st": "В процессе"
+    #     },
+    #     "rules_dto": [
+    #         {
+    #             "type_ex": 23,
+    #             "num_ex": 0,
+    #             "id_var": [
+    #                 61,
+    #                 62,
+    #                 63
+    #             ],
+    #             "vl_var": [
+    #                 {
+    #                     "value": 61,
+    #                     "label": "к"
+    #                 },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 },
+    #                 {
+    #                     "value": 63,
+    #                     "label": "т"
+    #                 }
+    #             ],
+    #             "side": "право",
+    #             "sound_rule": "ссылка",
+    #             "picture": "ссылка"
+    #         },
+    #         {
+    #             "type_ex": 17,
+    #             "num_ex": 0,
+    #             "id_lex": 74,
+    #             "id_var": [
+    #                 61,
+    #                 62,
+    #                 63
+    #             ],
+    #             "vl_var": [
+    #                 {
+    #                     "value": 61,
+    #                     "label": "к"
+    #                 },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 },
+    #                 {
+    #                     "value": 63,
+    #                     "label": "т"
+    #                 }
+    #             ],
+    #             "sound_rule": "ссылка",
+    #             "picture": "ссылка"
+    #         }
+    #     ],
+    #     "dialogs": [
+    #         {
+    #             "type_ex": 21,
+    #             "num_ex": 0,
+    #             "pic_video": "ссылка"
+    #         }
+    #     ],
+    #     "description": ""
+    # }
     class Meta:
         model = ForLessonsDTO
-        fields = '__all__'
+        fields = ['name_les', 'lessonblock', 'video', 'lesson_info', 'rules_dto', 'dialogs', 'description']
 
     def create(self, validated_data):
         lessons_info_data = validated_data.pop('lesson_info')
         rules_data = validated_data.pop('rules_dto')
+        dialogs_data = validated_data.pop('dialogs')
         forlessonsdto = ForLessonsDTO.objects.create(**validated_data)
-        for lesson_info_data in lessons_info_data:
+        # for lesson_info_data in lessons_info_data:
 
-            les = Lessons.objects.create(name_les=forlessonsdto.name_les, lessonblock=forlessonsdto.lessonblock,
-                                         video=forlessonsdto.video, **lesson_info_data)
-            les.save()
-            LessonInfoDTO.objects.create(forlesson=forlessonsdto, id=les.id_les, **lesson_info_data)
+        print('near les')
+        les = Lessons.objects.create(name_les=forlessonsdto.name_les, lessonblock=forlessonsdto.lessonblock,
+                                     video=forlessonsdto.video, **lessons_info_data)
+        les.save()
+        LessonInfoDTO.objects.create(forlesson=forlessonsdto, id=les.id_les, **lessons_info_data)
 
         for rule_data in rules_data:
             list_id = Rules.objects.values_list('id_r', flat=True)
-            if rule_data.get('type').type_ex == 23:
+            if rule_data.get('type_ex').type_ex == 23:
                 print("in if")
-                if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
-                    RulesDTO.objects.create(id=Rules.objects.order_by("id_r").values_list("id_r", flat=True).last()+1,
-                                            forlesson=forlessonsdto, type=rule_data.get('type'),
-                                            num_ex=rule_data.get('num_ex'),
-                                            picture=rule_data.get('picture'), side=rule_data.get('side'),
-                                            sound_rule=rule_data.get('sound_rule'))
-                else:
-                    RulesDTO.objects.create(forlesson=forlessonsdto, type=rule_data.get('type'),
-                                            num_ex=rule_data.get('num_ex'),
-                                            picture=rule_data.get('picture'), side=rule_data.get('side'),
-                                            sound_rule=rule_data.get('sound_rule'))
-                print('near rule')
-                rule = Rules.objects.create(id_r=RulesDTO.objects.order_by("id").values_list("id", flat=True).last(), lesson=les,
+                # if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
+                #     r = RulesDTO.objects.create(,
+                #                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                #                             num_ex=rule_data.get('num_ex'),
+                #                             picture=rule_data.get('picture'), side=rule_data.get('side'),
+                #                             sound_rule=rule_data.get('sound_rule'))
+                #     r.save()
+                # else:
+                r = RulesDTO.objects.create(id=RulesDTO.objects.order_by("id").values_list("id", flat=True).last()+1,
+                                            forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                                        num_ex=rule_data.get('num_ex'),
+                                        picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                        sound_rule=rule_data.get('sound_rule'))
+                r.save()
+                print('near rule if')
+                print(r.id)
+                rule = Rules.objects.create(id_r=r.id, lesson=les,
                                             picture=rule_data.get('picture'), side=rule_data.get('side'),
                                             sound_rule=rule_data.get('sound_rule'))
                 # for i in rule_data.get('id_var'):
@@ -270,22 +471,20 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
                 for i in rule_data.get('id_var'):
                     print(i)
-                    id_rd = RulesDTO.objects.order_by("id").values_list("id", flat=True).last()
-                    a = RulesDTO.objects.get(id=id_rd)
+                    a = RulesDTO.objects.get(id=r.id)
                     a.id_var.add(i)
-                a.save()
+                    a.save()
 
-                print(rule_data.get('vl_var'))
-                # for i in rule_data.get('vl_var'):
-                #     print(i)
-                #     id_rd = RulesDTO.objects.order_by("id").values_list("id", flat=True).last()
-                #     a = RulesDTO.objects.get(id=id_rd)
-                #     a.id_var.add(i)
-                # a.save()
+                vls_data = rule_data.pop('vl_var')
+
+                print('near vl_data if')
+                for vl_data in vls_data:
+                    v = Vl.objects.create(id_r=r, **vl_data)
+                    v.save()
 
             else:
                 print('in else')
-                ex = Exercises.objects.create(type=rule_data.get('type'), lesson=les, num_ex=rule_data.get('num_ex'))
+                ex = Exercises.objects.create(type=rule_data.get('type_ex'), lesson=les, num_ex=rule_data.get('num_ex'))
                 ex.save()
                 print('near task')
                 task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex'),
@@ -299,38 +498,44 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
 
                 print('near rulesDTO')
-                if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
-                    RulesDTO.objects.create(id=Rules.objects.order_by("id_r").values_list("id_r", flat=True).last()+1,
-                                            forlesson=forlessonsdto, type=rule_data.get('type'),
-                                            num_ex=rule_data.get('num_ex'),
-                                            picture=rule_data.get('picture'), side=rule_data.get('side'),
-                                            sound_rule=rule_data.get('sound_rule'))
-                else:
-                    RulesDTO.objects.create(forlesson=forlessonsdto, type=rule_data.get('type'),
-                                            num_ex=rule_data.get('num_ex'),
-                                            picture=rule_data.get('picture'), side=rule_data.get('side'),
-                                            sound_rule=rule_data.get('sound_rule'))
+                # if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
+                #     RulesDTO.objects.create(,
+                #                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                #                             num_ex=rule_data.get('num_ex'), id_lex=rule_data.get('id_lex'),
+                #                             picture=rule_data.get('picture'), side=rule_data.get('side'),
+                #                             sound_rule=rule_data.get('sound_rule'))
+                # else:
+                r = RulesDTO.objects.create(id=RulesDTO.objects.order_by("id").values_list("id", flat=True).last()+1,
+                                            forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                                        num_ex=rule_data.get('num_ex'), id_lex=rule_data.get('id_lex'),
+                                        picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                        sound_rule=rule_data.get('sound_rule'))
+                r.save()
 
-                if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
-                    id_rd = RulesDTO.objects.order_by("id").values_list("id", flat=True).last()
-                    a = RulesDTO.objects.get(id=id_rd)
-                    a.id.set(Rules.objects.last() + 1)
-                    a.save()
+
+                # if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
+                #     a = RulesDTO.objects.get(id=id_rd)
+                #     a.id.set(Rules.objects.last() + 1)
+                #     a.save()
 
                 for i in rule_data.get('id_var'):
                     print(i)
-                    id_rd = RulesDTO.objects.order_by("id").values_list("id", flat=True).last()
-                    a = RulesDTO.objects.get(id=id_rd)
+
+                    a = RulesDTO.objects.get(id=r.id)
                     a.id_var.add(i)
                 a.save()
 
+                vls_data = rule_data.pop('vl_var')
 
-            #a = RulesDTO.objects.get(id=rule.id_r).id_var.set(rule.lexeme)
-            #b = RulesDTO.vl_var.add(*rule_data.get('vl_var'))
-            #a.save()
-            #b.save()
+                print('near vl_data else')
+                # print(vls_data)
+                for vl_data in vls_data:
+                    v = Vl.objects.create(id_r=r, **vl_data)
+                    v.save()
 
+        for dialog_data in dialogs_data:
 
+            DialogDTO.objects.create(forlesson=forlessonsdto, id=les.id_les, **dialog_data)
         return forlessonsdto
 
 
@@ -451,10 +656,10 @@ class LessonBlocksWriteSerializer(serializers.ModelSerializer):
     #             Lessons.objects.create(**lesson_data, lessonblock=instance)
     #     return instance
 
+
 class LessonBlocksReadSerializer(serializers.ModelSerializer):
    class Meta(LessonBlocksWriteSerializer.Meta):
        depth = 1
-
 
 
 class LecFillingWriteSerializer(serializers.ModelSerializer):
@@ -514,8 +719,6 @@ class ProgressWriteSerializer(serializers.ModelSerializer):
    class Meta:
        model = Progress
        fields = ('id', 'id_ex', 'login', 'mean_pr', 'count_attempt')
-
-
 
 
 class VowelSoundWriteSerializer(serializers.ModelSerializer):

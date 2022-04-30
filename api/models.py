@@ -50,22 +50,22 @@ class LessonInfoDTO(models.Model):
     rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='ForLessonsDTO_status_rules_st',
 
                                 default='Пусто')
-    forlesson = models.ForeignKey("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
+    forlesson = models.OneToOneField("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
 
 
 class Vl(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     value = models.IntegerField()
     label = models.CharField(max_length=100)
+    id_r = models.ForeignKey("RulesDTO", related_name='vl_var', on_delete=models.CASCADE, blank=True, null=True)
 
 
 class RulesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
+    type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
     id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
-    id_var = models.ManyToManyField('Lexemes')
-    vl_var = models.ManyToManyField('Vl', blank=True, null=True)
+    id_var = models.ManyToManyField('Lexemes', blank=True, null=True)
     side = models.CharField(max_length=5, blank=True, null=True)
     sound_rule = models.TextField(blank=True, null=True)
     picture = models.TextField()
@@ -74,7 +74,7 @@ class RulesDTO(models.Model):
 
 class LexDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
     id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_miss')
@@ -83,14 +83,15 @@ class LexDTO(models.Model):
 
 class DialogDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    picture = models.TextField()
+    pic_video = models.TextField()
+    forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='dialogs', blank=True, null=True)
 
 
 class PhrasesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    type = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
+    type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
     lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
@@ -103,6 +104,7 @@ class ForLessonsDTO(models.Model):
     lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb', related_name='ForLessonsDTO_lesson_info',
                                     null=True)
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
 
 class Exercises(models.Model):
@@ -249,6 +251,7 @@ class People(models.Model):
     #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
     password_admin = models.CharField(max_length=20, blank=True, null=True)
+    photo = models.TextField(default='Пусто')
 
     class Meta:
         managed = False

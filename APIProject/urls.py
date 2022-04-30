@@ -30,7 +30,7 @@ schema_view = get_schema_view(
 
    ),
    public=True,
-   url="http://172.18.130.45:5052/api",
+   url="http://188.120.235.15:8000",
    generator_class=CustomOpenAPISchemaGenerator,
 )
 
@@ -39,7 +39,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
     path('', include('makevideo.urls')),
-    path('api/swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     #path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
