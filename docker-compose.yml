@@ -9,9 +9,9 @@ services:
     networks:
       - default
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: unolingua
+      POSTGRES_USER: uno
+      POSTGRES_PASSWORD: uno13578
     ports:
       - "5888:5432"
   backend:
