@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 # Create your models here.
@@ -39,17 +40,16 @@ class Status(models.Model):
 
 
 class LessonInfoDTO(models.Model):
-    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='ForLessonsDTO_status_video_st',
-                                 default='Пусто')
-    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='ForLessonsDTO_status_lex_st',
-                               default='Пусто')
-    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='ForLessonsDTO_status_phr_st',
-                               default='Пусто')
-    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='ForLessonsDTO_status_dialog_st',
-                                  default='Пусто')
-    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='ForLessonsDTO_status_rules_st',
-
-                                default='Пусто')
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st',
+                                 related_name='ForLessonsDTO_status_video_st', default='Пусто')
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st',
+                               related_name='ForLessonsDTO_status_lex_st', default='Пусто')
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st',
+                               related_name='ForLessonsDTO_status_phr_st', default='Пусто')
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st',
+                                  related_name='ForLessonsDTO_status_dialog_st', default='Пусто')
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st',
+                                 related_name='ForLessonsDTO_status_rules_st', default='Пусто')
     forlesson = models.OneToOneField("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
 
 
@@ -64,12 +64,34 @@ class RulesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex', blank=True, null=True)
+    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex',
+                               blank=True, null=True)
     id_var = models.ManyToManyField('Lexemes', blank=True, null=True)
     side = models.CharField(max_length=5, blank=True, null=True)
     sound_rule = models.TextField(blank=True, null=True)
     picture = models.TextField()
-    forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules_dto', blank=True, null=True,)
+    forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules', blank=True, null=True,)
+
+
+class VlLex(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_lex', on_delete=models.CASCADE, blank=True, null=True)
+
+
+class VlMiss(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_miss', on_delete=models.CASCADE, blank=True, null=True)
+
+
+class VlVar(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_variant', on_delete=models.CASCADE, blank=True, null=True)
 
 
 class LexDTO(models.Model):
@@ -77,8 +99,9 @@ class LexDTO(models.Model):
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
     id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
-    id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_miss')
+    id_miss = ArrayField(models.IntegerField(), blank=True, null=True)
     id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_variant')
+    forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='lex', blank=True, null=True)
 
 
 class DialogDTO(models.Model):
@@ -95,15 +118,17 @@ class PhrasesDTO(models.Model):
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
     lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
     id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
-    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_variant')
+    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True,
+                                        related_name='ForLessonsDTO_phrases_id_variant')
 
 
 class ForLessonsDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100,  null=True)
-    lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb', related_name='ForLessonsDTO_lesson_info',
-                                    null=True)
-    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video', blank=True, null=True)
+    lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb',
+                                    related_name='ForLessonsDTO_lesson_info', null=True)
+    video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video',
+                              blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
 
@@ -167,13 +192,19 @@ class LessonBlocks(models.Model):
 class Lessons(models.Model):
     id_les = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100)
-    lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson_info', null=True)
+    lessonblock = models.ForeignKey(LessonBlocks, models.DO_NOTHING, db_column='id_lb', related_name='lesson_info',
+                                    null=True)
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='video', blank=True, null=True)
-    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st', default='Пусто')
-    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st', default='Пусто')
-    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st', default='Пусто')
-    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st', default='Пусто')
-    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st', default='Пусто')
+    video_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='video_st', related_name='status_video_st',
+                                 default='Пусто')
+    lex_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='lex_st', related_name='status_lex_st',
+                               default='Пусто')
+    phr_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='phr_st', related_name='status_phr_st',
+                               default='Пусто')
+    dialog_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='dialog_st', related_name='status_dialog_st',
+                                  default='Пусто')
+    rules_st = models.ForeignKey(Status, models.DO_NOTHING, db_column='rules_st', related_name='status_rules_st',
+                                 default='Пусто')
 
     class Meta:
         managed = False
@@ -325,6 +356,7 @@ class Replicas(models.Model):
     ik = models.ForeignKey(Ik, models.DO_NOTHING, db_column='id_ik')
     med_ik = models.TextField()
     symbol = models.CharField(max_length=1)
+
     class Meta:
         managed = False
         db_table = 'replicas'

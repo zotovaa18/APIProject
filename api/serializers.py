@@ -178,11 +178,11 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
         picture = validated_data.get('picture')
         sound_rule = validated_data.get('sound_rule')
         side = validated_data.get('side')
-        type = validated_data.get('type')
+        type_ex = validated_data.get('type')
         num_ex = validated_data.get('num_ex')
         id_lex = validated_data.get('id_lex')
-        rulesdto = RulesDTO.objects.create(type_ex=type, num_ex=num_ex, id_lex=id_lex, side=side, sound_rule=sound_rule,
-                                           picture=picture)
+        rulesdto = RulesDTO.objects.create(type_ex=type_ex, num_ex=num_ex, id_lex=id_lex, side=side,
+                                           sound_rule=sound_rule, picture=picture)
         rulesdto.id_var.set(validated_data.get('id_var'))
         rulesdto.save()
         print('near for')
@@ -193,12 +193,84 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
             #rulesdto.vl_var.set(v.id)
         return rulesdto
 
+class VlLexWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = VlLex
+       fields = ['id', 'value', 'label', 'id_lexdto']
+
+
+class VlMissWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = VlMiss
+       fields = ['id', 'value', 'label', 'id_lexdto']
+
+
+class VlVarWriteSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = VlVar
+       fields = ['id', 'value', 'label', 'id_lexdto']
+
 
 class LexDTOWriteSerializer(serializers.ModelSerializer):
-   class Meta:
+    id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    #id_miss = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True, required=False)
+    id_miss = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
+    id_variant = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True, required=False)
+    vl_lex = VlLexWriteSerializer(many=True, allow_null=True, required=False)
+    vl_miss = VlMissWriteSerializer(many=True, allow_null=True, required=False)
+    vl_variant = VlVarWriteSerializer(many=True, allow_null=True, required=False)
+    class Meta:
        model = LexDTO
-       fields = "__all__"
-       depth = 5
+       fields = ['id', 'type_ex', 'num_ex', 'id_lex', 'id_lex', 'vl_lex', 'id_miss', 'vl_miss', 'id_variant',
+                 'vl_variant', 'forlesson']
+
+    def create(self, validated_data):
+
+        print('near lexdto')
+        type_ex = validated_data.get('type_ex')
+        num_ex = validated_data.get('num_ex')
+
+        lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+        lexdto.id_lex.set(validated_data.get('id_lex'))
+
+        lexdto.save()
+        print(validated_data.get('type_ex').type_ex)
+        if (validated_data.get('type_ex').type_ex == 2) or (validated_data.get('type_ex').type_ex == 7) or \
+                (validated_data.get('type_ex').type_ex == 5) or (validated_data.get('type_ex').type_ex == 15) or \
+                (validated_data.get('type_ex').type_ex == 6):
+            if (validated_data.get('type_ex').type_ex == 2) or (validated_data.get('type_ex').type_ex == 7):
+
+                vls_data = validated_data.pop('vl_lex')
+
+                print('near vl_lex else')
+                for vl_data in vls_data:
+                    v = VlLex.objects.create(id_lexdto=lexdto, **vl_data)
+                    v.save()
+
+            elif validated_data.get('type_ex').type_ex == 6:
+                lexdto.id_variant.set(validated_data.get('id_variant'))
+                vls_data = validated_data.pop('vl_variant')
+                print('near vl_variant else')
+                for vl_data in vls_data:
+                    v = VlVar.objects.create(id_lexdto=lexdto, **vl_data)
+                    v.save()
+            else:
+                print(validated_data.get('id_miss')[0])
+                lexdto.id_miss = validated_data.get('id_miss')
+
+                vls_data = validated_data.pop('vl_miss')
+                print('near vl_miss else')
+                for vl_data in vls_data:
+                    v = VlMiss.objects.create(id_lexdto=lexdto, **vl_data)
+                    v.save()
+
+                lexdto.id_variant.set(validated_data.get('id_variant'))
+                vls_data = validated_data.pop('vl_variant')
+                print('near vl_variant else')
+                for vl_data in vls_data:
+                    v = VlVar.objects.create(id_lexdto=lexdto, **vl_data)
+                    v.save()
+        return lexdto
 
 
 class DialogDTOWriteSerializer(serializers.ModelSerializer):
@@ -216,140 +288,13 @@ class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
 
 class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     lesson_info = LessonInfoDTOWriteSerializer()
-    rules_dto = RulesDTOWriteSerializer(many=True)
+    rules = RulesDTOWriteSerializer(many=True)
     dialogs = DialogDTOWriteSerializer(many=True)
-
-    # lex_dto = LexDTOWriteSerializer(many=True)
+    lex = LexDTOWriteSerializer(many=True)
     # phrase_dto = PhrasesDTOWriteSerializer(many=True)
-    # {
-    #     "lesson_info": [
-    #         {
-    #             "video_st": "Пусто     ",
-    #             "lex_st": "Пусто     ",
-    #             "phr_st": "Пусто     ",
-    #             "dialog_st": "Пусто     ",
-    #             "rules_st": "Пусто     "
-    #         }
-    #     ],
-    #     "rules_dto": [
-    #         {
-    #             "type": 23,
-    #             "num_ex": 0,
-    #             "id_lex": null,
-    #             "id_var": [61, 62],
-    #             "vl_var": [],
-    #             "side": "лево",
-    #             "sound_rule": "прол",
-    #             "picture": "лдолд"
-    #         }
-    #     ],
-    #     "name_les": "Тест 28.04_5",
-    #     "lessonblock": 1,
-    #     "video": 1
-    # }
 
     # {
-    #     "lesson_info": [
-    #         {
-    #             "video_st": "Пусто     ",
-    #             "lex_st": "Пусто     ",
-    #             "phr_st": "Пусто     ",
-    #             "dialog_st": "Пусто     ",
-    #             "rules_st": "Пусто     "
-    #         }
-    #     ],
-    #     "rules_dto": [
-    #         {
-    #             "type": 17,
-    #             "num_ex": 1,
-    #             "id_lex": 74,
-    #             "id_var": [61, 62],
-    #             "vl_var": [],
-    #             "side": null,
-    #             "sound_rule": "прол",
-    #             "picture": "лдолд"
-    #         }
-    #     ],
-    #     "name_les": "Тест 28.04_24",
-    #     "lessonblock": 1,
-    #     "video": 1
-    # }
-    # {
-    #     "lesson_info": [
-    #         {
-    #             "video_st": "Пусто     ",
-    #             "lex_st": "Пусто     ",
-    #             "phr_st": "Пусто     ",
-    #             "dialog_st": "Пусто     ",
-    #             "rules_st": "Пусто     "
-    #         }
-    #     ],
-    #     "rules_dto": [
-    #         {
-    #             "type": 23,
-    #             "num_ex": 0,
-    #             "id_lex": null,
-    #             "id_var": [61, 62],
-    #             "vl_var": [{
-    #                 "value": 61,
-    #                 "label": "к"
-    #             },
-    #                 {
-    #                     "value": 62,
-    #                     "label": "э"
-    #                 }],
-    #             "side": "лево",
-    #             "sound_rule": "прол",
-    #             "picture": "лдолд"
-    #         }
-    #     ],
-    #     "name_les": "Тест 29.04_",
-    #     "lessonblock": 1,
-    #     "video": 1
-    # }
-    #
-    # {
-    #     "name_les": "Тест 29.04_10",
-    #     "lessonblock": 1,
-    #     "video": 1,
-    #     "lesson_info": [
-    #         {
-    #             "video_st": "Пусто     ",
-    #             "lex_st": "Пусто     ",
-    #             "phr_st": "Пусто     ",
-    #             "dialog_st": "Пусто     ",
-    #             "rules_st": "Пусто     "
-    #         }
-    #     ],
-    #     "rules_dto": [
-    #         {
-    #             "type_ex": 23,
-    #             "num_ex": 0,
-    #             "id_lex": null,
-    #             "id_var": [61, 62],
-    #             "vl_var": [{
-    #                 "value": 61,
-    #                 "label": "к"
-    #             },
-    #                 {
-    #                     "value": 62,
-    #                     "label": "э"
-    #                 }],
-    #             "side": "лево",
-    #             "sound_rule": "прол",
-    #             "picture": "лдолд"
-    #         }
-    #     ],
-    #     "dialog": [
-    #         {
-    #             "type_ex": 21,
-    #             "num_ex": 0,
-    #             "pic_video": "asdfghjkl"
-    #         }],
-    #     "description": "fghjkl"
-    # }
-    # {
-    #     "name_les": "Тест 29.04_17",
+    #     "name_les": "Тест 30.04_1",
     #     "lessonblock": 1,
     #     "video": null,
     #     "lesson_info": {
@@ -359,8 +304,9 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     #         "dialog_st": "В процессе",
     #         "rules_st": "В процессе"
     #     },
-    #     "rules_dto": [
+    #     "rules": [
     #         {
+    #             "id": 0,
     #             "type_ex": 23,
     #             "num_ex": 0,
     #             "id_var": [
@@ -387,8 +333,9 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     #             "picture": "ссылка"
     #         },
     #         {
+    #             "id": 1,
     #             "type_ex": 17,
-    #             "num_ex": 0,
+    #             "num_ex": 1,
     #             "id_lex": 74,
     #             "id_var": [
     #                 61,
@@ -413,10 +360,161 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     #             "picture": "ссылка"
     #         }
     #     ],
+    #     "lex": [
+    #         {
+    #             "type_ex": 14,
+    #             "num_ex": 2,
+    #             "id_lex": [62]
+    #         },
+    #         {
+    #             "type_ex": 3,
+    #             "num_ex": 3,
+    #             "id_lex": [61]
+    #         },
+    #         {
+    #             "type_ex": 2,
+    #             "num_ex": 4,
+    #             "id_lex": [
+    #                 72,
+    #                 71
+    #             ],
+    #             "vl_lex": [
+    #                 {
+    #                     "value": 72,
+    #                     "label": "эм"
+    #                 },
+    #                 {
+    #                     "value": 71,
+    #                     "label": "мэ"
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "type_ex": 1,
+    #             "num_ex": 5,
+    #             "id_lex": [74]
+    #         },
+    #         {
+    #             "type_ex": 18,
+    #             "num_ex": 6,
+    #             "id_lex": [74]
+    #         },
+    #         {
+    #             "id": 6,
+    #             "type_ex": 5,
+    #             "num_ex": 7,
+    #             "id_lex": [74],
+    #             "id_miss": [
+    #                 2
+    #             ],
+    #             "vl_miss": [
+    #                 {
+    #                     "value": 2,
+    #                     "label": "2"
+    #                 }
+    #             ],
+    #             "id_variant": [
+    #                 61,
+    #                 62,
+    #                 63
+    #             ],
+    #             "vl_variant": [
+    #                 {
+    #                     "value": 61,
+    #                     "label": "к"
+    #                 },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 },
+    #                 {
+    #                     "value": 63,
+    #                     "label": "т"
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "id": 7,
+    #             "type_ex": 15,
+    #             "num_ex": 8,
+    #             "id_lex": [74],
+    #             "id_miss": [
+    #                 1,
+    #                 2,
+    #                 3
+    #             ],
+    #             "vl_miss": [
+    #                 {
+    #                     "value": 1,
+    #                     "label": "1"
+    #                 },
+    #                 {
+    #                     "value": 2,
+    #                     "label": "2"
+    #                 },
+    #                 {
+    #                     "value": 3,
+    #                     "label": "3"
+    #                 }
+    #             ],
+    #             "id_variant": [
+    #                 61,
+    #                 62,
+    #                 63,
+    #                 70
+    #             ],
+    #             "vl_variant": [
+    #                 {
+    #                     "value": 61,
+    #                     "label": "к"
+    #                 },
+    #                 {
+    #                     "value": 62,
+    #                     "label": "э"
+    #                 },
+    #                 {
+    #                     "value": 63,
+    #                     "label": "т"
+    #                 },
+    #                 {
+    #                     "value": 70,
+    #                     "label": "м"
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "type_ex": 7,
+    #             "num_ex": 9,
+    #             "id_lex": [
+    #                 72,
+    #                 71,
+    #                 76,
+    #                 77
+    #             ],
+    #             "vl_lex": [
+    #                 {
+    #                     "value": 72,
+    #                     "label": "эм"
+    #                 },
+    #                 {
+    #                     "value": 71,
+    #                     "label": "мэ"
+    #                 },
+    #                 {
+    #                     "value": 76,
+    #                     "label": "ма"
+    #                 },
+    #                 {
+    #                     "value": 77,
+    #                     "label": "ам"
+    #                 }
+    #             ]
+    #         }
+    #     ],
     #     "dialogs": [
     #         {
     #             "type_ex": 21,
-    #             "num_ex": 0,
+    #             "num_ex": 10,
     #             "pic_video": "ссылка"
     #         }
     #     ],
@@ -424,20 +522,25 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
     # }
     class Meta:
         model = ForLessonsDTO
-        fields = ['name_les', 'lessonblock', 'video', 'lesson_info', 'rules_dto', 'dialogs', 'description']
+        fields = ['id', 'name_les', 'lessonblock', 'video', 'lesson_info', 'rules', 'lex', 'dialogs', 'description']
 
     def create(self, validated_data):
         lessons_info_data = validated_data.pop('lesson_info')
-        rules_data = validated_data.pop('rules_dto')
+        rules_data = validated_data.pop('rules')
         dialogs_data = validated_data.pop('dialogs')
-        forlessonsdto = ForLessonsDTO.objects.create(**validated_data)
+        lexs_data = validated_data.pop('lex')
+        print(Lessons.objects.order_by("id_les").values_list("id_les", flat=True).last()+1)
+        forlessonsdto = ForLessonsDTO.objects.create(id=Lessons.objects.order_by("id_les").values_list("id_les", flat=True).last()+1,
+                                                     **validated_data)
         # for lesson_info_data in lessons_info_data:
 
         print('near les')
-        les = Lessons.objects.create(name_les=forlessonsdto.name_les, lessonblock=forlessonsdto.lessonblock,
+        print(forlessonsdto.id)
+        les = Lessons.objects.create(id_les=forlessonsdto.id,
+                                     name_les=forlessonsdto.name_les, lessonblock=forlessonsdto.lessonblock,
                                      video=forlessonsdto.video, **lessons_info_data)
         les.save()
-        LessonInfoDTO.objects.create(forlesson=forlessonsdto, id=les.id_les, **lessons_info_data)
+        LessonInfoDTO.objects.create(id=forlessonsdto.id, forlesson=forlessonsdto, **lessons_info_data)
 
         for rule_data in rules_data:
             list_id = Rules.objects.values_list('id_r', flat=True)
@@ -453,9 +556,9 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 # else:
                 r = RulesDTO.objects.create(id=RulesDTO.objects.order_by("id").values_list("id", flat=True).last()+1,
                                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
-                                        num_ex=rule_data.get('num_ex'),
-                                        picture=rule_data.get('picture'), side=rule_data.get('side'),
-                                        sound_rule=rule_data.get('sound_rule'))
+                                            num_ex=rule_data.get('num_ex'),
+                                            picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                            sound_rule=rule_data.get('sound_rule'))
                 r.save()
                 print('near rule if')
                 print(r.id)
@@ -520,7 +623,6 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
                 for i in rule_data.get('id_var'):
                     print(i)
-
                     a = RulesDTO.objects.get(id=r.id)
                     a.id_var.add(i)
                 a.save()
@@ -532,6 +634,145 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 for vl_data in vls_data:
                     v = Vl.objects.create(id_r=r, **vl_data)
                     v.save()
+
+        for lex_data in lexs_data:
+
+            lex = LexDTO.objects.create(id=LexDTO.objects.order_by("id").values_list("id", flat=True).last()+1,
+                                        forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                                        num_ex=lex_data.get('num_ex'))
+            lex.save()
+
+            for i in lex_data.get('id_lex'):
+                print(i)
+                a = LexDTO.objects.get(id=lex.id)
+                a.id_lex.add(i)
+            a.save()
+            if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7) or \
+                    (lex_data.get('type_ex').type_ex == 5) or (lex_data.get('type_ex').type_ex == 15) or \
+                    (lex_data.get('type_ex').type_ex == 6):
+                if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7):
+                    vls_data = lex_data.pop('vl_lex')
+
+                    print('near vl_lex else')
+                    for vl_data in vls_data:
+                        v = VlLex.objects.create(id_lexdto=lex, **vl_data)
+                        v.save()
+                    print('in if 2 7 exercises')
+                    ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                                                  num_ex=lex_data.get('num_ex'))
+                    ex.save()
+
+                    print('near if 2 7  task')
+                    count = 0
+                    for i in lex_data.get('id_lex'):
+                        count = count + 1
+                        print(i)
+                        print('near task')
+                        task = Tasks.objects.create(exercise=ex, num_task=count, lex_right=i)
+                        task.save()
+
+                elif lex_data.get('type_ex').type_ex == 6:
+                    for i in lex_data.get('id_variant'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_variant.add(i)
+                    a.save()
+
+                    vls_data = lex_data.pop('vl_variant')
+                    print('near vl_variant else')
+                    for vl_data in vls_data:
+                        v = VlVar.objects.create(id_lexdto=lex, **vl_data)
+                        v.save()
+
+                    print('in elif 6 exercises')
+                    ex = Exercises.objects.create(type=rule_data.get('type_ex'), lesson=les,
+                                                  num_ex=lex_data.get('num_ex'))
+                    ex.save()
+                    print('near elif 6 task')
+                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex')[0])
+                    task.save()
+
+                    for i in lex_data.get('id_variant'):
+                        print(i)
+                        variant = Variants.objects.create(task=task, lexeme=i)
+                        variant.save()
+
+                else:
+                    lex.id_miss = lex_data.get('id_miss')
+
+                    # for i in lex_data.get('id_miss'):
+                    #     print(i)
+                    #     a = LexDTO.objects.get(id=lex.id)
+                    #     a.id_miss.add(i)
+                    # a.save()
+
+                    vls_data = lex_data.pop('vl_miss')
+                    print('near vl_miss else')
+                    for vl_data in vls_data:
+                        v = VlMiss.objects.create(id_lexdto=lex, **vl_data)
+                        v.save()
+
+                    for i in lex_data.get('id_variant'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_variant.add(i)
+                    a.save()
+
+                    vls_data = lex_data.pop('vl_variant')
+                    print('near vl_variant else')
+                    for vl_data in vls_data:
+                        v = VlVar.objects.create(id_lexdto=lex, **vl_data)
+                        v.save()
+
+                    if lex_data.get('type_ex').type_ex == 5:
+                        print('in if 5 exercises')
+                        ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                                                      num_ex=lex_data.get('num_ex'))
+                        ex.save()
+                        print('near 5 task')
+
+                        task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0],
+                                                    num_lex=lex_data.get('id_miss')[0])
+                        task.save()
+
+                        print('near 5 variants')
+                        for i in lex_data.get('id_variant'):
+                            print(i)
+                            variant = Variants.objects.create(task=task, lexeme=i)
+                            variant.save()
+                    else:
+                        print('in 15 exercises')
+                        ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                                                      num_ex=lex_data.get('num_ex'))
+                        ex.save()
+
+                        print('near 15 task')
+                        count = 0
+                        flag = False
+                        for i in lex_data.get('id_miss'):
+                            count = count + 1
+                            print(i)
+                            if not flag:
+                                task = Tasks.objects.create(exercise=ex, num_task=count,
+                                                            lex_right=lex_data.get('id_lex')[0], num_lex=i)
+                                task.save()
+                            else:
+                                task1 = Tasks.objects.create(exercise=ex, num_task=count,
+                                                             lex_right=lex_data.get('id_lex')[0], num_lex=i)
+                                task1.save()
+
+                        print('near 15 variants')
+                        for i in lex_data.get('id_variant'):
+                            print(i)
+                            variant = Variants.objects.create(task=task, lexeme=i)
+                            variant.save()
+            else:
+                print('in else 1 3 14... exercises')
+                ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les, num_ex=lex_data.get('num_ex'))
+                ex.save()
+                print('near 1 3 14.... task')
+                task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0])
+                task.save()
 
         for dialog_data in dialogs_data:
 

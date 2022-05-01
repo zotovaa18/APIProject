@@ -69,10 +69,14 @@ urlpatterns = [
     path('forlessonsdto/',ForLessonsList.as_view()),
     path('lessoninfodto/', LessonInfoList.as_view()),
     path('rulesdto/', RulesDTOList.as_view()),
+    path('lexdto/', LexDTOList.as_view()),
     path('time_spent/', TimeSpentList.as_view()),
     path('time_spent/<int:pk>/', TimeSpentDetails.as_view()),
     path('vl/', VlList.as_view()),
     path('vl/<int:pk>/', VlDetails.as_view()),
+    path('vllex/', VlLexList.as_view()),
+    path('vlmiss/', VlMissList.as_view()),
+    path('vlvar/', VlVarList.as_view()),
     path('dialogdto/', DialogDTOList.as_view()),
 
 
