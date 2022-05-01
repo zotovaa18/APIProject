@@ -20,7 +20,7 @@ class Rating(models.Model):
 
 class WeakPoints(models.Model):
     login = models.CharField(primary_key=True, max_length=200, serialize=False)
-    id_ex = ArrayField(models.IntegerField())
+    weak = ArrayField(models.IntegerField())
 
     class Meta:
         managed = False

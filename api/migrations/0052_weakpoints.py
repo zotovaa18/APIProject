@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='WeakPoints',
             fields=[
                 ('login', models.CharField(max_length=200, primary_key=True, serialize=False)),
-                ('id_ex', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), size=None)),
+                ('weak', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), size=None)),
             ],
             options={
                 'db_table': 'weak_points',
