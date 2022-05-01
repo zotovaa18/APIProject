@@ -42,17 +42,6 @@ class PhrasesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
         return self.create(request)
 
 
-class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    queryset = TimeSpent.objects.all()
-    serializer_class = TimeSpentSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
 class RatingList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
@@ -126,6 +115,33 @@ class TimeSpentDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixin
 
     queryset = TimeSpent.objects.all()
     serializer_class = TimeSpentSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
+
+class NumStopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = NumStop.objects.all()
+    serializer_class = NumStopSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class NumStopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin):
+
+    queryset = NumStop.objects.all()
+    serializer_class = NumStopSerializer
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
@@ -1252,7 +1268,7 @@ class ShowInfoAboutRulesList(generics.GenericAPIView, mixins.ListModelMixin, mix
     """
      get:
        дто для экранов в приложении для блока правил.
-       Писать /?id_ex=0, если нужен доступ в правилам. /?id_ex=0 - к заданию.
+       Писать /?id_r=0, если нужен доступ в правилам. /?id_ex=0 - к заданию.
     """
     queryset = ShowInfoAboutRules.objects.all()
 

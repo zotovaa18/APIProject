@@ -28,6 +28,12 @@ class TimeSpentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class NumStopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NumStop
+        fields = '__all__'
+
+
 class PeopleGroupsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeopleGroups

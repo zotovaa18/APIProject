@@ -75,6 +75,8 @@ urlpatterns = [
     path('dialogdto/', DialogDTOList.as_view()),
     path('phrasesdto/', PhrasesDTOList.as_view()),
     path('rating/', RatingList.as_view()),
+    path('num_stop/', NumStopList.as_view()),
+    path('num_stop/<int:pk>/', NumStopDetails.as_view()),
 
 
     # path('api/newletters/', NewlettersList.as_view()),

@@ -26,6 +26,15 @@ class TimeSpent(models.Model):
         managed = False
         db_table = 'user_time_spent'
 
+
+class NumStop(models.Model):
+    login = models.CharField(primary_key=True, max_length=200, serialize=False)
+    count = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'num_stop'
+
         
 class Countries(models.Model):
     id_country = models.CharField(primary_key=True, max_length=3)
