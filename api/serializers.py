@@ -37,7 +37,7 @@ class NumStopSerializer(serializers.ModelSerializer):
 class WeakPointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeakPoints
-        fields = ['login', 'weak']
+        fields = ['login', 'id_ex']
 
 
 class PeopleGroupsSerializer(serializers.ModelSerializer):
