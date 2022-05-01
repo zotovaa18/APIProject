@@ -64,8 +64,7 @@ class RulesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    id_lex = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', related_name='ForLessonsDTO_id_lex',
-                               blank=True, null=True)
+    id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='RulesDTO_lex_id_lex')
     id_var = models.ManyToManyField('Lexemes', blank=True, null=True)
     side = models.CharField(max_length=5, blank=True, null=True)
     sound_rule = models.TextField(blank=True, null=True)
@@ -91,24 +90,39 @@ class VlVar(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     value = models.IntegerField()
     label = models.CharField(max_length=100)
-    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_variant', on_delete=models.CASCADE, blank=True, null=True)
+    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_var', on_delete=models.CASCADE, blank=True, null=True)
 
 
 class LexDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_lex')
+    id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='LexDTO_lex_id_lex')
     id_miss = ArrayField(models.IntegerField(), blank=True, null=True)
-    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_lex_id_variant')
+    id_var = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='LexDTO_lex_id_variant')
     forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='lex', blank=True, null=True)
+
+
+class VlRep(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    id_diadto = models.ForeignKey("DialogDTO", related_name='vl_rep', on_delete=models.CASCADE, blank=True, null=True)
+
+
+class VlMissD(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    id_diadto = models.ForeignKey("DialogDTO", related_name='vl_miss', on_delete=models.CASCADE, blank=True, null=True)
 
 
 class DialogDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    pic_video = models.TextField()
+    id_rep = ArrayField(models.IntegerField(), blank=True, null=True)
+    id_miss = ArrayField(models.IntegerField(), blank=True, null=True)
     forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='dialogs', blank=True, null=True)
 
 
@@ -116,10 +130,10 @@ class PhrasesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
     num_ex = models.DecimalField(max_digits=2, decimal_places=0)
-    lexeme = models.ForeignKey('Lexemes', models.DO_NOTHING, db_column='id_lex', null=True)
-    id_miss = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='ForLessonsDTO_phrases_id_miss')
-    id_variant = models.ManyToManyField('Lexemes', blank=True, null=True,
-                                        related_name='ForLessonsDTO_phrases_id_variant')
+    id_rep = models.ManyToManyField('Replicas', blank=True, null=True, related_name='PhrasesDTO_rep_id_rep')
+    id_miss = ArrayField(models.IntegerField(), blank=True, null=True)
+    id_var = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='PhrasesDTO_lex_id_variant')
+    forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='phrases', blank=True, null=True)
 
 
 class ForLessonsDTO(models.Model):

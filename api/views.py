@@ -15,11 +15,51 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
+
+class VlRepList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+
+    queryset = VlRep.objects.all()
+
+    serializer_class = VlRepWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class VlMissDList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+
+    queryset = VlMissD.objects.all()
+
+    serializer_class = VlMissDWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
 class DialogDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
 
     queryset = DialogDTO.objects.all()
 
     serializer_class = DialogDTOWriteSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class PhrasesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+
+    queryset = PhrasesDTO.objects.all()
+
+    serializer_class = PhrasesDTOWriteSerializer
 
     def get(self, request):
         return self.list(request)

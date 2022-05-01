@@ -77,7 +77,10 @@ urlpatterns = [
     path('vllex/', VlLexList.as_view()),
     path('vlmiss/', VlMissList.as_view()),
     path('vlvar/', VlVarList.as_view()),
+    path('vlmissd/', VlMissDList.as_view()),
+    path('vlrep/', VlRepList.as_view()),
     path('dialogdto/', DialogDTOList.as_view()),
+    path('phrasesdto/', PhrasesDTOList.as_view()),
 
 
     # path('api/newletters/', NewlettersList.as_view()),
