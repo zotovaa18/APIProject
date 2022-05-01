@@ -16,6 +16,23 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
 
+class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = WeakPoints.objects.all()
+    serializer_class = WeakPointsSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+
+class WeakPointsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin):
+    queryset = WeakPoints.objects.all()
+    serializer_class = WeakPointsSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+
 class DialogDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
 
     queryset = DialogDTO.objects.all()
@@ -133,9 +150,6 @@ class NumStopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateM
     def get(self, request):
         return self.list(request)
 
-    def post(self, request):
-        return self.create(request)
-
 
 class NumStopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                      mixins.DestroyModelMixin):
@@ -145,12 +159,6 @@ class NumStopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
-
-    def put(self, request, pk):
-        return self.update(request, pk=pk)
-
-    def delete(self, request, pk):
-        return self.destroy(request, pk=pk)
 
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,

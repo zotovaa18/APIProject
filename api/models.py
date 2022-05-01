@@ -18,6 +18,15 @@ class Rating(models.Model):
         db_table = 'rating'
 
 
+class WeakPoints(models.Model):
+    login = models.CharField(primary_key=True, max_length=200, serialize=False)
+    weak = ArrayField(models.IntegerField())
+
+    class Meta:
+        managed = False
+        db_table = 'weak_points'
+
+
 class TimeSpent(models.Model):
     login = models.CharField(primary_key=True, max_length=200, serialize=False)
     time_spent = models.IntegerField()

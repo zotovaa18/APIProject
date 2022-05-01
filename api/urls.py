@@ -77,7 +77,8 @@ urlpatterns = [
     path('rating/', RatingList.as_view()),
     path('num_stop/', NumStopList.as_view()),
     path('num_stop/<int:pk>/', NumStopDetails.as_view()),
-
+    path('weak_points/', WeakPointsList.as_view()),
+    path('weak_points/<int:pk>/', WeakPointsDetails.as_view()),
 
     # path('api/newletters/', NewlettersList.as_view()),
     # path('api/newwords/', NewwordsList.as_view()),
