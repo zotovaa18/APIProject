@@ -6,6 +6,18 @@ from django.contrib.postgres.fields import ArrayField
 from makevideo.models import Video
 
 
+class Rating(models.Model):
+    login = models.CharField(primary_key=True, max_length=200, serialize=False)
+    name = models.CharField(max_length=40)
+    surname = models.CharField(max_length=40)
+    photo = models.TextField(default='Пусто')
+    count = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'rating'
+
+
 class TimeSpent(models.Model):
     login = models.CharField(primary_key=True, max_length=200, serialize=False)
     time_spent = models.IntegerField()
@@ -53,13 +65,6 @@ class LessonInfoDTO(models.Model):
     forlesson = models.OneToOneField("ForLessonsDTO", related_name='lesson_info', on_delete=models.CASCADE)
 
 
-class Vl(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_r = models.ForeignKey("RulesDTO", related_name='vl_var', on_delete=models.CASCADE, blank=True, null=True)
-
-
 class RulesDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex', related_name='ForLessonsDTO_type')
@@ -72,27 +77,6 @@ class RulesDTO(models.Model):
     forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules', blank=True, null=True,)
 
 
-class VlLex(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_lex', on_delete=models.CASCADE, blank=True, null=True)
-
-
-class VlMiss(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_miss', on_delete=models.CASCADE, blank=True, null=True)
-
-
-class VlVar(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_lexdto = models.ForeignKey("LexDTO", related_name='vl_var', on_delete=models.CASCADE, blank=True, null=True)
-
-
 class LexDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     type_ex = models.ForeignKey('TypesEx', models.DO_NOTHING, db_column='type_ex')
@@ -101,20 +85,6 @@ class LexDTO(models.Model):
     id_miss = ArrayField(models.IntegerField(), blank=True, null=True)
     id_var = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='LexDTO_lex_id_variant')
     forlesson = models.ForeignKey("ForLessonsDTO", models.DO_NOTHING, related_name='lex', blank=True, null=True)
-
-
-class VlRep(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_diadto = models.ForeignKey("DialogDTO", related_name='vl_rep', on_delete=models.CASCADE, blank=True, null=True)
-
-
-class VlMissD(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    value = models.IntegerField()
-    label = models.CharField(max_length=100)
-    id_diadto = models.ForeignKey("DialogDTO", related_name='vl_miss', on_delete=models.CASCADE, blank=True, null=True)
 
 
 class DialogDTO(models.Model):

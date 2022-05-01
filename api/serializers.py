@@ -16,6 +16,12 @@ from .models import ShowInfoAboutWordsLetters, ShowInfoAboutPhrase, ForLessonsDT
 from .models import *
 
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['name', 'surname', 'photo', 'count']
+
+
 class TimeSpentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeSpent
@@ -142,12 +148,6 @@ class LessonInfoDTOWriteSerializer(serializers.ModelSerializer):
         exclude = ('forlesson',)
 
 
-class VlWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vl
-        fields = ['id', 'value', 'label', 'id_r']
-
-
 class RulesDTOWriteSerializer(serializers.ModelSerializer):
     # vl_var = VlWriteSerializer(many=True)
     # id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
@@ -196,24 +196,6 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
         #     v.save()
         #     #rulesdto.vl_var.set(v.id)
         return rulesdto
-
-
-class VlLexWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VlLex
-        fields = ['id', 'value', 'label', 'id_lexdto']
-
-
-class VlMissWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VlMiss
-        fields = ['id', 'value', 'label', 'id_lexdto']
-
-
-class VlVarWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VlVar
-        fields = ['id', 'value', 'label', 'id_lexdto']
 
 
 class LexDTOWriteSerializer(serializers.ModelSerializer):
@@ -276,18 +258,6 @@ class LexDTOWriteSerializer(serializers.ModelSerializer):
                 #     v = VlVar.objects.create(id_lexdto=lexdto, **vl_data)
                 #     v.save()
         return lexdto
-
-
-class VlRepWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VlRep
-        fields = ['id', 'value', 'label', 'id_dialogdto']
-
-
-class VlMissDWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VlMissD
-        fields = ['id', 'value', 'label', 'id_dialogdto']
 
 
 class DialogDTOWriteSerializer(serializers.ModelSerializer):

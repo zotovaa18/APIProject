@@ -16,32 +16,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
 
-class VlRepList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = VlRep.objects.all()
-
-    serializer_class = VlRepWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
-class VlMissDList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = VlMissD.objects.all()
-
-    serializer_class = VlMissDWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
 class DialogDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
 
     queryset = DialogDTO.objects.all()
@@ -68,74 +42,6 @@ class PhrasesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
         return self.create(request)
 
 
-class VlLexList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = VlLex.objects.all()
-
-    serializer_class = VlLexWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
-class VlMissList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = VlMiss.objects.all()
-
-    serializer_class = VlMissWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
-class VlVarList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = VlVar.objects.all()
-
-    serializer_class = VlVarWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
-class VlList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
-    queryset = Vl.objects.all()
-
-    serializer_class = VlWriteSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-
-class VlDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin):
-
-    queryset = Vl.objects.all()
-    serializer_class = VlWriteSerializer
-
-    def get(self, request, pk):
-        return self.retrieve(request, pk=pk)
-
-    def put(self, request, pk):
-        return self.update(request, pk=pk)
-
-    def delete(self, request, pk):
-        return self.destroy(request, pk=pk)
-
-
 class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TimeSpent.objects.all()
     serializer_class = TimeSpentSerializer
@@ -145,6 +51,17 @@ class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
 
     def post(self, request):
         return self.create(request)
+
+
+class RatingList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    # def post(self, request):
+    #     return self.create(request)
 
 
 class LexDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):

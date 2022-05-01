@@ -72,15 +72,9 @@ urlpatterns = [
     path('lexdto/', LexDTOList.as_view()),
     path('time_spent/', TimeSpentList.as_view()),
     path('time_spent/<int:pk>/', TimeSpentDetails.as_view()),
-    path('vl/', VlList.as_view()),
-    path('vl/<int:pk>/', VlDetails.as_view()),
-    path('vllex/', VlLexList.as_view()),
-    path('vlmiss/', VlMissList.as_view()),
-    path('vlvar/', VlVarList.as_view()),
-    path('vlmissd/', VlMissDList.as_view()),
-    path('vlrep/', VlRepList.as_view()),
     path('dialogdto/', DialogDTOList.as_view()),
     path('phrasesdto/', PhrasesDTOList.as_view()),
+    path('rating/', RatingList.as_view()),
 
 
     # path('api/newletters/', NewlettersList.as_view()),
