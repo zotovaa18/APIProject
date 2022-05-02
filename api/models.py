@@ -59,6 +59,17 @@ class NumStop(models.Model):
         managed = False
         db_table = 'num_stop'
 
+
+class ProgressBlocks(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+    sum = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'progress_blocks'
+
         
 class Countries(models.Model):
     id_country = models.CharField(primary_key=True, max_length=3)
