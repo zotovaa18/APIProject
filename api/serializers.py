@@ -32,7 +32,7 @@ class TimeSpentSerializer(serializers.ModelSerializer):
 class NumStopSerializer(serializers.ModelSerializer):
     class Meta:
         model = NumStop
-        fields = ['block', 'id_les', 'login', 'stop']
+        fields = ['block', 'name_les', 'login', 'stop']
 
 
 class ProgressBlocksSerializer(serializers.ModelSerializer):

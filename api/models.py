@@ -51,7 +51,7 @@ class TimeSpent(models.Model):
 class NumStop(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     block = models.TextField()
-    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    name_les = models.TextField()
     login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
     stop = models.IntegerField()
 

@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='NumStop',
             fields=[
                 ('login', models.CharField(max_length=200, primary_key=True, serialize=False)),
+                ('name_les', models.TextField()),
                 ('count', models.IntegerField()),
             ],
             options={

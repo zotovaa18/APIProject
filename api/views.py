@@ -195,8 +195,11 @@ class NumStopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateM
     """
      get:
        дто для экранов с местом остановки пользователей
-       Писать, например ?block=wordsletters&id_les=1&login=103333743383425053665,
-       если нужен доступ к конкретному пользователю в конкретном уроке и разделе
+       Писать, например ?block=wordsletters&login=103333743383425053665,
+       если нужен доступ к конкретному пользователю в конкретном разделе
+       Писать, например ?login=103333743383425053665,
+       если нужен доступ к конкретному пользователю
+
     """
 
     queryset = NumStop.objects.all()
@@ -207,18 +210,17 @@ class NumStopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateM
         return NumStopSerializer
 
     def get(self, request, *args, **kwargs):
-        id_les = request.GET.get("id_les")
         login = request.GET.get("login")
         block = request.GET.get("block")
-        if (id_les is not None) and (login is not None) and (block is not None):
-            show_info = NumStop.objects.filter(block=block, id_les=id_les, login=login)
+        if (login is not None) and (block is not None):
+            show_info = NumStop.objects.filter(block=block, login=login)
             serializer = NumStopSerializer(show_info, many=True)
             return Response(serializer.data)
-        elif (id_les is not None) and (login is None) and (block is not None):
-            show_info = NumStop.objects.filter(block=block, id_les=id_les)
+        elif (login is None) and (block is not None):
+            show_info = NumStop.objects.filter(block=block)
             serializer = NumStopSerializer(show_info, many=True)
             return Response(serializer.data)
-        elif(id_les is None) and (login is not None) and (block is not None):
+        elif(login is not None) and (block is not None):
             show_info = NumStop.objects.filter(block=block, login=login)
             serializer = NumStopSerializer(show_info, many=True)
             return Response(serializer.data)
@@ -1309,6 +1311,10 @@ class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
     @swagger_auto_schema(operation_summary='добавить новое избранное')
     def post(self, request):
         return self.create(request)
+
+    @swagger_auto_schema(operation_summary='удалить данные о конкретном избранном')
+    def delete(self, request):
+        return self.destroy(request, pk=pk)
 
 
 class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
