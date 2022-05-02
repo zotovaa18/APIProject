@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='ProgressBlocks',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name_les', models.TextField()),
                 ('sum', models.IntegerField()),
             ],
             options={

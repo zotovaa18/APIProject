@@ -170,7 +170,7 @@ class ProgressBlocksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     """
      get:
        дто для экранов с местом остановки пользователей
-       Писать, например ?id_les=1&login=103333743383425053665,
+       Писать, например ?login=103333743383425053665,
        если нужен доступ к конкретному пользователю в конкретном уроке и разделе
     """
 
@@ -182,17 +182,8 @@ class ProgressBlocksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.
         return ProgressBlocksSerializer
 
     def get(self, request, *args, **kwargs):
-        id_les = request.GET.get("id_les")
         login = request.GET.get("login")
-        if (id_les is not None) and (login is not None):
-            show_info = ProgressBlocks.objects.filter(id_les=id_les, login=login)
-            serializer = ProgressBlocksSerializer(show_info, many=True)
-            return Response(serializer.data)
-        elif (id_les is not None) and (login is None):
-            show_info = ProgressBlocks.objects.filter(id_les=id_les)
-            serializer = ProgressBlocksSerializer(show_info, many=True)
-            return Response(serializer.data)
-        elif(id_les is None) and (login is not None):
+        if login is not None:
             show_info = ProgressBlocks.objects.filter(login=login)
             serializer = ProgressBlocksSerializer(show_info, many=True)
             return Response(serializer.data)

@@ -38,7 +38,7 @@ class NumStopSerializer(serializers.ModelSerializer):
 class ProgressBlocksSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgressBlocks
-        fields = ['id_les', 'login', 'sum']
+        fields = ['name_les', 'login', 'sum']
 
 
 class NumberOfWeakPointsSerializer(serializers.ModelSerializer):
