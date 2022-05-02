@@ -35,6 +35,17 @@ class Weaks(models.Model):
         db_table = 'for_weak_dto'
 
 
+class DeleteDTO(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    id_ex = ArrayField(models.IntegerField())
+    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+
+    class Meta:
+        managed = False
+        db_table = 'delete_dto'
+
+
 # class WeakExerciseDTO:
 #     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
 #     count = models.IntegerField()

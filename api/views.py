@@ -1,4 +1,4 @@
-#from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse
 from .models import *
 from .serializers import *
 '''from django.http import JsonResponse
@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view'''
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import APIView
 from rest_framework import generics
 from rest_framework import mixins
@@ -14,6 +15,43 @@ from rest_framework import viewsets
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
+
+
+class DeleteDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+     get:
+       дто для экранов со слабыми уроками для пользователей
+       Писать /?id_les=...&login=, если нужен доступ к конкретному пользователю
+    """
+    queryset = DeleteDTO.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return DeleteDTOSerializer
+
+    @swagger_auto_schema(operation_summary='получить статистику')
+    def get(self, request, *args, **kwargs):
+        login = request.GET.get("login")
+        id_les = request.GET.get("id_les")
+        if (login is not None) and (id_les is not None):
+            show_info = DeleteDTO.objects.filter(id_les=id_les, login=login)
+            serializer = DeleteDTOSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+
+    @transaction.atomic
+    def delete(self, request):
+        login = request.GET.get("login")
+        id_les = request.GET.get("id_les")
+        print('tyt')
+        show_info = DeleteDTO.objects.get(id_les=id_les, login=login)
+        print(show_info.id_ex)
+        for i in show_info.id_ex:
+            print(i)
+            instance = Progress.objects.get(login=login, id_ex=i)
+            instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):

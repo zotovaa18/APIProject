@@ -47,6 +47,13 @@ class WeaksSerializer(serializers.ModelSerializer):
         fields = ['name_les', 'id_les', 'login','total', 'completed','data']
 
 
+class DeleteDTOSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeleteDTO
+        fields = ['id_les', 'id_ex', 'login']
+
+
+
 class ProgressBlocksSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgressBlocks
