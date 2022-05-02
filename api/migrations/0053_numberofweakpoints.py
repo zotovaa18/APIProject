@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='NumberOfWeakPoints',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name_les', models.TextField()),
                 ('count', models.IntegerField()),
                 ('type', models.TextField()),
             ],

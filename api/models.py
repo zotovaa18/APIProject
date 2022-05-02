@@ -8,7 +8,7 @@ from makevideo.models import Video
 
 class NumberOfWeakPoints(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    name_les = models.TextField()
     login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
     count = models.IntegerField()
     type = models.TextField()

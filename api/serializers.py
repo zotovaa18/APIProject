@@ -6,6 +6,7 @@ Created on Fri Nov  5 22:20:50 2021
 """
 
 from rest_framework import serializers
+from django.db import transaction
 
 from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
 from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
@@ -43,7 +44,7 @@ class ProgressBlocksSerializer(serializers.ModelSerializer):
 class NumberOfWeakPointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = NumberOfWeakPoints
-        fields = ['id_les', 'login', 'count', 'type']
+        fields = ['name_les', 'login', 'count', 'type']
 
 
 # class WeakPointsSerializer(serializers.ModelSerializer):
@@ -611,7 +612,9 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         fields = ['id', 'name_les', 'lessonblock', 'video', 'lesson_info', 'rules', 'lex', 'phrases', 'dialogs',
                   'description']
 
+    @transaction.atomic
     def create(self, validated_data):
+        #with transaction.atomic():
         lessons_info_data = validated_data.pop('lesson_info')
         rules_data = validated_data.pop('rules')
         phrases_data = validated_data.pop('phrases')
