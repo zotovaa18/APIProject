@@ -16,21 +16,44 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
 
-class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    queryset = WeakPoints.objects.all()
-    serializer_class = WeakPointsSerializer
+class NumberOfWeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+     get:
+       дто для экранов со слабыми уроками для пользователей
+       Писать /?login=, если нужен доступ к конкретному пользователю
+    """
+    queryset = NumberOfWeakPoints.objects.all()
 
-    def get(self, request):
-        return self.list(request)
+    def get_serializer_class(self):
+        method = self.request.method
+        return NumberOfWeakPointsSerializer
+
+    @swagger_auto_schema(operation_summary='получить статистику')
+    def get(self, request, *args, **kwargs):
+        login = request.GET.get("login")
+        if login is not None:
+            show_info = NumberOfWeakPoints.objects.filter(login=login)
+            serializer = NumberOfWeakPointsSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
 
 
-class WeakPointsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                        mixins.DestroyModelMixin):
-    queryset = WeakPoints.objects.all()
-    serializer_class = WeakPointsSerializer
-
-    def get(self, request, pk):
-        return self.retrieve(request, pk=pk)
+# class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+#     queryset = WeakPoints.objects.all()
+#     serializer_class = WeakPointsSerializer
+#
+#     def get(self, request):
+#         return self.list(request)
+#
+#
+# class WeakPointsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+#                         mixins.DestroyModelMixin):
+#     queryset = WeakPoints.objects.all()
+#     serializer_class = WeakPointsSerializer
+#
+#     def get(self, request, pk):
+#         return self.retrieve(request, pk=pk)
 
 
 class DialogDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):

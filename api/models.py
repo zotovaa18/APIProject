@@ -6,6 +6,18 @@ from django.contrib.postgres.fields import ArrayField
 from makevideo.models import Video
 
 
+class NumberOfWeakPoints(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+    count = models.IntegerField()
+    type = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'number_of_weak_points'
+
+
 class Rating(models.Model):
     login = models.CharField(primary_key=True, max_length=200, serialize=False)
     name = models.CharField(max_length=40)
@@ -18,13 +30,13 @@ class Rating(models.Model):
         db_table = 'rating'
 
 
-class WeakPoints(models.Model):
-    login = models.CharField(primary_key=True, max_length=200, serialize=False)
-    weak = ArrayField(models.IntegerField())
-
-    class Meta:
-        managed = False
-        db_table = 'weak_points'
+# class WeakPoints(models.Model):
+#     login = models.CharField(primary_key=True, max_length=200, serialize=False)
+#     weak = ArrayField(models.IntegerField())
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'weak_points'
 
 
 class TimeSpent(models.Model):
