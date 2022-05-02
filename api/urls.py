@@ -79,7 +79,8 @@ urlpatterns = [
     # path('weak_points/', WeakPointsList.as_view()),
     # path('weak_points/<int:pk>/', WeakPointsDetails.as_view()),
     path('number_of_weak_points/', NumberOfWeakPointsList.as_view()),
-    path('progress_blocks/', ProgressBlocksList.as_view())
+    path('progress_blocks/', ProgressBlocksList.as_view()),
+    path('weak_points/', WeakPointsList.as_view())
 
     # path('api/newletters/', NewlettersList.as_view()),
     # path('api/newwords/', NewwordsList.as_view()),

@@ -35,11 +35,11 @@ class NumStopSerializer(serializers.ModelSerializer):
         fields = ['block', 'name_les', 'login', 'stop']
 
 
-class WeakPointsDTOSerializer(serializers.ModelSerializer):
-    lex = LexDTOWriteSerializer(many=True)
+class WeakPointsSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = WeakPointDTO
-        fields = ['count', 'type', 'name_les', 'id_les', 'login', 'total', 'complited']
+        model = WeakPoints
+        fields = ['name_les', 'id_les', 'login','total', 'completed','count', 'type']
 
 
 class ProgressBlocksSerializer(serializers.ModelSerializer):
