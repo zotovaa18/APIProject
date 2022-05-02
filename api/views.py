@@ -39,6 +39,28 @@ class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
             return self.list(request, *args, **kwargs)
 
 
+class WeaksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+     get:
+       дто для экранов со слабыми уроками для пользователей
+       Писать /?login=, если нужен доступ к конкретному пользователю
+    """
+    queryset = Weaks.objects.all()
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return WeaksSerializer
+
+    @swagger_auto_schema(operation_summary='получить статистику')
+    def get(self, request, *args, **kwargs):
+        login = request.GET.get("login")
+        if login is not None:
+            show_info = Weaks.objects.filter(login=login)
+            serializer = WeaksSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+
 
 class NumberOfWeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """

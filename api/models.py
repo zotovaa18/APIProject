@@ -21,6 +21,20 @@ class WeakPoints(models.Model):
         db_table = 'for_weak_points_dto'
 
 
+class Weaks(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    name_les = models.TextField()
+    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+    total = models.IntegerField()
+    completed = models.IntegerField()
+    data = ArrayField(models.TextField())
+
+    class Meta:
+        managed = False
+        db_table = 'for_weak_dto'
+
+
 # class WeakExerciseDTO:
 #     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
 #     count = models.IntegerField()
