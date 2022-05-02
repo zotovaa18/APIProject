@@ -31,7 +31,7 @@ class TimeSpentSerializer(serializers.ModelSerializer):
 class NumStopSerializer(serializers.ModelSerializer):
     class Meta:
         model = NumStop
-        fields = '__all__'
+        fields = ['block', 'id_les', 'login', 'stop']
 
 
 class NumberOfWeakPointsSerializer(serializers.ModelSerializer):

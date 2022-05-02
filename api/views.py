@@ -167,21 +167,38 @@ class TimeSpentDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixin
 
 
 class NumStopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    queryset = NumStop.objects.all()
-    serializer_class = NumStopSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-
-class NumStopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin):
+    """
+     get:
+       дто для экранов с местом остановки пользователей
+       Писать, например ?block=wordsletters&id_les=1&login=103333743383425053665,
+       если нужен доступ к конкретному пользователю в конкретном уроке и разделе
+    """
 
     queryset = NumStop.objects.all()
-    serializer_class = NumStopSerializer
 
-    def get(self, request, pk):
-        return self.retrieve(request, pk=pk)
+    @swagger_auto_schema(operation_summary='получить порядковый номер остановки')
+    def get_serializer_class(self):
+        method = self.request.method
+        return NumStopSerializer
+
+    def get(self, request, *args, **kwargs):
+        id_les = request.GET.get("id_les")
+        login = request.GET.get("login")
+        block = request.GET.get("block")
+        if (id_les is not None) and (login is not None) and (block is not None):
+            show_info = NumStop.objects.filter(block=block, id_les=id_les, login=login)
+            serializer = NumStopSerializer(show_info, many=True)
+            return Response(serializer.data)
+        elif (id_les is not None) and (login is None) and (block is not None):
+            show_info = NumStop.objects.filter(block=block, id_les=id_les)
+            serializer = NumStopSerializer(show_info, many=True)
+            return Response(serializer.data)
+        elif(id_les is None) and (login is not None) and (block is not None):
+            show_info = NumStop.objects.filter(block=block, login=login)
+            serializer = NumStopSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
 
 
 class CountryList(generics.GenericAPIView, mixins.ListModelMixin,

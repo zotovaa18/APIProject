@@ -76,7 +76,6 @@ urlpatterns = [
     path('phrasesdto/', PhrasesDTOList.as_view()),
     path('rating/', RatingList.as_view()),
     path('num_stop/', NumStopList.as_view()),
-    path('num_stop/<int:pk>/', NumStopDetails.as_view()),
     # path('weak_points/', WeakPointsList.as_view()),
     # path('weak_points/<int:pk>/', WeakPointsDetails.as_view()),
     path('number_of_weak_points/', NumberOfWeakPointsList.as_view()),

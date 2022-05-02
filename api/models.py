@@ -49,8 +49,11 @@ class TimeSpent(models.Model):
 
 
 class NumStop(models.Model):
-    login = models.CharField(primary_key=True, max_length=200, serialize=False)
-    count = models.IntegerField()
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
+    block = models.TextField()
+    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
+    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
+    stop = models.IntegerField()
 
     class Meta:
         managed = False
