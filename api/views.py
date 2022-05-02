@@ -16,6 +16,33 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 
 
+class WeakPointsDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+     get:
+       дто для экранов со слабыми уроками для пользователей
+       Писать /?login=, если нужен доступ к конкретному пользователю
+    """
+    weak_points = WeakPointsDTO.objects.all()
+    
+    
+        
+    
+
+    def get_serializer_class(self):
+        method = self.request.method
+        return NumberOfWeakPointsSerializer
+
+    @swagger_auto_schema(operation_summary='получить статистику')
+    def get(self, request, *args, **kwargs):
+        login = request.GET.get("login")
+        if login is not None:
+            show_info = NumberOfWeakPoints.objects.filter(login=login)
+            serializer = NumberOfWeakPointsSerializer(show_info, many=True)
+            return Response(serializer.data)
+        else:
+            return self.list(request, *args, **kwargs)
+
+
 class NumberOfWeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
      get:
@@ -1154,6 +1181,9 @@ class ProgressList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
     def post(self, request):
         return self.create(request)
 
+    def delete(self, request):
+        return self.destroy(request)
+
 
 class ProgressDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                       mixins.DestroyModelMixin):
@@ -1311,10 +1341,6 @@ class FavoritesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
     @swagger_auto_schema(operation_summary='добавить новое избранное')
     def post(self, request):
         return self.create(request)
-
-    @swagger_auto_schema(operation_summary='удалить данные о конкретном избранном')
-    def delete(self, request):
-        return self.destroy(request, pk=pk)
 
 
 class FavoritesDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
