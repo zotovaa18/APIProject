@@ -63,7 +63,27 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8000',
+]
+
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = (
+    'csrftoken',
+    'content-type',
+    'X-CSRFToken',
+    'Authorization',
+    'Content-Type',
+    'Accept'
+)
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = 'X-CSRFToken'
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = 'APIProject.urls'
 
 TEMPLATES = [
