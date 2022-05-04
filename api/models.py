@@ -209,8 +209,7 @@ class PhrasesDTO(models.Model):
 class ForLessonsDTO(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.CharField(max_length=100,  null=True)
-    lessonblock = models.ForeignKey('LessonBlocks', models.DO_NOTHING, db_column='id_lb',
-                                    related_name='ForLessonsDTO_lesson_info', null=True)
+    lessonblock = models.IntegerField( null=True)
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video',
                               blank=True, null=True)
     description = models.TextField(blank=True, null=True)

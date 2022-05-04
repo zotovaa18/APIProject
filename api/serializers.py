@@ -639,14 +639,19 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         phrases_data = validated_data.pop('phrases')
         dialogs_data = validated_data.pop('dialogs')
         lexs_data = validated_data.pop('lex')
-        print(Lessons.objects.order_by("id_les").values_list("id_les", flat=True).last() + 1)
-        forlessonsdto = ForLessonsDTO.objects.create(id=Lessons.objects.order_by("id_les").values_list("id_les", flat=True).last() + 1,
+        print(ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+        forlessonsdto = ForLessonsDTO.objects.create(id=ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
                                                      **validated_data)
 
         print('near les')
         print(forlessonsdto.id)
+        list_id_lb = LessonBlocks.objects.values_list('id_lb', flat=True)
+        if forlessonsdto.lessonblock not in list_id_lb:
+            lb = LessonBlocks.objects.create(id_lb=forlessonsdto.lessonblock)
+            lb.save()
+        lb1 = LessonBlocks.objects.get(id_lb=forlessonsdto.lessonblock)
         les = Lessons.objects.create(id_les=forlessonsdto.id,
-                                     name_les=forlessonsdto.name_les, lessonblock=forlessonsdto.lessonblock,
+                                     name_les=forlessonsdto.name_les, lessonblock=lb1,
                                      video=forlessonsdto.video, **lessons_info_data)
         les.save()
         LessonInfoDTO.objects.create(id=forlessonsdto.id, forlesson=forlessonsdto, **lessons_info_data)
