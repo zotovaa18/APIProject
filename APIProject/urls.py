@@ -22,6 +22,12 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from .customopenapi import CustomOpenAPISchemaGenerator
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Project API",
@@ -41,5 +47,9 @@ urlpatterns = [
     path('', include('makevideo.urls')),
     path('swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     #path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('auth/', include('authentication.urls', namespace='authentication')),
 ]
 
