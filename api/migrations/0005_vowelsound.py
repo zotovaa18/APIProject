@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('transcr1', models.CharField(max_length=2)),
                 ('transcr2', models.CharField(max_length=2)),
-                ('sound1', models.TextField()),
-                ('sound2', models.TextField()),
+                ('sound1', models.FileField(upload_to="images/sound/")),
+                ('sound2', models.FileField(upload_to="images/sound/")),
             ],
             options={
                 'db_table': 'vowel_sound',

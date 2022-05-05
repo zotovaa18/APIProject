@@ -17,6 +17,7 @@ from rest_framework import viewsets
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class DeleteDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -171,6 +172,7 @@ class PhrasesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
 class RatingList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         return self.list(request)
@@ -195,6 +197,7 @@ class LexDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 class RulesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = RulesDTO.objects.all()
     serializer_class = RulesDTOWriteSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         return self.list(request)
@@ -324,6 +327,7 @@ class CountryList(generics.GenericAPIView, mixins.ListModelMixin,
     """
     queryset = Countries.objects.all()
     serializer_class = CountriesSerializer
+    parser_classes = (MultiPartParser, FormParser)
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @swagger_auto_schema(operation_summary='получить список всех стран')
@@ -764,6 +768,7 @@ class VowelSoundList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
        добавляет новый звук гласной
     """
     queryset = VowelSound.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         method = self.request.method
@@ -815,6 +820,7 @@ class MediaList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
        добавляет новое медиа. Можно добавить медиа без лексемы
     """
     queryset = Medias.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         method = self.request.method
@@ -913,6 +919,7 @@ class ReplicasList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
        symbol - знак, который пишется в конце фразы
     """
     queryset = Replicas.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         method = self.request.method
@@ -942,6 +949,7 @@ class ReplicasDetails(generics.GenericAPIView, mixins.RetrieveModelMixin,
     """
     queryset = Replicas.objects.all()
     serializer_class = ReplicasWriteSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     @swagger_auto_schema(operation_summary='получить данные о конкретной реплике по id')
     def get(self, request, pk):
@@ -1284,7 +1292,7 @@ class TasksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
        pronunciation - микрофон для фраз
     """
     queryset = Tasks.objects.all()
-
+    parser_classes = (MultiPartParser, FormParser)
     def get_serializer_class(self):
         method = self.request.method
         if method == 'PUT' or method == 'POST':
@@ -1313,6 +1321,7 @@ class TasksDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Up
     """
     queryset = Tasks.objects.all()
     serializer_class = TasksWriteSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     @swagger_auto_schema(operation_summary='получить данные о конкретном задании по id')
     def get(self, request, pk):

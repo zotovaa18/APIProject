@@ -18,6 +18,7 @@ from .models import *
 
 
 class RatingSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(required=False)
     class Meta:
         model = Rating
         fields = ['name', 'surname', 'photo', 'count']
@@ -38,20 +39,19 @@ class NumStopSerializer(serializers.ModelSerializer):
 class WeakPointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeakPoints
-        fields = ['name_les', 'id_les', 'login','total', 'completed','count', 'type']
+        fields = ['name_les', 'id_les', 'login', 'total', 'completed', 'count', 'type']
 
 
 class WeaksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Weaks
-        fields = ['name_les', 'id_les', 'login','total', 'completed','data']
+        fields = ['name_les', 'id_les', 'login', 'total', 'completed','data']
 
 
 class DeleteDTOSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeleteDTO
         fields = ['id_les', 'id_ex', 'login']
-
 
 
 class ProgressBlocksSerializer(serializers.ModelSerializer):
@@ -85,12 +85,16 @@ class StatusSerializer(serializers.ModelSerializer):
 
 
 class CountriesSerializer(serializers.ModelSerializer):
+    flag_link = serializers.ImageField(required=False)
+
     class Meta:
         model = Countries
         fields = '__all__'
 
 
 class PeopleSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(required=False)
+
     class Meta:
         model = People
         fields = '__all__'
@@ -195,6 +199,8 @@ class LessonInfoDTOWriteSerializer(serializers.ModelSerializer):
 class RulesDTOWriteSerializer(serializers.ModelSerializer):
     # vl_var = VlWriteSerializer(many=True)
     # id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
+    picture = serializers.ImageField(required=False)
+    sound_rule = serializers.FileField(required=False)
     id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
                                                 required=False)
 
@@ -244,7 +250,6 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
 
 class LexDTOWriteSerializer(serializers.ModelSerializer):
     id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-    # id_miss = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True, required=False)
     id_miss = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
     id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
                                                 required=False)
@@ -1130,6 +1135,8 @@ class RulesLexemesSerializer(serializers.ModelSerializer):
 
 
 class MediaWriteSerializer(serializers.ModelSerializer):
+    link_med = serializers.FileField(required=False)
+
     class Meta:
         model = Medias
         fields = ('id_med', 'link_med', 'lexeme', 'type')
@@ -1147,6 +1154,8 @@ class IkSerializer(serializers.ModelSerializer):
 
 
 class ReplicasWriteSerializer(serializers.ModelSerializer):
+    med_ik = serializers.FileField(required=False)
+
     class Meta:
         model = Replicas
         fields = ('id_rep', 'time_start', 'time_finish', 'lexeme', 'media', 'ik', 'med_ik', 'symbol')
@@ -1170,6 +1179,9 @@ class ProgressWriteSerializer(serializers.ModelSerializer):
 
 
 class VowelSoundWriteSerializer(serializers.ModelSerializer):
+    sound1 = serializers.FileField(required=False)
+    sound2 = serializers.FileField(required=False)
+
     class Meta:
         model = VowelSound
         fields = ('id', 'lexeme', 'transcr1', 'transcr2', 'sound1', 'sound2')

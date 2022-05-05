@@ -78,7 +78,7 @@ class Rating(models.Model):
     login = models.CharField(primary_key=True, max_length=200, serialize=False)
     name = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
-    photo = models.TextField(default='Пусто')
+    photo = models.ImageField(upload_to="images/", blank=True, null=True)
     count = models.IntegerField()
 
     class Meta:
@@ -172,8 +172,8 @@ class RulesDTO(models.Model):
     id_lex = models.ManyToManyField('Lexemes', blank=True, null=True, related_name='RulesDTO_lex_id_lex')
     id_var = models.ManyToManyField('Lexemes', blank=True, null=True)
     side = models.CharField(max_length=5, blank=True, null=True)
-    sound_rule = models.TextField(blank=True, null=True)
-    picture = models.TextField()
+    sound_rule = models.FileField(unique=True, upload_to="images/sound/")
+    picture = models.ImageField(unique=True, upload_to="images/")
     forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules', blank=True, null=True,)
 
 
@@ -365,7 +365,7 @@ class People(models.Model):
     #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
     password_admin = models.CharField(max_length=20, blank=True, null=True)
-    photo = models.TextField(default='Пусто')
+    photo = models.ImageField(unique=True, upload_to="images/")
 
     class Meta:
         managed = False
@@ -403,9 +403,9 @@ class Progress(models.Model):
 
 class Rules(models.Model):
     id_r = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    picture = models.TextField()
+    picture = models.ImageField(unique=True, upload_to="images/")
     side = models.CharField(max_length=5)
-    sound_rule = models.TextField(blank=True, null=True)
+    sound_rule = models.FileField(unique=True, upload_to="images/sound/")
     lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', related_name='rule')
     lexeme = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
 
@@ -437,7 +437,7 @@ class Replicas(models.Model):
     lexeme = models.ForeignKey(Lexemes, models.DO_NOTHING, db_column='id_lex')
     media = models.ForeignKey(Medias, models.DO_NOTHING, db_column='id_med')
     ik = models.ForeignKey(Ik, models.DO_NOTHING, db_column='id_ik')
-    med_ik = models.TextField()
+    med_ik = models.ImageField(upload_to="images/")
     symbol = models.CharField(max_length=1)
 
     class Meta:
@@ -456,10 +456,10 @@ class Tasks(models.Model):
     type = models.ForeignKey('TypesMed', models.DO_NOTHING, db_column='type_med', blank=True, null=True)
     num_lex = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
     count_miss = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
-    picture = models.TextField(blank=True, null=True)
-    sound = models.TextField(blank=True, null=True)
+    picture = models.ImageField(blank=True, null=True, upload_to="images/")
+    sound = models.FileField(blank=True, null=True, upload_to="images/sound/")
     replic = models.ForeignKey('Replicas', models.DO_NOTHING, db_column='id_rep',  blank=True, null=True)
-    pronunciation = models.TextField(blank=True, null=True)
+    pronunciation = models.FileField(blank=True, null=True, upload_to="images/sound/")
 
     class Meta:
         managed = False
@@ -512,8 +512,8 @@ class VowelSound(models.Model):
     lexeme = models.OneToOneField(Lexemes, models.DO_NOTHING, db_column='id_lex')
     transcr1 = models.CharField(max_length=2)
     transcr2 = models.CharField(max_length=2)
-    sound1 = models.TextField()
-    sound2 = models.TextField()
+    sound1 = models.FileField(upload_to="images/sound/")
+    sound2 = models.FileField(upload_to="images/sound/")
 
     class Meta:
         managed = False

@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
             name='Medias',
             fields=[
                 ('id_med', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
-                ('link_med', models.FileField(upload_to='media/')),
+                ('link_med', models.FileField(upload_to="images/")),
             ],
             options={
                 'db_table': 'media',
@@ -208,7 +208,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=40, unique=True)),
                 ('password', models.CharField(blank=True, max_length=20, null=True)),
                 ('password_admin', models.CharField(blank=True, max_length=20, null=True)),
-                ('photo', models.TextField(default='Пусто'))
+                ('photo',  models.ImageField(upload_to="images/"))
             ],
             options={
                 'db_table': 'people',
@@ -269,7 +269,9 @@ class Migration(migrations.Migration):
             name='Rules',
             fields=[
                 ('id_r', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
-                ('picture', models.TextField()),
+                ('picture', models.ImageField(unique=True, upload_to="images/")),
+                ('side', models.CharField(max_length=5)),
+                ('sound_rule', models.FileField(unique=True, upload_to="images/sound/")),
             ],
             options={
                 'db_table': 'reduction',
@@ -324,9 +326,9 @@ class Migration(migrations.Migration):
                 ('num_task', models.DecimalField(decimal_places=0, max_digits=2)),
                 ('num_lex', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
                 ('count_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
-                ('picture', models.TextField(blank=True, null=True)),
-                ('sound', models.TextField(blank=True, null=True)),
-                ('pronunciation', models.TextField(blank=True, null=True))
+                ('picture', models.ImageField(blank=True, null=True, upload_to="images/")),
+                ('sound', models.FileField(blank=True, null=True, upload_to="images/sound/")),
+                ('pronunciation', models.FileField(blank=True, null=True, upload_to="images/sound/"))
             ],
             options={
                 'db_table': 'tasks',

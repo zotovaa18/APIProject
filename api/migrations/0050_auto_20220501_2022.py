@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                 ('login', models.CharField(primary_key=True, max_length=200, serialize=False)),
                 ('name', models.CharField(max_length=40)),
                 ('surname', models.CharField(max_length=40)),
-                ('photo', models.TextField(default='Пусто')),
+                ('photo', models.ImageField(upload_to="images/", blank=True, null=True)),
                 ('count', models.IntegerField()),
             ],
             options={
