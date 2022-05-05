@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
             name='Medias',
             fields=[
                 ('id_med', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
-                ('link_med', models.TextField()),
+                ('link_med', models.FileField(upload_to='media/')),
             ],
             options={
                 'db_table': 'media',
