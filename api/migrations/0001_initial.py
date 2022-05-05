@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_country', models.CharField(max_length=3, primary_key=True, serialize=False)),
                 ('country_name', models.CharField(max_length=40, unique=True)),
-                ('flag_link', models.TextField(unique=True)),
+                ('flag_link', models.ImageField(unique=True, upload_to="images/")),
             ],
             options={
                 'db_table': 'countries',

@@ -13,8 +13,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShowInfoAboutWordsLetters',
             fields=[
+                ('id_les', models.IntegerField()),
                 ('name_les', models.CharField(max_length=100)),
                 ('id_ex', models.DecimalField(decimal_places=0, max_digits=5, primary_key=True, serialize=False)),
+                ('num_ex', models.IntegerField()),
                 ('id_task', models.TextField()),
                 ('num_task', models.TextField()),
                 ('mean_lex1', models.TextField()),

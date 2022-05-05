@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, generics, mixins
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from .serializers import (
 )
 
 
-class RegistrationAPIView(APIView):
+class RegistrationAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
     Разрешить всем пользователям (аутентифицированным и нет) доступ к данному эндпоинту.
     """
@@ -30,7 +30,7 @@ class RegistrationAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPIView(APIView):
+class LoginAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     permission_classes = (AllowAny,)
     #renderer_classes = (UserJSONRenderer,)
     serializer_class = LoginSerializer

@@ -14,8 +14,10 @@ class Migration(migrations.Migration):
             name='ShowInfoAboutRules',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id_les', models.IntegerField()),
                 ('name_les', models.CharField(max_length=100)),
                 ('id_ex', models.DecimalField(decimal_places=0, max_digits=5)),
+                ('num_ex', models.IntegerField()),
                 ('id_r', models.DecimalField(decimal_places=0, max_digits=5)),
                 ('id_task', models.TextField()),
                 ('picture', models.TextField()),

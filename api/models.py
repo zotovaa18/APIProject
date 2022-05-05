@@ -130,7 +130,7 @@ class ProgressBlocks(models.Model):
 class Countries(models.Model):
     id_country = models.CharField(primary_key=True, max_length=3)
     country_name = models.CharField(unique=True, max_length=40)
-    flag_link = models.TextField(unique=True)
+    flag_link = models.ImageField(unique=True, upload_to="images/")
 
     class Meta:
         managed = False
@@ -521,8 +521,10 @@ class VowelSound(models.Model):
 
 
 class ShowInfoAboutRules(models.Model):
+    id_les = models.IntegerField()
     name_les = models.CharField(max_length=100)
     id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    num_ex = models.IntegerField()
     id_r = models.DecimalField(max_digits=5, decimal_places=0)
     id_task = models.TextField()
     picture = models.TextField()
@@ -541,8 +543,10 @@ class ShowInfoAboutRules(models.Model):
 
 
 class ShowInfoAboutWordsLetters(models.Model):
+    id_les = models.IntegerField()
     name_les = models.CharField(max_length=100)
     id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    num_ex = models.IntegerField()
     id_task = models.TextField()
     num_task = models.TextField()
     mean_lex1 = models.TextField()
@@ -563,8 +567,10 @@ class ShowInfoAboutWordsLetters(models.Model):
 
 
 class ShowInfoAboutPhrase(models.Model):
+    id_les = models.IntegerField()
     name_les = models.CharField(max_length=100)
     id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    id_les = models.IntegerField()
     id_task = models.TextField()
     num_task = models.TextField()
     replica = models.TextField()

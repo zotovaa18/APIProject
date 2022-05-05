@@ -47,8 +47,22 @@ INSTALLED_APPS = [
     'authentication',
 ]
 
+# SWAGGER_SETTINGS = {
+#    'USE_SESSION_AUTH': True
+# }
+
 SWAGGER_SETTINGS = {
-   'USE_SESSION_AUTH': False
+    'LOGIN_URL': 'auth/users/login',
+    'SHOW_REQUEST_HEADERS': True,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
 }
 
 MIDDLEWARE = [
@@ -175,11 +189,13 @@ USE_TZ = True
 
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 # STATICFILES_DIRS = (
-#     os.path.join(PROJECT_ROOT, 'static'),
+#     os.path.join(BASE_DIR, 'static'),
 # )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type
@@ -190,6 +206,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'authentication.backends.JWTAuthentication',
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
