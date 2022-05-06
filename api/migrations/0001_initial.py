@@ -271,7 +271,7 @@ class Migration(migrations.Migration):
                 ('id_r', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
                 ('picture', models.ImageField(unique=True, upload_to="images/")),
                 ('side', models.CharField(max_length=5)),
-                ('sound_rule', models.FileField(unique=True, upload_to="images/sound/")),
+                ('sound_rule', models.FileField(unique=True, upload_to="images/")),
             ],
             options={
                 'db_table': 'reduction',
@@ -327,8 +327,8 @@ class Migration(migrations.Migration):
                 ('num_lex', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
                 ('count_miss', models.DecimalField(blank=True, decimal_places=0, max_digits=3, null=True)),
                 ('picture', models.ImageField(blank=True, null=True, upload_to="images/")),
-                ('sound', models.FileField(blank=True, null=True, upload_to="images/sound/")),
-                ('pronunciation', models.FileField(blank=True, null=True, upload_to="images/sound/"))
+                ('sound', models.FileField(blank=True, null=True, upload_to="images/")),
+                ('pronunciation', models.FileField(blank=True, null=True, upload_to="images/"))
             ],
             options={
                 'db_table': 'tasks',
