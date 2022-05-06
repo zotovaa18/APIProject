@@ -1206,21 +1206,21 @@ class FavoritesReadSerializer(serializers.ModelSerializer):
 class ShowInfoAboutRulesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutRules
-        fields = ('name_les', 'id_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
+        fields = ('name_les', 'id_ex', 'num_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
                   'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
 
 
 class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutWordsLetters
-        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
+        fields = ('name_les', 'id_ex', 'num_ex', 'id_task', 'num_task', 'mean_lex1', 'sound1', 'mean_lex2', 'transcr1',
                   'transcr2', 'sound2', 'stress', 'pic', 'mean_type_ex', 'variant', 'miss')
 
 
 class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutPhrase
-        fields = ('name_les', 'id_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
+        fields = ('name_les', 'id_ex', 'num_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
                   'mean_type_ex')
 
 # class NewlettersSerializer(serializers.ModelSerializer):
