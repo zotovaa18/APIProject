@@ -220,6 +220,7 @@ class LessonInfoList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
 class ForLessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = ForLessonsDTO.objects.all()
     serializer_class = ForLessonsDTOWriteSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         return self.list(request)
