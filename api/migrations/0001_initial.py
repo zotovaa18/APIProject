@@ -269,7 +269,7 @@ class Migration(migrations.Migration):
             name='Rules',
             fields=[
                 ('id_r', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
-                ('picture', models.ImageField(unique=True, upload_to="images/")),
+                ('picture', models.TextField()),
                 ('side', models.CharField(max_length=5)),
                 ('sound_rule', models.FileField(unique=True, upload_to="images/")),
             ],

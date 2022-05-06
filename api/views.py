@@ -1023,6 +1023,7 @@ class RulesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
        добавляет новое правило. Side - сторона экрана, где должно располагаться правило
     """
     queryset = Rules.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         method = self.request.method

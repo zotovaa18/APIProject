@@ -403,7 +403,7 @@ class Progress(models.Model):
 
 class Rules(models.Model):
     id_r = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    picture = models.ImageField(unique=True, upload_to="images/")
+    picture = models.TextField()
     side = models.CharField(max_length=5)
     sound_rule = models.FileField(unique=True, upload_to="images/")
     lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', related_name='rule')
@@ -527,7 +527,7 @@ class ShowInfoAboutRules(models.Model):
     num_ex = models.IntegerField()
     id_r = models.DecimalField(max_digits=5, decimal_places=0)
     id_task = models.TextField()
-    picture = models.ImageField(upload_to="images/")
+    picture = models.TextField()
     sound_rule = models.FileField(upload_to="images/")
     side = models.CharField(max_length=5)
     mean_lex = models.TextField()

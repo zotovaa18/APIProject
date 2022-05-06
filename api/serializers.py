@@ -115,7 +115,7 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class RulesSerializer(serializers.ModelSerializer):
     lexeme = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
     lesson = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
-
+    sound_rule = serializers.FileField(required=False)
     class Meta:
         model = Rules
         fields = '__all__'

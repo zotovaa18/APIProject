@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('num_ex', models.IntegerField()),
                 ('id_r', models.DecimalField(decimal_places=0, max_digits=5)),
                 ('id_task', models.TextField()),
-                ('picture', models.ImageField(upload_to="images/")),
+                ('picture', models.TextField()),
                 ('sound_rule', models.FileField(upload_to="images/")),
                 ('side', models.CharField(max_length=5)),
                 ('mean_lex', models.TextField()),
