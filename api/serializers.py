@@ -294,7 +294,7 @@ class LexDTOWriteSerializer(serializers.ModelSerializer):
                 #     v.save()
             else:
                 print(validated_data.get('id_miss')[0])
-                lexdto.id_miss = validated_data.get('id_miss')
+                lexdto.id_miss = validated_data.get('id_miss')[0]
 
                 # vls_data = validated_data.pop('vl_miss')
                 # print('near vl_miss else')
@@ -786,7 +786,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 elif lex_data.get('type_ex').type_ex == 6:
                     print('in elif 6 exercises')
                     ex = Exercises.objects.create(id_ex=m,
-                                                  type=rule_data.get('type_ex'), lesson=les,
+                                                  type=lex_data.get('type_ex'), lesson=les,
                                                   num_ex=lex_data.get('num_ex'))
                     ex.save()
                     lex = LexDTO.objects.create(
@@ -807,13 +807,8 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         a.id_var.add(i)
                     a.save()
 
-                    for i in lex_data.get('id_lex'):
-                        print(i)
-                        a = LexDTO.objects.get(id=lex.id)
-                        a.id_lex.add(i)
-                    a.save()
                     print('near elif 6 task')
-                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex')[0])
+                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0])
                     task.save()
 
                     for i in lex_data.get('id_var'):
@@ -834,18 +829,14 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                             id=ex.id_ex,
                             forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
                             num_ex=lex_data.get('num_ex'))
-                        lex.save()
+
                         lex.id_miss = lex_data.get('id_miss')
+                        lex.save()
+
                         for i in lex_data.get('id_lex'):
                             print(i)
                             a = LexDTO.objects.get(id=lex.id)
                             a.id_lex.add(i)
-                        a.save()
-
-                        for i in lex_data.get('id_var'):
-                            print(i)
-                            a = LexDTO.objects.get(id=lex.id)
-                            a.id_var.add(i)
                         a.save()
 
                         print('near 5 task')
@@ -873,8 +864,14 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                             id=ex.id_ex,
                             forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
                             num_ex=lex_data.get('num_ex'))
-                        lex.save()
                         lex.id_miss = lex_data.get('id_miss')
+                        lex.save()
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_var.add(i)
+                        a.save()
+
                         for i in lex_data.get('id_lex'):
                             print(i)
                             a = LexDTO.objects.get(id=lex.id)
@@ -897,10 +894,11 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                                 task1.save()
 
                         print('near 15 variants')
+                        print(task.id_task)
                         for i in lex_data.get('id_var'):
                             print(i)
                             variant = Variants.objects.create(task=task, lexeme=i)
-                            variant.save()
+                        variant.save()
             else:
                 print('in else 1 3 14... exercises')
                 ex = Exercises.objects.create(id_ex=m,
@@ -927,15 +925,15 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
             type_ex = phrase_data.get('type_ex')
             num_ex = phrase_data.get('num_ex')
             print('in ph exercises')
-
+            m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             ex = Exercises.objects.create(
-                id_ex=Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                id_ex=m,
                 type=phrase_data.get('type_ex'), lesson=les,
                 num_ex=phrase_data.get('num_ex'))
             ex.save()
-            phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto,
-                                                  id=Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                                                  type_ex=type_ex, num_ex=num_ex)
+            phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex, type_ex=type_ex, num_ex=num_ex)
             phrasedto.id_rep.set(phrase_data.get('id_rep'))
 
             print(phrase_data.get('type_ex').type_ex)
@@ -964,7 +962,11 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         print(i)
                         variant = Variants.objects.create(task=task, lexeme=i)
                         variant.save()
-
+                else:
+                    print('near ph task')
+                    task = Tasks.objects.create(exercise=ex, num_task=1, replic=phrase_data.get('id_rep')[0],
+                                                num_lex=phrase_data.get('id_miss')[0])
+                    task.save()
                 phrasedto.save()
             else:
                 print('near ph task')
@@ -972,18 +974,21 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 task.save()
 
         for dialog_data in dialogs_data:
+            print('in exercises')
+            m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+            ex = Exercises.objects.create(id_ex=m, type=dialog_data.get('type_ex'), lesson=les,
+                                          num_ex=dialog_data.get('num_ex'))
+            ex.save()
             print('near dialogdto')
-            dialogdto = DialogDTO.objects.create(forlesson=forlessonsdto,
-                                                 id=DialogDTO.objects.order_by("id").values_list("id",
-                                                                                                 flat=True).last() + 1,
+            dialogdto = DialogDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex,
                                                  type_ex=dialog_data.get('type_ex'), num_ex=dialog_data.get('num_ex'),
                                                  id_rep=dialog_data.get('id_rep'))
             dialogdto.save()
 
             print(dialog_data.get('type_ex').type_ex)
-            print('in exercises')
-            ex = Exercises.objects.create(type=dialog_data.get('type_ex'), lesson=les, num_ex=dialog_data.get('num_ex'))
-            ex.save()
+
             if dialog_data.get('type_ex').type_ex == 21:
 
                 print('near 21 task')
@@ -1024,6 +1029,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         print(rules_data)
         phrases_data = validated_data.pop('phrases')
         lexs_data = validated_data.pop('lex')
+        dialogs_data = validated_data.pop('dialogs')
         forlessonsdto.name_les = validated_data.get('name_les', forlessonsdto.name_les)
         forlessonsdto.lessonblock = validated_data.get('lessonblock', forlessonsdto.lessonblock)
         forlessonsdto.video = validated_data.get('video', forlessonsdto.video)
@@ -1195,6 +1201,613 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         task.delete()
                         ex.delete()
                 rule_data.delete()
+
+        list_id_lex = []
+        for lex_data in lexs_data:
+            m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+            print(lex_data)
+            if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7) or \
+                    (lex_data.get('type_ex').type_ex == 5) or (lex_data.get('type_ex').type_ex == 15) or \
+                    (lex_data.get('type_ex').type_ex == 6):
+                if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7):
+                    if lex_data.get('id', None):
+                        print(lex_data.get('id'))
+                        print('in if 2 7 exercises')
+                        ex = Exercises.objects.get(id_ex=lex_data.get('id'))
+                        ex.type = lex_data.get('type_ex')
+                        ex.lesson = les
+                        ex.num_ex = lex_data.get('num_ex')
+                        ex.save()
+
+                        lex = LexDTO.objects.get(id=lex_data.get('id'))
+                        lex.forlesson = forlessonsdto
+                        lex.type_ex = lex_data.get('type_ex')
+                        lex.num_ex = lex_data.get('num_ex')
+                        lex.id_lex.set(lex_data.get('id_lex'))
+                        lex.save()
+
+                        print('near if 2 7  task')
+                        count = 0
+                        task_id_list = []
+                        for i in lex_data.get('id_lex'):
+                            count = count + 1
+                            print(i)
+                            obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count, lex_right=i)
+                            task_id_list.append(obj.id_task)
+
+                        ts = Tasks.objects.filter(exercise=ex)
+                        for t in ts:
+                            if t.id_task not in task_id_list:
+                                t.delete()
+                        list_id_lex.append(lex.id)
+                    else:
+
+                        print('in if 2 7 exercises')
+                        ex = Exercises.objects.create(id_ex=m,
+                                                      type=lex_data.get('type_ex'), lesson=les,
+                                                      num_ex=lex_data.get('num_ex'))
+                        ex.save()
+
+                        lex = LexDTO.objects.create(
+                            id=ex.id_ex,
+                            forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                            num_ex=lex_data.get('num_ex'))
+                        lex.save()
+
+                        for i in lex_data.get('id_lex'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_lex.add(i)
+                        a.save()
+                        print('near if 2 7  task')
+                        count = 0
+                        for i in lex_data.get('id_lex'):
+                            count = count + 1
+                            print(i)
+                            task = Tasks.objects.create(exercise=ex, num_task=count, lex_right=i)
+                            task.save()
+                        list_id_lex.append(lex.id)
+                elif lex_data.get('type_ex').type_ex == 6:
+                    if lex_data.get('id', None):
+                        ex = Exercises.objects.get(id_ex=lex_data.get('id'))
+                        ex.type = lex_data.get('type_ex')
+                        ex.lesson = les
+                        ex.num_ex = lex_data.get('num_ex')
+                        ex.save()
+
+                        lex = LexDTO.objects.get(id=lex_data.get('id'))
+                        lex.forlesson = forlessonsdto
+                        lex.type_ex = lex_data.get('type_ex')
+                        lex.num_ex = lex_data.get('num_ex')
+                        lex.id_lex.set(lex_data.get('id_lex'))
+                        lex.id_var.set(lex_data.get('id_var'))
+                        lex.save()
+
+                        print('near elif 6 task')
+                        task = Tasks.objects.get(exercise=ex)
+                        task.num_task = 1
+                        task.lex_right = lex_data.get('id_lex')[0]
+                        task.save()
+
+                        var_id_list = []
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            obj, created = Variants.objects.get_or_create(task=task, lexeme=i)
+                            var_id_list.append(obj.id)
+
+                        vs = Variants.objects.filter(task=task)
+                        for v in vs:
+                            if v.id not in var_id_list:
+                                v.delete()
+                        list_id_lex.append(lex.id)
+                    else:
+                        print('in elif 6 exercises')
+                        ex = Exercises.objects.create(id_ex=m,
+                                                      type=lex_data.get('type_ex'), lesson=les,
+                                                      num_ex=lex_data.get('num_ex'))
+                        ex.save()
+                        lex = LexDTO.objects.create(
+                            id=ex.id_ex,
+                            forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                            num_ex=lex_data.get('num_ex'))
+                        lex.save()
+
+                        for i in lex_data.get('id_lex'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_lex.add(i)
+                        a.save()
+
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_var.add(i)
+                        a.save()
+
+                        print('near elif 6 task')
+                        task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0])
+                        task.save()
+
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            variant = Variants.objects.create(task=task, lexeme=i)
+                            variant.save()
+                        list_id_lex.append(lex.id)
+                else:
+                    print('near 5 15')
+                    if lex_data.get('type_ex').type_ex == 5:
+                        if lex_data.get('id', None):
+                            ex = Exercises.objects.get(id_ex=lex_data.get('id'))
+                            ex.type = lex_data.get('type_ex')
+                            ex.lesson = les
+                            ex.num_ex = lex_data.get('num_ex')
+                            ex.save()
+
+                            lex = LexDTO.objects.get(id=lex_data.get('id'))
+                            lex.forlesson = forlessonsdto
+                            lex.type_ex = lex_data.get('type_ex')
+                            lex.num_ex = lex_data.get('num_ex')
+                            lex.id_lex.set(lex_data.get('id_lex'))
+                            lex.id_var.set(lex_data.get('id_var'))
+                            lex.id_miss = lex_data.get('id_miss')
+                            lex.save()
+
+                            print('near 5 task')
+                            task = Tasks.objects.get(exercise=ex)
+                            task.num_task = 1
+                            task.lex_right = lex_data.get('id_lex')[0]
+                            task.num_lex = lex_data.get('id_miss')[0]
+                            task.save()
+
+                            print('near 5 variants')
+                            var_id_list = []
+                            for i in lex_data.get('id_var'):
+                                print(i)
+                                obj, created = Variants.objects.get_or_create(task=task, lexeme=i)
+                                var_id_list.append(obj.id)
+
+                            vs = Variants.objects.filter(task=task)
+                            for v in vs:
+                                if v.id not in var_id_list:
+                                    v.delete()
+                            list_id_lex.append(lex.id)
+                        else:
+                            print('in if 5 exercises')
+                            ex = Exercises.objects.create(id_ex=m,
+                                                          type=lex_data.get('type_ex'), lesson=les,
+                                                          num_ex=lex_data.get('num_ex'))
+                            ex.save()
+                            lex = LexDTO.objects.create(
+                                id=ex.id_ex,
+                                forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                                num_ex=lex_data.get('num_ex'))
+                            lex.save()
+                            lex.id_miss = lex_data.get('id_miss')
+                            for i in lex_data.get('id_lex'):
+                                print(i)
+                                a = LexDTO.objects.get(id=lex.id)
+                                a.id_lex.add(i)
+                            a.save()
+
+                            print('near 5 task')
+                            for i in lex_data.get('id_var'):
+                                print(i)
+                                a = LexDTO.objects.get(id=lex.id)
+                                a.id_var.add(i)
+                            a.save()
+                            task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0],
+                                                        num_lex=lex_data.get('id_miss')[0])
+                            task.save()
+
+                            print('near 5 variants')
+                            for i in lex_data.get('id_var'):
+                                print(i)
+                                variant = Variants.objects.create(task=task, lexeme=i)
+                                variant.save()
+                            list_id_lex.append(lex.id)
+                    else:
+                        print('in 15 exercises')
+                        if lex_data.get('id', None):
+                            ex = Exercises.objects.get(id_ex=lex_data.get('id'))
+                            ex.type = lex_data.get('type_ex')
+                            ex.lesson = les
+                            ex.num_ex = lex_data.get('num_ex')
+                            ex.save()
+
+                            lex = LexDTO.objects.get(id=lex_data.get('id'))
+                            lex.forlesson = forlessonsdto
+                            lex.type_ex = lex_data.get('type_ex')
+                            lex.num_ex = lex_data.get('num_ex')
+                            lex.id_lex.set(lex_data.get('id_lex'))
+                            lex.id_var.set(lex_data.get('id_var'))
+                            lex.id_miss = lex_data.get('id_miss')
+                            lex.save()
+
+                            print('near 15 task')
+                            count = 0
+                            flag = False
+                            task_id_list = []
+                            for i in lex_data.get('id_miss'):
+                                count = count + 1
+                                print(i)
+                                if not flag:
+                                    obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count,
+                                                                               lex_right=lex_data.get('id_lex')[0],
+                                                                               num_lex=i)
+                                    task_id_list.append(obj.id_task)
+                                else:
+                                    obj1, created1 = Tasks.objects.get_or_create(exercise=ex, num_task=count,
+                                                                                 lex_right=lex_data.get('id_lex')[0],
+                                                                                 num_lex=i)
+                                    task_id_list.append(obj1.id_task)
+                            ts = Tasks.objects.filter(exercise=ex)
+                            for t in ts:
+                                if t.id_task not in task_id_list:
+                                    t.delete()
+                            print('near 15 variants')
+
+                            var_id_list = []
+                            for i in lex_data.get('id_var'):
+                                print(i)
+                                obj2, created = Variants.objects.get_or_create(task=obj, lexeme=i)
+                                var_id_list.append(obj2.id)
+
+                            vs = Variants.objects.filter(task=obj)
+                            for v in vs:
+                                if v.id not in var_id_list:
+                                    v.delete()
+                            list_id_lex.append(lex.id)
+                        else:
+                            ex = Exercises.objects.create(id_ex=m,
+                                                          type=lex_data.get('type_ex'), lesson=les,
+                                                          num_ex=lex_data.get('num_ex'))
+                            ex.save()
+                            lex = LexDTO.objects.create(
+                                id=ex.id_ex,
+                                forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                                num_ex=lex_data.get('num_ex'))
+                            lex.save()
+                            lex.id_miss = lex_data.get('id_miss')
+                            for i in lex_data.get('id_lex'):
+                                print(i)
+                                a = LexDTO.objects.get(id=lex.id)
+                                a.id_lex.add(i)
+                            a.save()
+
+                            print('near 15 task')
+                            count = 0
+                            flag = False
+                            for i in lex_data.get('id_miss'):
+                                count = count + 1
+                                print(i)
+                                if not flag:
+                                    task = Tasks.objects.create(exercise=ex, num_task=count,
+                                                                lex_right=lex_data.get('id_lex')[0], num_lex=i)
+                                    task.save()
+                                else:
+                                    task1 = Tasks.objects.create(exercise=ex, num_task=count,
+                                                                 lex_right=lex_data.get('id_lex')[0], num_lex=i)
+                                    task1.save()
+
+                            print('near 15 variants')
+                            for i in lex_data.get('id_var'):
+                                print(i)
+                                variant = Variants.objects.create(task=task, lexeme=i)
+                                variant.save()
+            else:
+                if lex_data.get('id', None):
+                    ex = Exercises.objects.get(id_ex=lex_data.get('id'))
+                    ex.type = lex_data.get('type_ex')
+                    ex.lesson = les
+                    ex.num_ex = lex_data.get('num_ex')
+                    ex.save()
+
+                    lex = LexDTO.objects.get(id=lex_data.get('id'))
+                    lex.forlesson = forlessonsdto
+                    lex.type_ex = lex_data.get('type_ex')
+                    lex.num_ex = lex_data.get('num_ex')
+                    lex.id_lex.set(lex_data.get('id_lex'))
+                    lex.save()
+
+                    print('near 1 3 14.... task')
+                    task = Tasks.objects.get(exercise=ex)
+                    task.num_task = 1
+                    task.lex_right = lex_data.get('id_lex')[0]
+                    task.save()
+
+                    list_id_lex.append(lex.id)
+                else:
+                    print('in else 1 3 14... exercises')
+                    ex = Exercises.objects.create(id_ex=m,
+                                                  type=lex_data.get('type_ex'), lesson=les, num_ex=lex_data.get('num_ex'))
+                    ex.save()
+
+                    lex = LexDTO.objects.create(
+                        id=ex.id_ex,
+                        forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                        num_ex=lex_data.get('num_ex'))
+                    lex.save()
+
+                    for i in lex_data.get('id_lex'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_lex.add(i)
+                    a.save()
+                    print('near 1 3 14.... task')
+                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0])
+                    task.save()
+
+                    list_id_lex.append(lex.id)
+        for lex_data in forlessonsdto.lex.all():
+            if lex_data.id not in list_id_lex:
+                if LexDTO.objects.filter(id=lex_data.id).exists():
+                    ld = LexDTO.objects.get(id=lex_data.id)
+                    ld.delete()
+                    if Exercises.objects.filter(id_ex=lex_data.id).exists():
+                        ex = Exercises.objects.get(id_ex=lex_data.id)
+                        task = Tasks.objects.filter(exercise=ex)
+                        for t in task:
+                            v = Variants.objects.filter(task=t.id_task)
+                            v.delete()
+                        task.delete()
+                        ex.delete()
+                lex_data.delete()
+
+        list_id_phr = []
+        for phrase_data in phrases_data:
+            print(phrase_data)
+            if phrase_data.get('id', None):
+                print('near phrasedto')
+                ex = Exercises.objects.get(id_ex=phrase_data.get('id'))
+                ex.type = phrase_data.get('type_ex')
+                ex.lesson = les
+                ex.num_ex = phrase_data.get('num_ex')
+                ex.save()
+
+                phrasedto = PhrasesDTO.objects.get(id=phrase_data.get('id'))
+                phrasedto.forlesson = forlessonsdto
+                phrasedto.type_ex = phrase_data.get('type_ex')
+                phrasedto.num_ex = phrase_data.get('num_ex')
+                phrasedto.id_rep.set(phrase_data.get('id_rep'))
+
+                print(phrase_data.get('type_ex').type_ex)
+
+                if (phrase_data.get('type_ex').type_ex == 19) or (phrase_data.get('type_ex').type_ex == 20):
+                    phrasedto.id_miss = phrase_data.get('id_miss')
+                    if phrase_data.get('type_ex').type_ex == 20:
+                        phrasedto.id_var.set(phrase_data.get('id_var'))
+                        print('near 20 task')
+                        count = 0
+                        flag = False
+                        task_id_list = []
+                        for i in phrase_data.get('id_miss'):
+                            count = count + 1
+                            print(i)
+                            if not flag:
+                                obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count,
+                                                                           replic=phrase_data.get('id_rep')[0],
+                                                                           num_lex=i)
+                                task_id_list.append(obj.id_task)
+                            else:
+                                obj1, created1 = Tasks.objects.get_or_create(exercise=ex, num_task=count,
+                                                                             replic=phrase_data.get('id_rep')[0],
+                                                                             num_lex=i)
+                                task_id_list.append(obj1.id_task)
+
+                        ts = Tasks.objects.filter(exercise=ex)
+                        for t in ts:
+                            if t.id_task not in task_id_list:
+                                t.delete()
+
+                        print('near 20 variants')
+                        var_id_list = []
+                        for i in phrase_data.get('id_var'):
+                            print(i)
+                            obj2, created = Variants.objects.get_or_create(task=obj, lexeme=i)
+                            var_id_list.append(obj2.id)
+
+                        vs = Variants.objects.filter(task=obj)
+                        for v in vs:
+                            if v.id not in var_id_list:
+                                v.delete()
+                    else:
+                        print('near ph task')
+                        task = Tasks.objects.get(exercise=ex)
+                        task.num_task = 1
+                        task.replic = phrase_data.get('id_rep')[0]
+                        task.num_lex = phrase_data.get('id_miss')[0]
+                        task.save()
+                    phrasedto.save()
+                    list_id_phr.append(phrasedto.id)
+                else:
+                    print('near ph task')
+                    task = Tasks.objects.get(exercise=ex)
+                    task.num_task = 1
+                    task.replic = phrase_data.get('id_rep')[0]
+                    task.save()
+                    list_id_phr.append(phrasedto.id)
+            else:
+                print('near phrasedto else')
+                type_ex = phrase_data.get('type_ex')
+                num_ex = phrase_data.get('num_ex')
+                print('in ph exercises')
+                m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                ex = Exercises.objects.create(
+                    id_ex=m,
+                    type=phrase_data.get('type_ex'), lesson=les,
+                    num_ex=phrase_data.get('num_ex'))
+                ex.save()
+                phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex, type_ex=type_ex, num_ex=num_ex)
+                phrasedto.id_rep.set(phrase_data.get('id_rep'))
+
+                print(phrase_data.get('type_ex').type_ex)
+
+                if (phrase_data.get('type_ex').type_ex == 19) or (phrase_data.get('type_ex').type_ex == 20):
+                    phrasedto.id_miss = phrase_data.get('id_miss')
+                    if phrase_data.get('type_ex').type_ex == 20:
+                        phrasedto.id_var.set(phrase_data.get('id_var'))
+                        print('near 20 task')
+                        count = 0
+                        flag = False
+                        for i in phrase_data.get('id_miss'):
+                            count = count + 1
+                            print(i)
+                            if not flag:
+                                task = Tasks.objects.create(exercise=ex, num_task=count,
+                                                            replic=phrase_data.get('id_rep')[0], num_lex=i)
+                                task.save()
+                            else:
+                                task1 = Tasks.objects.create(exercise=ex, num_task=count,
+                                                             replic=phrase_data.get('id_rep')[0], num_lex=i)
+                                task1.save()
+
+                        print('near 20 variants')
+                        for i in phrase_data.get('id_var'):
+                            print(i)
+                            variant = Variants.objects.create(task=task, lexeme=i)
+                            variant.save()
+                    else:
+                        print('near ph task')
+                        task = Tasks.objects.create(exercise=ex, num_task=1, replic=phrase_data.get('id_rep')[0],
+                                                    num_lex=phrase_data.get('id_miss')[0])
+                        task.save()
+                    phrasedto.save()
+                    list_id_phr.append(phrasedto.id)
+                else:
+                    print('near ph task')
+                    task = Tasks.objects.create(exercise=ex, num_task=1, replic=phrase_data.get('id_rep')[0])
+                    task.save()
+                    list_id_phr.append(phrasedto.id)
+        for phrase_data in forlessonsdto.phrases.all():
+            if phrase_data.id not in list_id_phr:
+                if PhrasesDTO.objects.filter(id=phrase_data.id).exists():
+                    pd = PhrasesDTO.objects.get(id=phrase_data.id)
+                    pd.delete()
+                    if Exercises.objects.filter(id_ex=phrase_data.id).exists():
+                        ex = Exercises.objects.get(id_ex=phrase_data.id)
+                        task = Tasks.objects.filter(exercise=ex)
+                        for t in task:
+                            v = Variants.objects.filter(task=t.id_task)
+                            v.delete()
+                        task.delete()
+                        ex.delete()
+                phrase_data.delete()
+
+        list_id_dia = []
+        for dialog_data in dialogs_data:
+            if dialog_data.get('id', None):
+                print('in exercises')
+                ex = Exercises.objects.get(id_ex=dialog_data.get('id'))
+                ex.type = dialog_data.get('type_ex')
+                ex.lesson = les
+                ex.num_ex = dialog_data.get('num_ex')
+                ex.save()
+
+                print('near dialogdto')
+                dialogdto = DialogDTO.objects.get(id=dialog_data.get('id'))
+                dialogdto.forlesson = forlessonsdto
+                dialogdto.type_ex = dialog_data.get('type_ex')
+                dialogdto.num_ex = dialog_data.get('num_ex')
+                dialogdto.id_rep = dialog_data.get('id_rep')
+                dialogdto.save()
+
+                print(dialog_data.get('type_ex').type_ex)
+
+                if dialog_data.get('type_ex').type_ex == 21:
+
+                    print('near 21 task')
+                    print(dialog_data.get('id_rep')[0])
+                    lexeme = Lexemes.objects.get(id_lex=dialog_data.get('id_rep')[0])
+                    task = Tasks.objects.get(exercise=ex)
+                    task.num_task = 1
+                    task.lex_right = lexeme
+                    task.save()
+                    list_id_dia.append(dialogdto.id)
+                else:
+                    print('near 22 task')
+                    dialogdto.id_miss = dialog_data.get('id_miss')
+                    dialogdto.save()
+                    count = 0
+                    s = len(dialog_data.get('id_miss'))
+                    t = 0
+                    task_id_list = []
+                    for i in dialog_data.get('id_rep'):
+                        count = count + 1
+                        print(i)
+                        rep = Replicas.objects.get(id_rep=i)
+                        if t < s:
+                            obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count, replic=rep,
+                                                               num_lex=dialog_data.get('id_miss')[t])
+                            t = t + 1
+                            task_id_list.append(obj.id_task)
+                        else:
+                            obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count, replic=rep)
+                            task_id_list.append(obj.id_task)
+
+                    ts = Tasks.objects.filter(exercise=ex)
+                    for t in ts:
+                        if t.id_task not in task_id_list:
+                            t.delete()
+                    list_id_dia.append(dialogdto.id)
+            else:
+                print('in exercises')
+                m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                ex = Exercises.objects.create(id_ex=m, type=dialog_data.get('type_ex'), lesson=les,
+                                              num_ex=dialog_data.get('num_ex'))
+                ex.save()
+                print('near dialogdto')
+                dialogdto = DialogDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex,
+                                                     type_ex=dialog_data.get('type_ex'), num_ex=dialog_data.get('num_ex'),
+                                                     id_rep=dialog_data.get('id_rep'))
+                dialogdto.save()
+
+                print(dialog_data.get('type_ex').type_ex)
+
+                if dialog_data.get('type_ex').type_ex == 21:
+                    print('near 21 task')
+                    print(dialog_data.get('id_rep')[0])
+                    lexeme = Lexemes.objects.get(id_lex=dialog_data.get('id_rep')[0])
+                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lexeme)
+                    task.save()
+                    list_id_dia.append(dialogdto.id)
+                else:
+                    print('near 22 task')
+                    dialogdto.id_miss = dialog_data.get('id_miss')
+                    dialogdto.save()
+                    count = 0
+                    s = len(dialog_data.get('id_miss'))
+                    t = 0
+                    for i in dialog_data.get('id_rep'):
+                        count = count + 1
+                        print(i)
+                        rep = Replicas.objects.get(id_rep=i)
+                        if t < s:
+                            task = Tasks.objects.create(exercise=ex, num_task=count, replic=rep,
+                                                        num_lex=dialog_data.get('id_miss')[t])
+                            task.save()
+                            t = t + 1
+                        else:
+                            task = Tasks.objects.create(exercise=ex, num_task=count, replic=rep)
+                            task.save()
+                    list_id_dia.append(dialogdto.id)
+
+        for dialog_data in forlessonsdto.dialogs.all():
+            if dialog_data.id not in list_id_dia:
+                if DialogDTO.objects.filter(id=dialog_data.id).exists():
+                    d = DialogDTO.objects.get(id=dialog_data.id)
+                    d.delete()
+                    if Exercises.objects.filter(id_ex=dialog_data.id).exists():
+                        ex = Exercises.objects.get(id_ex=dialog_data.id)
+                        task = Tasks.objects.filter(exercise=ex)
+                        task.delete()
+                        ex.delete()
+                dialog_data.delete()
         return forlessonsdto
 
 
@@ -1230,7 +1843,6 @@ class LessonBlocksWriteSerializer(serializers.ModelSerializer):
         model = LessonBlocks
         fields = ["id_lb", 'lesson_info']
 
-    # #"lesson_info"
     def create(self, validated_data):
         lessons_info = validated_data.pop('lesson_info')
         lessonblock = LessonBlocks.objects.create(**validated_data)
@@ -1239,59 +1851,6 @@ class LessonBlocksWriteSerializer(serializers.ModelSerializer):
             les.save()
         return lessonblock
 
-    # def update(self, instance, validated_data):
-    #     lesson_info = validated_data.pop('lesson_info')
-    #     instance.save()
-    #     keep_lessons = []
-    #     #existing_ids = [lesson.id_les for lesson in instance.lesson_info]
-    #     for lesson_data in lesson_info:
-    #         les_id = lesson_data.get('id_les', None)
-    #         #if "id_les" in lesson_data.keys():
-    #         if les_id:
-    #             if Lessons.objects.filter(id_les=lesson_data["id_les"]).exists():
-    #                 lesson = Lessons.objects.get(id_les=lesson_data["id_les"])
-    #                 lesson.name_les = lesson_data.get('name_les', lesson.name_les)
-    #                 #lesson.lessonblock = lesson_data('lessonblock', instance.id_lb)
-    #                 lesson.video = lesson_data.get('video', lesson.video)
-    #                 lesson.video_st = lesson_data.get('video_st', lesson.video_st)
-    #                 lesson.lex_st = lesson_data.get('lex_st', lesson.lex_st)
-    #                 lesson.phr_st = lesson_data.get('phr_st', lesson.phr_st)
-    #                 lesson.dialog_st = lesson_data.get('dialog_st', lesson.dialog_st)
-    #                 lesson.rules_st = lesson_data.get('rules_st', lesson.rules_st)
-    #                 lesson.save()
-    #                 keep_lessons.append(lesson.id_les)
-    #                 exercises_info = validated_data.pop('exercises_info')
-    #                 keep_exercises = []
-    #                 for exercise_data in exercises_info:
-    #                     les_ex = exercise_data.get('id_ex', None)
-    #                     # if "id_les" in lesson_data.keys(): 'id_ex', 'type', 'lesson', 'num_ex',
-    #                     print("tyt")
-    #                     if les_ex:
-    #                         if Exercises.objects.filter(id_ex=exercise_data["id_ex"]).exists():
-    #                             exercise = Exercises.objects.get(id_les=exercise_data["id_ex"])
-    #                             exercise.type = lesson_data.get('type', exercise.type)
-    #                             # lesson.lessonblock = lesson_data('lessonblock', instance.id_lb)
-    #                             exercise.num_ex = lesson_data.get('num_ex', exercise.num_ex)
-    #                             exercise.save()
-    #                             keep_exercises.append(exercise.id_ex)
-    #
-    #                         else:
-    #                             continue
-    #                     else:
-    #                         exercise = Exercises.objects.create(**exercise_data, lesson=lesson)
-    #                         keep_exercises.append(exercise.id_ex)
-    #                 for exercise_data in lesson.exercises_info:
-    #                     if exercise_data.id_ex not in keep_exercises:
-    #                         exercise_data.delete()
-    #             else:
-    #                 continue
-    #         else:
-    #             lesson = Lessons.objects.create(**lesson_data, lessonblock=instance)
-    #             keep_lessons.append(lesson.id_les)
-    #     for lesson_data in instance.lesson_info:
-    #         if lesson_data.id_les not in keep_lessons:
-    #             lesson_data.delete()
-    #     return instance
     def update(self, instance, validated_data):
         lessons_data = validated_data.get('lesson_info')
         instance.save()
