@@ -1190,7 +1190,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         ex = Exercises.objects.get(id_ex=rule_data.id)
                         task = Tasks.objects.filter(exercise=ex)
                         for t in task:
-                            v = Variants.objects.filter(task=t.id)
+                            v = Variants.objects.filter(task=t.id_task)
                             v.delete()
                         task.delete()
                         ex.delete()
