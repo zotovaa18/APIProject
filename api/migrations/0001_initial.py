@@ -271,7 +271,7 @@ class Migration(migrations.Migration):
                 ('id_r', models.AutoField(auto_created = True, primary_key=True, serialize=False)),
                 ('picture', models.TextField()),
                 ('side', models.CharField(max_length=5)),
-                ('sound_rule', models.FileField(unique=True, upload_to="images/")),
+                ('sound_rule', models.TextField()),
             ],
             options={
                 'db_table': 'reduction',

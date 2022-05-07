@@ -115,7 +115,7 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class RulesSerializer(serializers.ModelSerializer):
     lexeme = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
     lesson = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
-    sound_rule = serializers.FileField(required=False)
+    #sound_rule = serializers.FileField(required=False)
     class Meta:
         model = Rules
         fields = '__all__'
@@ -199,8 +199,9 @@ class LessonInfoDTOWriteSerializer(serializers.ModelSerializer):
 class RulesDTOWriteSerializer(serializers.ModelSerializer):
     # vl_var = VlWriteSerializer(many=True)
     # id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-    picture = serializers.ImageField(required=False)
-    sound_rule = serializers.FileField(required=False)
+    #picture = serializers.ImageField(required=False)
+    #sound_rule = serializers.FileField(required=False)
+    id = serializers.IntegerField(required=False)
     id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
                                                 required=False)
 
@@ -249,6 +250,7 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
 
 
 class LexDTOWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
     id_miss = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
     id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
@@ -310,6 +312,7 @@ class LexDTOWriteSerializer(serializers.ModelSerializer):
 
 
 class DialogDTOWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     id_rep = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
     id_miss = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
 
@@ -368,6 +371,7 @@ class DialogDTOWriteSerializer(serializers.ModelSerializer):
 
 
 class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     id_rep = serializers.PrimaryKeyRelatedField(many=True, queryset=Replicas.objects.all())
     id_miss = serializers.ListField(child=serializers.IntegerField(), allow_null=True, required=False)
     id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
@@ -673,7 +677,10 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 #                             sound_rule=rule_data.get('sound_rule'))
                 #     r.save()
                 # else:
-                r = RulesDTO.objects.create(id=RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                r = RulesDTO.objects.create(id=m,
                                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
                                             num_ex=rule_data.get('num_ex'),
                                             picture=rule_data.get('picture'), side=rule_data.get('side'),
@@ -697,16 +704,13 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                     a.id_var.add(i)
                     a.save()
 
-                # vls_data = rule_data.pop('vl_var')
-                #
-                # print('near vl_data if')
-                # for vl_data in vls_data:
-                #     v = Vl.objects.create(id_r=r, **vl_data)
-                #     v.save()
-
             else:
                 print('in else')
-                ex = Exercises.objects.create(type=rule_data.get('type_ex'), lesson=les, num_ex=rule_data.get('num_ex'))
+                m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                ex = Exercises.objects.create(id_ex=m,
+                                              type=rule_data.get('type_ex'), lesson=les, num_ex=rule_data.get('num_ex'))
                 ex.save()
                 print('near task')
                 task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex')[0],
@@ -726,17 +730,12 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 #                             picture=rule_data.get('picture'), side=rule_data.get('side'),
                 #                             sound_rule=rule_data.get('sound_rule'))
                 # else:
-                r = RulesDTO.objects.create(id=RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                r = RulesDTO.objects.create(id=ex.id_ex,
                                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
                                             num_ex=rule_data.get('num_ex'),
                                             picture=rule_data.get('picture'), side=rule_data.get('side'),
                                             sound_rule=rule_data.get('sound_rule'))
                 r.save()
-
-                # if RulesDTO.objects.order_by("id").values_list("id", flat=True).last() in list_id:
-                #     a = RulesDTO.objects.get(id=id_rd)
-                #     a.id.set(Rules.objects.last() + 1)
-                #     a.save()
 
                 for i in rule_data.get('id_lex'):
                     print(i)
@@ -750,41 +749,32 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                     a.id_var.add(i)
                 a.save()
 
-                # vls_data = rule_data.pop('vl_var')
-                #
-                # print('near vl_data else')
-                # # print(vls_data)
-                # for vl_data in vls_data:
-                #     v = Vl.objects.create(id_r=r, **vl_data)
-                #     v.save()
-
         for lex_data in lexs_data:
-
-            lex = LexDTO.objects.create(id=LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                                        forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
-                                        num_ex=lex_data.get('num_ex'))
-            lex.save()
-
-            for i in lex_data.get('id_lex'):
-                print(i)
-                a = LexDTO.objects.get(id=lex.id)
-                a.id_lex.add(i)
-            a.save()
+            m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7) or \
                     (lex_data.get('type_ex').type_ex == 5) or (lex_data.get('type_ex').type_ex == 15) or \
                     (lex_data.get('type_ex').type_ex == 6):
                 if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7):
-                    # vls_data = lex_data.pop('vl_lex')
-                    #
-                    # print('near vl_lex else')
-                    # for vl_data in vls_data:
-                    #     v = VlLex.objects.create(id_lexdto=lex, **vl_data)
-                    #     v.save()
+
                     print('in if 2 7 exercises')
-                    ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                    ex = Exercises.objects.create(id_ex=m,
+                                                  type=lex_data.get('type_ex'), lesson=les,
                                                   num_ex=lex_data.get('num_ex'))
                     ex.save()
 
+                    lex = LexDTO.objects.create(
+                        id=ex.id_ex,
+                        forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                        num_ex=lex_data.get('num_ex'))
+                    lex.save()
+
+                    for i in lex_data.get('id_lex'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_lex.add(i)
+                    a.save()
                     print('near if 2 7  task')
                     count = 0
                     for i in lex_data.get('id_lex'):
@@ -794,22 +784,34 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         task.save()
 
                 elif lex_data.get('type_ex').type_ex == 6:
+                    print('in elif 6 exercises')
+                    ex = Exercises.objects.create(id_ex=m,
+                                                  type=rule_data.get('type_ex'), lesson=les,
+                                                  num_ex=lex_data.get('num_ex'))
+                    ex.save()
+                    lex = LexDTO.objects.create(
+                        id=ex.id_ex,
+                        forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                        num_ex=lex_data.get('num_ex'))
+                    lex.save()
+
+                    for i in lex_data.get('id_lex'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_lex.add(i)
+                    a.save()
+
                     for i in lex_data.get('id_var'):
                         print(i)
                         a = LexDTO.objects.get(id=lex.id)
                         a.id_var.add(i)
                     a.save()
 
-                    # vls_data = lex_data.pop('vl_variant')
-                    # print('near vl_variant else')
-                    # for vl_data in vls_data:
-                    #     v = VlVar.objects.create(id_lexdto=lex, **vl_data)
-                    #     v.save()
-
-                    print('in elif 6 exercises')
-                    ex = Exercises.objects.create(type=rule_data.get('type_ex'), lesson=les,
-                                                  num_ex=lex_data.get('num_ex'))
-                    ex.save()
+                    for i in lex_data.get('id_lex'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lex.id)
+                        a.id_lex.add(i)
+                    a.save()
                     print('near elif 6 task')
                     task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex')[0])
                     task.save()
@@ -821,39 +823,37 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
                 else:
                     print('near 5 15')
-                    lex.id_miss = lex_data.get('id_miss')
-
-                    # for i in lex_data.get('id_miss'):
-                    #     print(i)
-                    #     a = LexDTO.objects.get(id=lex.id)
-                    #     a.id_miss.add(i)
-                    # a.save()
-                    #
-                    # vls_data = lex_data.pop('vl_miss')
-                    # print('near vl_miss else')
-                    # for vl_data in vls_data:
-                    #     v = VlMiss.objects.create(id_lexdto=lex, **vl_data)
-                    #     v.save()
-
-                    for i in lex_data.get('id_var'):
-                        print(i)
-                        a = LexDTO.objects.get(id=lex.id)
-                        a.id_var.add(i)
-                    a.save()
-
-                    # vls_data = lex_data.pop('vl_variant')
-                    # print('near vl_variant else')
-                    # for vl_data in vls_data:
-                    #     v = VlVar.objects.create(id_lexdto=lex, **vl_data)
-                    #     v.save()
 
                     if lex_data.get('type_ex').type_ex == 5:
                         print('in if 5 exercises')
-                        ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                        ex = Exercises.objects.create(id_ex=m,
+                                                      type=lex_data.get('type_ex'), lesson=les,
                                                       num_ex=lex_data.get('num_ex'))
                         ex.save()
-                        print('near 5 task')
+                        lex = LexDTO.objects.create(
+                            id=ex.id_ex,
+                            forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                            num_ex=lex_data.get('num_ex'))
+                        lex.save()
+                        lex.id_miss = lex_data.get('id_miss')
+                        for i in lex_data.get('id_lex'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_lex.add(i)
+                        a.save()
 
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_var.add(i)
+                        a.save()
+
+                        print('near 5 task')
+                        for i in lex_data.get('id_var'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_var.add(i)
+                        a.save()
                         task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0],
                                                     num_lex=lex_data.get('id_miss')[0])
                         task.save()
@@ -865,9 +865,21 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                             variant.save()
                     else:
                         print('in 15 exercises')
-                        ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les,
+                        ex = Exercises.objects.create(id_ex=m,
+                                                      type=lex_data.get('type_ex'), lesson=les,
                                                       num_ex=lex_data.get('num_ex'))
                         ex.save()
+                        lex = LexDTO.objects.create(
+                            id=ex.id_ex,
+                            forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                            num_ex=lex_data.get('num_ex'))
+                        lex.save()
+                        lex.id_miss = lex_data.get('id_miss')
+                        for i in lex_data.get('id_lex'):
+                            print(i)
+                            a = LexDTO.objects.get(id=lex.id)
+                            a.id_lex.add(i)
+                        a.save()
 
                         print('near 15 task')
                         count = 0
@@ -891,8 +903,21 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                             variant.save()
             else:
                 print('in else 1 3 14... exercises')
-                ex = Exercises.objects.create(type=lex_data.get('type_ex'), lesson=les, num_ex=lex_data.get('num_ex'))
+                ex = Exercises.objects.create(id_ex=m,
+                                              type=lex_data.get('type_ex'), lesson=les, num_ex=lex_data.get('num_ex'))
                 ex.save()
+
+                lex = LexDTO.objects.create(
+                    id=ex.id_ex,
+                    forlesson=forlessonsdto, type_ex=lex_data.get('type_ex'),
+                    num_ex=lex_data.get('num_ex'))
+                lex.save()
+
+                for i in lex_data.get('id_lex'):
+                    print(i)
+                    a = LexDTO.objects.get(id=lex.id)
+                    a.id_lex.add(i)
+                a.save()
                 print('near 1 3 14.... task')
                 task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lex_data.get('id_lex')[0])
                 task.save()
@@ -901,9 +926,15 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
             print('near phrasedto')
             type_ex = phrase_data.get('type_ex')
             num_ex = phrase_data.get('num_ex')
+            print('in ph exercises')
 
+            ex = Exercises.objects.create(
+                id_ex=Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                type=phrase_data.get('type_ex'), lesson=les,
+                num_ex=phrase_data.get('num_ex'))
+            ex.save()
             phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto,
-                                                  id=PhrasesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                                                  id=Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
                                                   type_ex=type_ex, num_ex=num_ex)
             phrasedto.id_rep.set(phrase_data.get('id_rep'))
 
@@ -913,10 +944,6 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 phrasedto.id_miss = phrase_data.get('id_miss')
                 if phrase_data.get('type_ex').type_ex == 20:
                     phrasedto.id_var.set(phrase_data.get('id_var'))
-                    ex = Exercises.objects.create(type=phrase_data.get('type_ex'), lesson=les,
-                                                  num_ex=phrase_data.get('num_ex'))
-                    ex.save()
-
                     print('near 20 task')
                     count = 0
                     flag = False
@@ -940,10 +967,6 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
                 phrasedto.save()
             else:
-                print('in ph exercises')
-                ex = Exercises.objects.create(type=phrase_data.get('type_ex'), lesson=les,
-                                              num_ex=phrase_data.get('num_ex'))
-                ex.save()
                 print('near ph task')
                 task = Tasks.objects.create(exercise=ex, num_task=1, replic=phrase_data.get('id_rep')[0])
                 task.save()
@@ -991,6 +1014,187 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         task = Tasks.objects.create(exercise=ex, num_task=count, replic=rep)
                         task.save()
 
+        return forlessonsdto
+
+    @transaction.atomic
+    def update(self, forlessonsdto, validated_data):
+
+        lessons_info_data = validated_data.pop('lesson_info')
+        rules_data = validated_data.get('rules')
+        print(rules_data)
+        phrases_data = validated_data.pop('phrases')
+        lexs_data = validated_data.pop('lex')
+        forlessonsdto.name_les = validated_data.get('name_les', forlessonsdto.name_les)
+        forlessonsdto.lessonblock = validated_data.get('lessonblock', forlessonsdto.lessonblock)
+        forlessonsdto.video = validated_data.get('video', forlessonsdto.video)
+
+        forlessonsdto.description = validated_data.get('description', forlessonsdto.description)
+        forlessonsdto.save()
+
+        print('near les')
+        print(forlessonsdto.id)
+        lb1 = LessonBlocks.objects.get(id_lb=forlessonsdto.lessonblock)
+        if Lessons.objects.filter(id_les=forlessonsdto.id).exists():
+            print('in 2 if')
+            les = Lessons.objects.get(id_les=forlessonsdto.id)
+            les.name_les = validated_data.get('name_les')
+            les.lessonblock = lb1
+            les.video = validated_data.get('video')
+            les.video_st = lessons_info_data.get('video_st')
+            les.lex_st = lessons_info_data.get('lex_st')
+            les.phr_st = lessons_info_data.get('phr_st')
+            les.dialog_st = lessons_info_data.get('dialog_st')
+            les.rules_st = lessons_info_data.get('rules_st')
+            les.save()
+
+            ld = LessonInfoDTO.objects.get(id=forlessonsdto.id)
+            ld.video_st = lessons_info_data.get('video_st')
+            ld.lex_st = lessons_info_data.get('lex_st')
+            ld.phr_st = lessons_info_data.get('phr_st')
+            ld.dialog_st = lessons_info_data.get('dialog_st')
+            ld.rules_st = lessons_info_data.get('rules_st')
+            ld.save()
+
+        list_id_rule = []
+        for rule_data in rules_data:
+            if rule_data.get('type_ex').type_ex == 23:
+                print("in if")
+                print(rule_data.get('id'))
+                if rule_data.get('id', None):
+                    r = RulesDTO.objects.get(id=rule_data.get('id'))
+                    r.forlesson = forlessonsdto
+                    r.type_ex = rule_data.get('type_ex')
+                    r.num_ex = rule_data.get('num_ex')
+                    r.picture = rule_data.get('picture')
+                    r.side = rule_data.get('side')
+                    r.sound_rule = rule_data.get('sound_rule')
+                    r.save()
+
+                    rule = Rules.objects.get(id_r=r.id)
+                    rule.lesson = les
+                    rule.picture = rule_data.get('picture')
+                    rule.side = rule_data.get('side')
+                    rule.sound_rule = rule_data.get('sound_rule')
+                    rule.lexeme.set(rule_data.get('id_var'))
+                    rule.save()
+                else:
+                    print('in else')
+                    m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                            LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    r = RulesDTO.objects.create(id=m,
+                                                forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                                                num_ex=rule_data.get('num_ex'),
+                                                picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                                sound_rule=rule_data.get('sound_rule'))
+                    r.id_var.set(rule_data.get('id_var'))
+                    r.save()
+                    print('near rule if')
+                    print(r.id)
+                    rule = Rules.objects.create(id_r=r.id, lesson=les,
+                                                picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                                sound_rule=rule_data.get('sound_rule'))
+
+                    rule.lexeme.set(rule_data.get('id_var'))
+                    rule.save()
+                list_id_rule.append(r.id)
+            else:
+                if rule_data.get('id', None):
+                    r = RulesDTO.objects.get(id=rule_data.get('id'))
+                    r.forlesson = forlessonsdto
+                    r.type_ex = rule_data.get('type_ex')
+                    r.num_ex = rule_data.get('num_ex')
+                    r.picture = rule_data.get('picture')
+                    r.side = rule_data.get('side')
+                    r.sound_rule = rule_data.get('sound_rule')
+
+                    r.id_var.set(rule_data.get('id_var'))
+                    r.id_lex.set(rule_data.get('id_lex'))
+
+                    r.save()
+
+                    ex = Exercises.objects.get(id_ex=r.id)
+                    ex.type = rule_data.get('type_ex')
+                    ex.lesson = les
+                    ex.num_ex = rule_data.get('num_ex')
+                    ex.save()
+                    print('near task')
+                    task = Tasks.objects.get(exercise=ex)
+                    task.num_task = 1
+                    task.lex_right = rule_data.get('id_lex')[0]
+                    task.picture = rule_data.get('picture')
+                    task.sound = rule_data.get('sound_rule')
+                    task.save()
+
+                    var_id_list = []
+                    for i in rule_data.get('id_var'):
+                        print(i)
+                        obj, created = Variants.objects.get_or_create(task=task, lexeme = i)
+                        var_id_list.append(obj.id)
+
+                    vs = Variants.objects.filter(task=task)
+                    for v in vs:
+                        if v.id not in var_id_list:
+                            v.delete()
+
+                else:
+                    print('in else')
+                    m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
+                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+                            LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    ex = Exercises.objects.create(id_ex=m,
+                                                  type=rule_data.get('type_ex'), lesson=les,
+                                                  num_ex=rule_data.get('num_ex'))
+                    ex.save()
+                    print('near task')
+                    task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=rule_data.get('id_lex')[0],
+                                                picture=rule_data.get('picture'), sound=rule_data.get('sound_rule'))
+                    task.save()
+
+                    for i in rule_data.get('id_var'):
+                        print(i)
+                        variant = Variants.objects.create(task=task, lexeme=i)
+                        variant.save()
+
+                    print('near rulesDTO')
+                    r = RulesDTO.objects.create(id=ex.id_ex,
+                                                forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
+                                                num_ex=rule_data.get('num_ex'),
+                                                picture=rule_data.get('picture'), side=rule_data.get('side'),
+                                                sound_rule=rule_data.get('sound_rule'))
+                    r.save()
+
+                    for i in rule_data.get('id_lex'):
+                        print(i)
+                        a = RulesDTO.objects.get(id=r.id)
+                        a.id_lex.add(i)
+                    a.save()
+
+                    for i in rule_data.get('id_var'):
+                        print(i)
+                        a = RulesDTO.objects.get(id=r.id)
+                        a.id_var.add(i)
+                    a.save()
+                list_id_rule.append(r.id)
+        for rule_data in forlessonsdto.rules.all():
+            if rule_data.id not in list_id_rule:
+                if RulesDTO.objects.filter(id=rule_data.id).exists():
+                    rd = RulesDTO.objects.get(id=rule_data.id)
+                    rd.delete()
+                    if Rules.objects.filter(id_r=rule_data.id).exists():
+                        if RulesLexemes.objects.filter(rule=rule_data.id).exists():
+                            RulesLexemes.objects.filter(rule=rule_data.id).delete()
+                        r = Rules.objects.get(id_r=rule_data.id)
+                        r.delete()
+                    elif Exercises.objects.filter(id_ex=rule_data.id).exists():
+                        ex = Exercises.objects.get(id_ex=rule_data.id)
+                        task = Tasks.objects.filter(exercise=ex)
+                        for t in task:
+                            v = Variants.objects.filter(task=t.id)
+                            v.delete()
+                        task.delete()
+                        ex.delete()
+                rule_data.delete()
         return forlessonsdto
 
 

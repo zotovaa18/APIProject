@@ -174,7 +174,7 @@ class RulesDTO(models.Model):
     side = models.CharField(max_length=5, blank=True, null=True)
     sound_rule = models.TextField()
     picture = models.TextField()
-    #forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules', blank=True, null=True,)
+    forlesson = models.ForeignKey("ForLessonsDTO",  models.DO_NOTHING, related_name='rules', blank=True, null=True,)
 
 
 class LexDTO(models.Model):
@@ -212,7 +212,6 @@ class ForLessonsDTO(models.Model):
     lessonblock = models.IntegerField( null=True)
     video = models.ForeignKey(Video, models.DO_NOTHING, db_column='id_v', related_name='ForLessonsDTO_video',
                               blank=True, null=True)
-    rules = models.ManyToManyField('RulesDTO', blank=True, null=True, related_name='RulesDTO')
     description = models.TextField(blank=True, null=True)
 
 
@@ -406,7 +405,7 @@ class Rules(models.Model):
     id_r = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     picture = models.TextField()
     side = models.CharField(max_length=5)
-    sound_rule = models.FileField(unique=True, upload_to="images/")
+    sound_rule = models.TextField()
     lesson = models.ForeignKey(Lessons, models.DO_NOTHING, db_column='id_les', related_name='rule')
     lexeme = models.ManyToManyField(Lexemes, through='RulesLexemes', related_name='rules')
 

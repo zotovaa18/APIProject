@@ -229,6 +229,22 @@ class ForLessonsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
         return self.create(request)
 
 
+class ForLessonsDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin):
+
+    queryset = ForLessonsDTO.objects.all()
+    serializer_class = ForLessonsDTOWriteSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
+
 class TimeSpentList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TimeSpent.objects.all()
     serializer_class = TimeSpentSerializer
@@ -1024,7 +1040,7 @@ class RulesList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
        добавляет новое правило. Side - сторона экрана, где должно располагаться правило
     """
     queryset = Rules.objects.all()
-    parser_classes = (MultiPartParser, FormParser)
+    #parser_classes = (MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         method = self.request.method
