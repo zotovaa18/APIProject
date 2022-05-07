@@ -570,6 +570,7 @@ class ShowInfoAboutPhrase(models.Model):
     id_les = models.IntegerField()
     name_les = models.CharField(max_length=100)
     id_ex = models.DecimalField(primary_key=True, max_digits=5, decimal_places=0)
+    num_ex = models.IntegerField()
     id_les = models.IntegerField()
     id_task = models.TextField()
     num_task = models.TextField()
