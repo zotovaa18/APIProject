@@ -14,7 +14,6 @@ from .models import *
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(required=False)
 
     class Meta:
         model = Rating

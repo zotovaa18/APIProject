@@ -1,22 +1,14 @@
-from django.shortcuts import render, HttpResponse
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-from .models import *
 from .serializers import *
 '''from django.http import JsonResponse
 from django.http import HttpResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view'''
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from rest_framework.decorators import APIView, permission_classes
+from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
-from rest_framework.schemas import AutoSchema
 from rest_framework import viewsets
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
@@ -172,7 +164,6 @@ class PhrasesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
 class RatingList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         return self.list(request)

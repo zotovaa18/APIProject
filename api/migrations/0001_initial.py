@@ -208,7 +208,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=40, unique=True)),
                 ('password', models.CharField(blank=True, max_length=20, null=True)),
                 ('password_admin', models.CharField(blank=True, max_length=20, null=True)),
-                ('photo',  models.ImageField(upload_to="images/"))
+                ('photo', models.TextField(null=True, blank=True))
             ],
             options={
                 'db_table': 'people',
