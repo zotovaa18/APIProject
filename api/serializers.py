@@ -5,20 +5,17 @@ Created on Fri Nov  5 22:20:50 2021
 @author: zotov
 """
 
-from rest_framework import serializers
 from django.db import transaction
+from rest_framework import serializers
 
-from .models import Countries, PeopleGroups, People, TypesLex, TypesMed, LessonBlocks, Lessons
-from .models import Lexemes, Medias, Ik, Replicas, LecFilling, Rules, RulesLexemes, TypesEx, ShowInfoAboutWordsLetters
-from .models import Exercises, Progress, Tasks, Variants, Favorites, Status, VowelSound, ShowInfoAboutRules
 # from .models import Newletters, Newwords, Newphrases, Matchsyllablessound, Collectwordsletters, Missingletter
 # from .models import Pronunciationwords, Recoverphrases, Selectwords, Wordpicturematch, Wordpictureselect, Writewords
-from .models import ShowInfoAboutWordsLetters, ShowInfoAboutPhrase, ForLessonsDTO
 from .models import *
 
 
 class RatingSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(required=False)
+
     class Meta:
         model = Rating
         fields = ['name', 'surname', 'photo', 'count']
@@ -45,7 +42,7 @@ class WeakPointsSerializer(serializers.ModelSerializer):
 class WeaksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Weaks
-        fields = ['name_les', 'id_les', 'login', 'total', 'completed','data']
+        fields = ['name_les', 'id_les', 'login', 'total', 'completed', 'data']
 
 
 class DeleteDTOSerializer(serializers.ModelSerializer):
@@ -115,7 +112,8 @@ class TypesMedSerializer(serializers.ModelSerializer):
 class RulesSerializer(serializers.ModelSerializer):
     lexeme = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
     lesson = serializers.PrimaryKeyRelatedField(queryset=Lessons.objects.all())
-    #sound_rule = serializers.FileField(required=False)
+
+    # sound_rule = serializers.FileField(required=False)
     class Meta:
         model = Rules
         fields = '__all__'
@@ -199,8 +197,8 @@ class LessonInfoDTOWriteSerializer(serializers.ModelSerializer):
 class RulesDTOWriteSerializer(serializers.ModelSerializer):
     # vl_var = VlWriteSerializer(many=True)
     # id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all())
-    #picture = serializers.ImageField(required=False)
-    #sound_rule = serializers.FileField(required=False)
+    # picture = serializers.ImageField(required=False)
+    # sound_rule = serializers.FileField(required=False)
     id = serializers.IntegerField(required=False)
     id_lex = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
                                                 required=False)
@@ -343,7 +341,6 @@ class DialogDTOWriteSerializer(serializers.ModelSerializer):
         fields = ['id', 'type_ex', 'num_ex', 'id_rep', 'id_miss', 'forlesson']
 
     def create(self, validated_data):
-
         print('near dialogdto')
         type_ex = validated_data.get('type_ex')
         num_ex = validated_data.get('num_ex')
@@ -353,11 +350,10 @@ class DialogDTOWriteSerializer(serializers.ModelSerializer):
         dialogdto.save()
         print(validated_data.get('type_ex').type_ex)
         if validated_data.get('type_ex').type_ex == 22:
-
-        #     dialogdto.pic_video = validated_data.get('pic_video')
-        #     dialogdto.save()
-        #
-        # else:
+            #     dialogdto.pic_video = validated_data.get('pic_video')
+            #     dialogdto.save()
+            #
+            # else:
 
             # vls_data = validated_data.pop('vl_rep')
             # print('near vl_rep')
@@ -612,14 +608,15 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        #with transaction.atomic():
+        # with transaction.atomic():
         lessons_info_data = validated_data.pop('lesson_info')
         rules_data = validated_data.pop('rules')
         phrases_data = validated_data.pop('phrases')
         dialogs_data = validated_data.pop('dialogs')
         lexs_data = validated_data.pop('lex')
-        forlessonsdto = ForLessonsDTO.objects.create(id=ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                                                     **validated_data)
+        forlessonsdto = ForLessonsDTO.objects.create(
+            id=ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
+            **validated_data)
 
         print('near les')
         print(forlessonsdto.id)
@@ -648,7 +645,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 # else:
                 m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
                         RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
-                r = RulesDTO.objects.create(id = m,
+                r = RulesDTO.objects.create(id=m,
                                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
                                             num_ex=rule_data.get('num_ex'),
                                             picture=rule_data.get('picture'), side=rule_data.get('side'),
@@ -957,7 +954,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
                 print('near 21 task')
                 print(dialog_data.get('id_rep')[0])
-                #print(Lexemes.objects.get(id_lex=dialog_data.get('id_rep')[0]))
+                # print(Lexemes.objects.get(id_lex=dialog_data.get('id_rep')[0]))
                 lexeme = Lexemes.objects.get(id_lex=dialog_data.get('id_rep')[0])
                 task = Tasks.objects.create(exercise=ex, num_task=1, lex_right=lexeme)
                 task.save()
@@ -1098,7 +1095,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                     var_id_list = []
                     for i in rule_data.get('id_var'):
                         print(i)
-                        obj, created = Variants.objects.get_or_create(task=task, lexeme = i)
+                        obj, created = Variants.objects.get_or_create(task=task, lexeme=i)
                         var_id_list.append(obj.id)
 
                     vs = Variants.objects.filter(task=task)
@@ -1482,7 +1479,8 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 else:
                     print('in else 1 3 14... exercises')
                     ex = Exercises.objects.create(id_ex=m,
-                                                  type=lex_data.get('type_ex'), lesson=les, num_ex=lex_data.get('num_ex'))
+                                                  type=lex_data.get('type_ex'), lesson=les,
+                                                  num_ex=lex_data.get('num_ex'))
                     ex.save()
 
                     lex = LexDTO.objects.create(
@@ -1601,7 +1599,8 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                     type=phrase_data.get('type_ex'), lesson=les,
                     num_ex=phrase_data.get('num_ex'))
                 ex.save()
-                phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex, type_ex=type_ex, num_ex=num_ex)
+                phrasedto = PhrasesDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex, type_ex=type_ex,
+                                                      num_ex=num_ex)
                 phrasedto.id_rep.set(phrase_data.get('id_rep'))
 
                 print(phrase_data.get('type_ex').type_ex)
@@ -1701,7 +1700,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                         rep = Replicas.objects.get(id_rep=i)
                         if t < s:
                             obj, created = Tasks.objects.get_or_create(exercise=ex, num_task=count, replic=rep,
-                                                               num_lex=dialog_data.get('id_miss')[t])
+                                                                       num_lex=dialog_data.get('id_miss')[t])
                             t = t + 1
                             task_id_list.append(obj.id_task)
                         else:
@@ -1722,7 +1721,8 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 ex.save()
                 print('near dialogdto')
                 dialogdto = DialogDTO.objects.create(forlesson=forlessonsdto, id=ex.id_ex,
-                                                     type_ex=dialog_data.get('type_ex'), num_ex=dialog_data.get('num_ex'),
+                                                     type_ex=dialog_data.get('type_ex'),
+                                                     num_ex=dialog_data.get('num_ex'),
                                                      id_rep=dialog_data.get('id_rep'))
                 dialogdto.save()
 
@@ -1777,7 +1777,7 @@ class LessonsWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lessons
         fields = (
-        'id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st',)
+            'id_les', 'name_les', 'lessonblock', 'video', 'video_st', 'lex_st', 'phr_st', 'dialog_st', 'rules_st',)
         # 'exercises_info'
         # read_only_fields = ('lessonblock',)
         # depth = 6
@@ -1928,8 +1928,9 @@ class FavoritesReadSerializer(serializers.ModelSerializer):
 class ShowInfoAboutRulesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutRules
-        fields = ('name_les', 'id_ex', 'num_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
-                  'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
+        fields = (
+            'name_les', 'id_ex', 'num_ex', 'id_r', 'id_task', 'picture', 'sound_rule', 'side', 'mean_lex', 'var_lex',
+            'var_transcr', 'var_sound', 'var_pic', 'mean_type_ex')
 
 
 class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
@@ -1942,8 +1943,10 @@ class ShowInfoAboutWordsLettersSerializer(serializers.ModelSerializer):
 class ShowInfoAboutPhraseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShowInfoAboutPhrase
-        fields = ('name_les', 'id_ex', 'num_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant', 'miss',
-                  'mean_type_ex')
+        fields = (
+            'name_les', 'id_ex', 'num_ex', 'id_task', 'num_task', 'replica', 'ik', 'pic_video', 'sound2', 'variant',
+            'miss',
+            'mean_type_ex')
 
 # class NewlettersSerializer(serializers.ModelSerializer):
 #    class Meta:

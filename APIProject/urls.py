@@ -13,47 +13,39 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework import permissions
-from django.urls import path, include, re_path
-from django.views.generic import TemplateView
-from .customopenapi import CustomOpenAPISchemaGenerator
-
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from .customopenapi import CustomOpenAPISchemaGenerator
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Project API",
-      default_version='v1',
-      description="Test description",
+    openapi.Info(
+        title="Project API",
+        default_version='v1',
+        description="Test description",
 
-   ),
-   public=False,
-   url="https://api.unolingua.flareon.ru/",
-   generator_class=CustomOpenAPISchemaGenerator,
-   permission_classes=(permissions.AllowAny,),
+    ),
+    public=False,
+    url="http://127.0.0.1:8000/",
+    generator_class=CustomOpenAPISchemaGenerator,
+    permission_classes=(permissions.AllowAny,),
 )
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('api.urls')),
-    path('', include('makevideo.urls')),
-    path('swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    #path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    #path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('auth/', include('authentication.urls', namespace='authentication')),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('', include('api.urls')),
+                  path('', include('makevideo.urls')),
+                  path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+                  # path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+                  # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+                  # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+                  # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+                  path('auth/', include('authentication.urls', namespace='authentication')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

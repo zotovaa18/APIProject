@@ -1,15 +1,16 @@
-from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.decorators import APIView
+import os
+
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework import mixins
-from rest_framework import viewsets
-from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .models import Video
-    #, VideoCommands
-from .serializers import VideoSerializer\
-    #, VideoCommandsReadSerializer, VideoCommandsWriteSerializer
+# , VideoCommands
+from .serializers import VideoSerializer \
+    # , VideoCommandsReadSerializer, VideoCommandsWriteSerializer
+
 
 # Create your views here.
 
@@ -58,6 +59,18 @@ class VideoDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Up
     def delete(self, request, pk):
         return self.destroy(request, pk=pk)
 
+
+@api_view(['GET'])
+def showcommands(request):
+    if request.method == 'GET':
+        l = []
+        for filenames in os.listdir('media/video'):
+            veter = filenames.replace('.', '')
+            veter = veter.replace(' ', '')
+            veter = veter.replace('mov', '')
+            veter = veter.replace(veter[0], '').lower()
+            l.append(veter)
+        return Response(l)
 
 # class VideoCommandsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
 #     queryset = VideoCommands.objects.all()
