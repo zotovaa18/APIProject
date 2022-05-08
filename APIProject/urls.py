@@ -48,4 +48,3 @@ urlpatterns = [
                   # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
                   path('auth/', include('authentication.urls', namespace='authentication')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

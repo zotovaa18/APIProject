@@ -90,7 +90,6 @@ class CountriesSerializer(serializers.ModelSerializer):
 
 
 class PeopleSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(required=False)
 
     class Meta:
         model = People

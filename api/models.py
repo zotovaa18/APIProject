@@ -1,6 +1,5 @@
-from django.db import models
 from django.contrib.postgres.fields import ArrayField
-
+from django.db import models
 
 # Create your models here.
 from makevideo.models import Video
@@ -365,7 +364,7 @@ class People(models.Model):
     #id_country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='id_country')
     password = models.CharField(max_length=20, blank=True, null=True)
     password_admin = models.CharField(max_length=20, blank=True, null=True)
-    photo = models.ImageField(unique=True, upload_to="images/")
+    photo = models.TextField(null=True, blank=True)
 
     class Meta:
         managed = False
