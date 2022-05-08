@@ -120,6 +120,7 @@ class ProgressBlocks(models.Model):
     name_les = models.TextField()
     login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
     sum = models.IntegerField()
+    video_link = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

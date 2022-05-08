@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('name_les', models.TextField()),
                 ('sum', models.IntegerField()),
+                ('video_link', models.TextField(blank=True, null=True))
             ],
             options={
                 'db_table': 'progress_blocks',

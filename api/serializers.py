@@ -53,7 +53,7 @@ class DeleteDTOSerializer(serializers.ModelSerializer):
 class ProgressBlocksSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgressBlocks
-        fields = ['name_les', 'login', 'sum']
+        fields = ['name_les', 'login', 'sum', 'video_link']
 
 
 class NumberOfWeakPointsSerializer(serializers.ModelSerializer):

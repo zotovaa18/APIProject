@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('surname', models.CharField(max_length=40)),
                 ('photo', models.TextField(blank=True, null=True)),
                 ('count', models.IntegerField()),
+
             ],
             options={
                 'db_table': 'rating',
