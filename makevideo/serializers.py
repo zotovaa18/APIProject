@@ -13,7 +13,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = ('id_v', 'name_video', 'commands')
+        fields = ('id_v', 'name_video', 'commands', 'video_link')
 
     @transaction.atomic
     def create(self, validated_data):
@@ -33,7 +33,11 @@ class VideoSerializer(serializers.ModelSerializer):
                 print('true')
                 clips.append(VideoFileClip(os.path.dirname('media/video/') + '/' + filename))
         video = concatenate_videoclips(clips, method='compose')
-        video.write_videofile('media/video/ct_01.mp4')
+        video.write_videofile('media/video_lesson/' + videocreate.name_video + '.mp4')
+        videocreate.video_link = 'http://api.unolingua.flareon.ru/' + 'media/video_lesson/' + videocreate.name_video + '.mp4'
+
+        # with open('media/video_lesson/'+videocreate.name_video+'.mp4') as f:
+        #     videocreate.video_link.save(videocreate.name_video+'.mp4', File(f))
 
         return videocreate
 

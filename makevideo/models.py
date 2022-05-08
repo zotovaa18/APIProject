@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.db import models
+
 
 # Create your models here.
 
@@ -8,6 +9,7 @@ class Video(models.Model):
     id_v = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_video = models.CharField(max_length=100)
     commands = ArrayField(models.TextField(), blank=True)
+    video_link = models.TextField(serialize=False)
 
     class Meta:
         managed = False
