@@ -209,31 +209,13 @@ class RulesDTOWriteSerializer(serializers.ModelSerializer):
         model = RulesDTO
         fields = '__all__'
 
-    # {
-    #     "type": 23,
-    #     "num_ex": 0,
-    #     "id_lex": null,
-    #     "id_var": [61, 62],
-    #     "vl_var": [{
-    #         "value": 61,
-    #         "label": "к"
-    #     },
-    #         {
-    #             "value": 62,
-    #             "label": "э"
-    #         }],
-    #     "side": "лево",
-    #     "sound_rule": "прол",
-    #     "picture": "лдолд"
-    # }
-
     def create(self, validated_data):
         # vls_data = validated_data.pop('vl_var')
         print('near rulesdto')
         picture = validated_data.get('picture')
         sound_rule = validated_data.get('sound_rule')
         side = validated_data.get('side')
-        type_ex = validated_data.get('type')
+        type_ex = validated_data.get('type_ex')
         num_ex = validated_data.get('num_ex')
         rulesdto = RulesDTO.objects.create(type_ex=type_ex, num_ex=num_ex, side=side,
                                            sound_rule=sound_rule, picture=picture)
@@ -263,51 +245,75 @@ class LexDTOWriteSerializer(serializers.ModelSerializer):
         model = LexDTO
         fields = ['id', 'type_ex', 'num_ex', 'id_lex', 'id_miss', 'id_var', 'forlesson']
 
+    @transaction.atomic
     def create(self, validated_data):
 
         print('near lexdto')
         type_ex = validated_data.get('type_ex')
         num_ex = validated_data.get('num_ex')
 
-        lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
-        lexdto.id_lex.set(validated_data.get('id_lex'))
-
-        lexdto.save()
         print(validated_data.get('type_ex').type_ex)
-        if (validated_data.get('type_ex').type_ex == 5) or (validated_data.get('type_ex').type_ex == 15) or \
+        if (validated_data.get('type_ex').type_ex == 2) or (validated_data.get('type_ex').type_ex == 7) or \
+                (validated_data.get('type_ex').type_ex == 5) or (validated_data.get('type_ex').type_ex == 15) or \
                 (validated_data.get('type_ex').type_ex == 6):
-            # if (validated_data.get('type_ex').type_ex == 2) or (validated_data.get('type_ex').type_ex == 7):
-            #
-            #     # vls_data = validated_data.pop('vl_lex')
-            #     #
-            #     # print('near vl_lex else')
-            #     # for vl_data in vls_data:
-            #     #     v = VlLex.objects.create(id_lexdto=lexdto, **vl_data)
-            #     #     v.save()
+            if (validated_data.get('type_ex').type_ex == 2) or (validated_data.get('type_ex').type_ex == 7):
+                lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+                lexdto.id_lex.set(validated_data.get('id_lex'))
 
-            if validated_data.get('type_ex').type_ex == 6:
-                lexdto.id_var.set(validated_data.get('id_var'))
-                # vls_data = validated_data.pop('vl_variant')
-                # print('near vl_variant else')
-                # for vl_data in vls_data:
-                #     v = VlVar.objects.create(id_lexdto=lexdto, **vl_data)
-                #     v.save()
+                lexdto.save()
+
+            elif validated_data.get('type_ex').type_ex == 6:
+
+                lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+                lexdto.id_lex.set(validated_data.get('id_lex'))
+
+                lexdto.save()
+
+                for i in validated_data.get('id_var'):
+                    print(i)
+                    a = LexDTO.objects.get(id=lexdto.id)
+                    a.id_var.add(i)
+                a.save()
+
             else:
-                print(validated_data.get('id_miss')[0])
-                lexdto.id_miss = validated_data.get('id_miss')[0]
+                print('near 5 15')
 
-                # vls_data = validated_data.pop('vl_miss')
-                # print('near vl_miss else')
-                # for vl_data in vls_data:
-                #     v = VlMiss.objects.create(id_lexdto=lexdto, **vl_data)
-                #     v.save()
+                if validated_data.get('type_ex').type_ex == 5:
 
-                lexdto.id_var.set(validated_data.get('id_var'))
-                # vls_data = validated_data.pop('vl_variant')
-                # print('near vl_variant else')
-                # for vl_data in vls_data:
-                #     v = VlVar.objects.create(id_lexdto=lexdto, **vl_data)
-                #     v.save()
+                    lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+                    lexdto.id_lex.set(validated_data.get('id_lex'))
+
+                    lexdto.id_miss = validated_data.get('id_miss')
+                    lexdto.save()
+
+                    print('near 5 task')
+                    for i in validated_data.get('id_var'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lexdto.id)
+                        a.id_var.add(i)
+                    a.save()
+
+                else:
+                    print('in 15 exercises')
+
+                    lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+                    lexdto.id_lex.set(validated_data.get('id_lex'))
+
+                    lexdto.id_miss = validated_data.get('id_miss')
+                    lexdto.save()
+                    for i in validated_data.get('id_var'):
+                        print(i)
+                        a = LexDTO.objects.get(id=lexdto.id)
+                        a.id_var.add(i)
+                    a.save()
+
+        else:
+            print('in else 1 3 14... exercises')
+            lexdto = LexDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
+            lexdto.id_lex.set(validated_data.get('id_lex'))
+
+            lexdto.save()
+
         return lexdto
 
 
@@ -377,41 +383,6 @@ class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
     id_var = serializers.PrimaryKeyRelatedField(many=True, queryset=Lexemes.objects.all(), allow_null=True,
                                                 required=False)
 
-    # {
-    #     "id": 0,
-    #     "type_ex": 4,
-    #     "num_ex": 3,
-    #     "id_rep": [
-    #         3
-    #     ]
-    # }
-    # {
-    #     "id": 1,
-    #     "type_ex": 19,
-    #     "num_ex": 4,
-    #     "id_rep": [
-    #         3
-    #     ],
-    #     "id_miss": [
-    #         1
-    #     ]
-    # }
-    # {
-    #     "id": 2,
-    #     "type_ex": 20,
-    #     "num_ex": 6,
-    #     "id_rep": [
-    #         8
-    #     ],
-    #     "id_var": [
-    #         75
-    #     ],
-    #     "id_miss": [
-    #         1,
-    #         4
-    #     ]
-    # }
-
     class Meta:
         model = PhrasesDTO
         fields = ['id', 'type_ex', 'num_ex', 'id_rep', 'id_miss', 'id_var', 'forlesson']
@@ -421,7 +392,6 @@ class PhrasesDTOWriteSerializer(serializers.ModelSerializer):
         print('near phrasedto')
         type_ex = validated_data.get('type_ex')
         num_ex = validated_data.get('num_ex')
-
         phrasedto = PhrasesDTO.objects.create(type_ex=type_ex, num_ex=num_ex)
         phrasedto.id_rep.set(validated_data.get('id_rep'))
 
@@ -648,7 +618,6 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         phrases_data = validated_data.pop('phrases')
         dialogs_data = validated_data.pop('dialogs')
         lexs_data = validated_data.pop('lex')
-        print(ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
         forlessonsdto = ForLessonsDTO.objects.create(id=ForLessonsDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
                                                      **validated_data)
 
@@ -678,9 +647,8 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 #     r.save()
                 # else:
                 m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
-                r = RulesDTO.objects.create(id=m,
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                r = RulesDTO.objects.create(id = m,
                                             forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
                                             num_ex=rule_data.get('num_ex'),
                                             picture=rule_data.get('picture'), side=rule_data.get('side'),
@@ -707,8 +675,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
             else:
                 print('in else')
                 m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
                 ex = Exercises.objects.create(id_ex=m,
                                               type=rule_data.get('type_ex'), lesson=les, num_ex=rule_data.get('num_ex'))
                 ex.save()
@@ -751,8 +718,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
 
         for lex_data in lexs_data:
             m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7) or \
                     (lex_data.get('type_ex').type_ex == 5) or (lex_data.get('type_ex').type_ex == 15) or \
                     (lex_data.get('type_ex').type_ex == 6):
@@ -926,8 +892,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
             num_ex = phrase_data.get('num_ex')
             print('in ph exercises')
             m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             ex = Exercises.objects.create(
                 id_ex=m,
                 type=phrase_data.get('type_ex'), lesson=les,
@@ -976,8 +941,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         for dialog_data in dialogs_data:
             print('in exercises')
             m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             ex = Exercises.objects.create(id_ex=m, type=dialog_data.get('type_ex'), lesson=les,
                                           num_ex=dialog_data.get('num_ex'))
             ex.save()
@@ -1086,8 +1050,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 else:
                     print('in else')
                     m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                            LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
                     r = RulesDTO.objects.create(id=m,
                                                 forlesson=forlessonsdto, type_ex=rule_data.get('type_ex'),
                                                 num_ex=rule_data.get('num_ex'),
@@ -1146,8 +1109,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 else:
                     print('in else')
                     m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                            LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                            RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
                     ex = Exercises.objects.create(id_ex=m,
                                                   type=rule_data.get('type_ex'), lesson=les,
                                                   num_ex=rule_data.get('num_ex'))
@@ -1205,8 +1167,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
         list_id_lex = []
         for lex_data in lexs_data:
             m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                    LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                    RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
             print(lex_data)
             if (lex_data.get('type_ex').type_ex == 2) or (lex_data.get('type_ex').type_ex == 7) or \
                     (lex_data.get('type_ex').type_ex == 5) or (lex_data.get('type_ex').type_ex == 15) or \
@@ -1634,8 +1595,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
                 num_ex = phrase_data.get('num_ex')
                 print('in ph exercises')
                 m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
                 ex = Exercises.objects.create(
                     id_ex=m,
                     type=phrase_data.get('type_ex'), lesson=les,
@@ -1756,8 +1716,7 @@ class ForLessonsDTOWriteSerializer(serializers.ModelSerializer):
             else:
                 print('in exercises')
                 m = max(Exercises.objects.order_by("id_ex").values_list("id_ex", flat=True).last() + 1,
-                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1,
-                        LexDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
+                        RulesDTO.objects.order_by("id").values_list("id", flat=True).last() + 1)
                 ex = Exercises.objects.create(id_ex=m, type=dialog_data.get('type_ex'), lesson=les,
                                               num_ex=dialog_data.get('num_ex'))
                 ex.save()

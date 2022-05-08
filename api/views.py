@@ -197,7 +197,7 @@ class LexDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 class RulesDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = RulesDTO.objects.all()
     serializer_class = RulesDTOWriteSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    #parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         return self.list(request)
