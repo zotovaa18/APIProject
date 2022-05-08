@@ -31,7 +31,7 @@ schema_view = get_schema_view(
 
     ),
     public=False,
-    url="http://127.0.0.1:8000/",
+    url="https://api.unolingua.flareon.ru/",
     generator_class=CustomOpenAPISchemaGenerator,
     permission_classes=(permissions.AllowAny,),
 )
