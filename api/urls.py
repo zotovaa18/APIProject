@@ -5,14 +5,10 @@ Created on Fri Nov  5 01:53:05 2021
 @author: zotov
 """
 
+from django.urls import path
 
-from django.urls import path, include
-#country_list, country_details LexemesList, ForLessonsList
+# country_list, country_details LexemesList, ForLessonsList
 from .views import *
-
-from rest_framework import routers
-
-from api import views
 
 # router = routers.DefaultRouter()
 # router.register(r'lessons', views.LessonsDetails)
@@ -81,7 +77,6 @@ urlpatterns = [
     # path('weak_points/<int:pk>/', WeakPointsDetails.as_view()),
     path('number_of_weak_points/', NumberOfWeakPointsList.as_view()),
     path('progress_blocks/', ProgressBlocksList.as_view()),
-    path('weak_points/', WeakPointsList.as_view()),
     path('weaks/', WeaksList.as_view()),
     path('deletedto/', DeleteDTOList.as_view()),
 

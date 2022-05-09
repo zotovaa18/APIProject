@@ -5,21 +5,6 @@ from django.db import models
 from makevideo.models import Video
 
 
-class WeakPoints(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-    name_les = models.TextField()
-    id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
-    login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
-    total = models.IntegerField()
-    completed = models.IntegerField()
-    count = models.IntegerField()
-    type = models.TextField()
-
-    class Meta:
-        managed = False
-        db_table = 'for_weak_points_dto'
-
-
 class Weaks(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
     name_les = models.TextField()
@@ -43,22 +28,6 @@ class DeleteDTO(models.Model):
     class Meta:
         managed = False
         db_table = 'delete_dto'
-
-
-# class WeakExerciseDTO:
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     count = models.IntegerField()
-#     type = models.TextField()
-#     forweak = models.ForeignKey("WeakPointDTO", models.DO_NOTHING, related_name='data', blank=True, null=True)
-#
-#
-# class WeakPointDTO(models.Model):
-#     id = models.AutoField(auto_created=True, primary_key=True, serialize=False)
-#     name_les = models.TextField()
-#     #login = models.ForeignKey('People', models.DO_NOTHING, db_column='login')
-#     id_les = models.ForeignKey('Lessons', models.DO_NOTHING, db_column='id_les')
-#     total = models.IntegerField()
-#     complited = models.IntegerField()
 
 
 class NumberOfWeakPoints(models.Model):

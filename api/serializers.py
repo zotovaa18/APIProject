@@ -32,12 +32,6 @@ class NumStopSerializer(serializers.ModelSerializer):
         fields = ['block', 'name_les', 'login', 'stop']
 
 
-class WeakPointsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WeakPoints
-        fields = ['name_les', 'id_les', 'login', 'total', 'completed', 'count', 'type']
-
-
 class WeaksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Weaks

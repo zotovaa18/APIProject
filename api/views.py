@@ -49,29 +49,6 @@ class DeleteDTOList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class WeakPointsList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    """
-     get:
-       дто для экранов со слабыми уроками для пользователей
-       Писать /?login=, если нужен доступ к конкретному пользователю
-    """
-    queryset = WeakPoints.objects.all()
-
-    def get_serializer_class(self):
-        method = self.request.method
-        return WeakPointsSerializer
-
-    @swagger_auto_schema(operation_summary='получить статистику')
-    def get(self, request, *args, **kwargs):
-        login = request.GET.get("login")
-        if login is not None:
-            show_info = WeakPoints.objects.filter(login=login)
-            serializer = WeakPointsSerializer(show_info, many=True)
-            return Response(serializer.data)
-        else:
-            return self.list(request, *args, **kwargs)
-
-
 class WeaksList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
      get:
