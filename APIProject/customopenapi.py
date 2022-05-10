@@ -40,14 +40,6 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             "description": "Набор методов для работы с данными об лексемах"
         },
         {
-            "name": "makevideo",
-            "description": "Набор методов для работы с данными о блоке с видео"
-        },
-        {
-            "name": "media",
-            "description": "Набор методов для работы с данными о медиа"
-        },
-        {
             "name": "people",
             "description": "Набор методов для работы с данными о пользователей"
         },

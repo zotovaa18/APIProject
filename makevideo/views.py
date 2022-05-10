@@ -61,7 +61,12 @@ class VideoDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Up
 
 
 @api_view(['GET'])
+@swagger_auto_schema(operation_summary='получить список команды для видео')
 def showcommands(request):
+    """
+     get:
+       возвращает массив команд, из которых может состоять видео
+    """
     if request.method == 'GET':
         l = []
         for filenames in os.listdir('media/video'):
