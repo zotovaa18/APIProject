@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-f$o_^vr#6)**b-1dop29+2ktk7mu)8lguyy23h47^i!(-b$gqx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://unolingua.flareon.ru', '127.0.0.1']
+ALLOWED_HOSTS = ['https://unolingua.flareon.ru', '127.0.0.1', 'https://api.unolingua.flareon.ru']
 
 # Application definition
 
